@@ -20,7 +20,7 @@ This document divides the DONT FORGET project into independent feature chunks fo
 
 ---
 
-## Chunk 1: Reminders & Home Screen (`chunk-01-home-and-reminders`) — **STATUS: READY TO START**
+## Chunk 1: Reminders & Home Screen (`chunk-01-home-and-reminders`) — **STATUS: COMPLETED & APPROVED**
 - **One-paragraph Scope**: Implements the Home Screen displaying active reminders, the Reminder Detail/Overview screen showing checklist items with interactive checkboxes, "Pack All" packing capability, "Mark as Complete" popup dialog, Reminder Restore flow for accidentally completed reminders, Reminder Deletion dialog, and automatic purging of inactive/completed reminders older than 24 hours on app launch.
 - **Spec Sections**: User Journeys 4, 5, 7, 8; Requirements 3, 4, 11; Rules 1, 11; Screens 1 (Home), 9 (Reminder View), Delete / Mark Complete Popups.
 - **Files Owned**: `com/example/dontforget/feature/home/**`, `com/example/dontforget/feature/reminderdetail/**`.
@@ -29,7 +29,7 @@ This document divides the DONT FORGET project into independent feature chunks fo
 - **Routes In/Out**:
   - In: `Route.Home`, `Route.ReminderDetail(reminderId)`
   - Out: `Route.CreateReminder`, `Route.EditReminder(reminderId)`, `Route.TemplateManagement`
-- **Status**: **Ready to start**
+- **Status**: **Completed & Approved**
 
 ---
 
@@ -73,8 +73,8 @@ This document divides the DONT FORGET project into independent feature chunks fo
 
 ## Summary of Run Order
 1. **Chunk 0: Shared Foundation** (**COMPLETED**)
-2. **Parallel Phase (Chunks 1, 2, 3, 4)**:
-   - Chunk 1: Home & Reminders (**READY TO START**)
+2. **Chunk 1: Home & Reminders** (**COMPLETED**)
+3. **Parallel Phase (Chunks 2, 3, 4)**:
    - Chunk 2: Create & Edit Reminder (**READY TO START**)
    - Chunk 3: Template Management (**READY TO START**)
    - Chunk 4: Notifications & Deep Linking (**READY TO START**)

@@ -1,6 +1,9 @@
 package com.example.dontforget
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -11,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
@@ -21,6 +25,15 @@ import androidx.navigation.navArgument
 import com.example.dontforget.core.navigation.Route
 import com.example.dontforget.data.local.DontForgetDatabase
 import com.example.dontforget.data.repository.ReminderRepositoryImpl
+import com.example.dontforget.data.repository.TemplateRepositoryImpl
+import com.example.dontforget.feature.createreminder.CreateReminderScreen
+import com.example.dontforget.feature.createreminder.CreateReminderViewModel
+import com.example.dontforget.feature.editreminder.EditReminderScreen
+import com.example.dontforget.feature.editreminder.EditReminderViewModel
+import com.example.dontforget.feature.home.HomeScreen
+import com.example.dontforget.feature.home.HomeViewModel
+import com.example.dontforget.feature.reminderdetail.ReminderDetailScreen
+import com.example.dontforget.feature.reminderdetail.ReminderDetailViewModel
 import com.example.dontforget.ui.theme.DontForgetTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -30,9 +43,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        // Auto-purge inactive reminders older than 24h on launch
         val db = DontForgetDatabase.getDatabase(applicationContext)
         val reminderRepo = ReminderRepositoryImpl(db.reminderDao(), db.checklistItemDao())
+        val templateRepo = TemplateRepositoryImpl(db.contextDao(), db.templateDao(), db.checklistItemDao())
 
         setContent {
             DontForgetTheme {
@@ -52,17 +65,53 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     ) {
                         composable(Route.Home.route) {
-                            PlaceholderScreen(title = "Home Screen (Chunk 1)")
+                            val homeViewModel = remember { HomeViewModel(reminderRepo) }
+                            HomeScreen(
+                                viewModel = homeViewModel,
+                                onNavigateToDetail = { reminderId ->
+                                    navController.navigate(Route.ReminderDetail.createRoute(reminderId))
+                                },
+                                onNavigateToCreateReminder = {
+                                    navController.navigate(Route.CreateReminder.route)
+                                },
+                                onNavigateToTemplates = {
+                                    navController.navigate(Route.TemplateManagement.route)
+                                },
+                                onOpenNotificationSettings = {
+                                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                        data = Uri.fromParts("package", packageName, null)
+                                    }
+                                    startActivity(intent)
+                                }
+                            )
                         }
                         composable(Route.CreateReminder.route) {
-                            PlaceholderScreen(title = "Create Reminder Screen (Chunk 2)")
+                            val createViewModel = remember { CreateReminderViewModel(reminderRepo, templateRepo) }
+                            CreateReminderScreen(
+                                viewModel = createViewModel,
+                                onNavigateHome = {
+                                    navController.popBackStack(Route.Home.route, false)
+                                },
+                                onNavigateToReminderDetail = { reminderId ->
+                                    navController.navigate(Route.ReminderDetail.createRoute(reminderId)) {
+                                        popUpTo(Route.Home.route)
+                                    }
+                                }
+                            )
                         }
                         composable(
                             route = Route.EditReminder.ROUTE,
                             arguments = listOf(navArgument("reminderId") { type = NavType.LongType })
                         ) { backStackEntry ->
                             val id = backStackEntry.arguments?.getLong("reminderId") ?: 0L
-                            PlaceholderScreen(title = "Edit Reminder Screen #$id (Chunk 2)")
+                            val editViewModel = remember(id) { EditReminderViewModel(reminderRepo) }
+                            EditReminderScreen(
+                                reminderId = id,
+                                viewModel = editViewModel,
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                }
+                            )
                         }
                         composable(Route.TemplateManagement.route) {
                             PlaceholderScreen(title = "Template Management Screen (Chunk 3)")
@@ -86,7 +135,16 @@ class MainActivity : ComponentActivity() {
                             arguments = listOf(navArgument("reminderId") { type = NavType.LongType })
                         ) { backStackEntry ->
                             val id = backStackEntry.arguments?.getLong("reminderId") ?: 0L
-                            PlaceholderScreen(title = "Reminder Detail Screen #$id (Chunk 1)")
+                            val detailViewModel = remember(id) { ReminderDetailViewModel(id, reminderRepo) }
+                            ReminderDetailScreen(
+                                viewModel = detailViewModel,
+                                onNavigateToEdit = { reminderId ->
+                                    navController.navigate(Route.EditReminder.createRoute(reminderId))
+                                },
+                                onNavigateBack = {
+                                    navController.popBackStack()
+                                }
+                            )
                         }
                     }
                 }
