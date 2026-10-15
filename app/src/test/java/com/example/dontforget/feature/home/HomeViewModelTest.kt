@@ -1,5 +1,6 @@
 package com.example.dontforget.feature.home
 
+import com.example.dontforget.data.local.entity.ReminderEntity
 import com.example.dontforget.data.repository.FakeChecklistItemDao
 import com.example.dontforget.data.repository.FakeReminderDao
 import com.example.dontforget.data.repository.ReminderRepositoryImpl
@@ -12,8 +13,11 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.util.Calendar
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModelTest {
@@ -55,11 +59,57 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `onTemplatesClick emits NavigateToTemplates effect`() = runTest(testDispatcher) {
+    fun `onOpenNotificationSettingsClick emits OpenNotificationSettings effect`() = runTest(testDispatcher) {
         val viewModel = HomeViewModel(repository)
-        viewModel.onEvent(HomeUiEvent.OnTemplatesClick)
+        viewModel.onEvent(HomeUiEvent.OnOpenNotificationSettingsClick)
 
         val effect = viewModel.effect.first()
-        assertEquals(HomeUiSideEffect.NavigateToTemplates, effect)
+        assertEquals(HomeUiSideEffect.OpenNotificationSettings, effect)
+    }
+
+    @Test
+    fun `onFilterTabSelected updates selectedFilter in HomeUiState`() = runTest(testDispatcher) {
+        val viewModel = HomeViewModel(repository)
+        assertEquals(HomeFilterTab.ACTIVE, viewModel.uiState.value.selectedFilter)
+
+        viewModel.onEvent(HomeUiEvent.OnFilterTabSelected(HomeFilterTab.COMPLETED))
+        assertEquals(HomeFilterTab.COMPLETED, viewModel.uiState.value.selectedFilter)
+    }
+
+    @Test
+    fun `onNotificationPermissionStatusChanged updates isNotificationPermissionGranted`() = runTest(testDispatcher) {
+        val viewModel = HomeViewModel(repository)
+        assertTrue(viewModel.uiState.value.isNotificationPermissionGranted)
+
+        viewModel.onEvent(HomeUiEvent.OnNotificationPermissionStatusChanged(false))
+        assertFalse(viewModel.uiState.value.isNotificationPermissionGranted)
+    }
+
+    @Test
+    fun `categorization properties correctly partition active reminders`() = runTest(testDispatcher) {
+        val calToday = Calendar.getInstance()
+        val calTomorrow = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 1) }
+        val calUpcoming = Calendar.getInstance().apply { add(Calendar.DAY_OF_YEAR, 3) }
+
+        val todayReminder = ReminderEntity(id = 1, contextId = 1, contextTitle = "Work Today", contextIconName = "work", departureEpochMillis = calToday.timeInMillis)
+        val tomorrowReminder = ReminderEntity(id = 2, contextId = 1, contextTitle = "Gym Tomorrow", contextIconName = "gym", departureEpochMillis = calTomorrow.timeInMillis)
+        val upcomingReminder = ReminderEntity(id = 3, contextId = 1, contextTitle = "Flight Upcoming", contextIconName = "flight", departureEpochMillis = calUpcoming.timeInMillis)
+
+        fakeReminderDao.insertReminder(todayReminder)
+        fakeReminderDao.insertReminder(tomorrowReminder)
+        fakeReminderDao.insertReminder(upcomingReminder)
+
+        val viewModel = HomeViewModel(repository)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(3, state.activeReminders.size)
+        assertEquals(1, state.todayReminders.size)
+        assertEquals(1, state.tomorrowReminders.size)
+        assertEquals(1, state.upcomingReminders.size)
+
+        assertEquals("Work Today", state.todayReminders[0].reminder.contextTitle)
+        assertEquals("Gym Tomorrow", state.tomorrowReminders[0].reminder.contextTitle)
+        assertEquals("Flight Upcoming", state.upcomingReminders[0].reminder.contextTitle)
     }
 }

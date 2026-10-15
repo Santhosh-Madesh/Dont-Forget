@@ -28,6 +28,17 @@ class FakeReminderDao(
         emit(active)
     }
 
+    override fun getCompletedReminders(): Flow<List<ReminderWithItems>> = flow {
+        val itemsList = fakeChecklistItemDaoProvider()?.items ?: emptyList()
+        val completed = reminders.filter { it.isCompleted }.map { reminder ->
+            ReminderWithItems(
+                reminder = reminder,
+                items = itemsList.filter { it.parentId == reminder.id && it.parentType == "REMINDER" }
+            )
+        }
+        emit(completed)
+    }
+
     override fun getReminderById(id: Long): Flow<ReminderWithItems?> = flow {
         val reminder = reminders.find { it.id == id }
         if (reminder == null) {

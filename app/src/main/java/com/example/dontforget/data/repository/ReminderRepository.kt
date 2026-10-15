@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ReminderRepository {
     fun getActiveReminders(): Flow<List<ReminderWithItems>>
+    fun getCompletedReminders(): Flow<List<ReminderWithItems>>
     fun getReminderById(id: Long): Flow<ReminderWithItems?>
     suspend fun getReminderEntityById(id: Long): ReminderEntity?
     suspend fun insertReminder(reminder: ReminderEntity, items: List<ChecklistItemEntity>): Long

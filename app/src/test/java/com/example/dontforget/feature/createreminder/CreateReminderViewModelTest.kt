@@ -95,6 +95,8 @@ class FakeReminderRepository : ReminderRepository {
 
     override fun getActiveReminders(): Flow<List<ReminderWithItems>> = flow { emit(emptyList()) }
 
+    override fun getCompletedReminders(): Flow<List<ReminderWithItems>> = flow { emit(emptyList()) }
+
     override fun getReminderById(id: Long): Flow<ReminderWithItems?> = flow {
         val rem = reminders.find { it.id == id }
         if (rem == null) {

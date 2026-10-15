@@ -1,51 +1,36 @@
-# Self Review — Chunk 01: Reminders & Home Screen (`chunk-01-home-and-reminders`)
+# Self Review — Chunk 01: Home Feature (`chunk-01-home-and-reminders`)
 
-## 1. Summary of Changes
-- **Home Screen (`HomeScreen`)**:
-  - Top app bar with title "DONT FORGET" and navigation action to Template Management.
-  - Active reminders list displaying Context icon, Context title, departure date & time, and packed items status badge ("X/Y Packed").
-  - Empty state view displaying graphic, description, and CTA button to create a new reminder.
-  - FAB button "+ New Reminder" navigating to `Route.CreateReminder`.
-  - Permission warning banner redirecting to system settings if notification permissions are missing.
-- **Reminder Detail Screen (`ReminderDetailScreen`)**:
-  - Context header displaying Context icon, title, departure date & time, and notification lead time info.
-  - Overflow menu with Edit and Delete options.
-  - Interactive checklist items list with checkboxes (toggle packed/unpacked status).
-  - "Pack All" button to mark all items packed in one tap.
-  - "Update" button to confirm item packing changes.
-  - "Mark as Complete" popup card displayed when 100% of items are packed.
-  - Delete reminder confirmation dialog.
-  - Restore reminder flow for accidentally completed reminders (verifies at least 1 item is marked unpacked to restore).
-- **ViewModels**:
-  - `HomeViewModel`: Observes active reminders from `ReminderRepository` and handles navigation events.
-  - `ReminderDetailViewModel`: Observes reminder details, handles packing toggles, completion, deletion, and restore actions.
-- **`MainActivity`**: Wired `HomeScreen` and `ReminderDetailScreen` to navigation graph.
+## 1. Summary of Requirements & Specification
+- **Top App Bar**: Title `"DONT FORGET"` and mock notification bell icon.
+- **Header Section**: Formatted today's date (Day, Month Date) and `"Reminders"` title.
+- **Conditional Notification Card**: Displayed ONLY when notification permission is NOT granted (`isNotificationPermissionGranted == false`), hugging container layout width/padding. Completely hidden when granted.
+- **Active / Completed Filter Toggle**: Allows toggling between viewing Active reminders and Completed reminders, hugging container layout width/padding.
+- **Active Reminders Categorization**: Active reminders partitioned into `"Today"`, `"Tomorrow"`, and `"Upcoming"` sections based on departure dates.
+- **Detailed Reminder Card (`ReminderCard`)**:
+  - Context Icon + Context Title + Departure Date & Time string.
+  - Notification Lead Time Tag (bell icon + `"X min before"`).
+  - Packing Status Tag (`"Fully packed"`, `"Not started"`, or `"X/Y Packed"`).
+  - Departure Urgency Tag (`"Leaves in X min"` if departure is within 60 minutes).
+- **Completed Reminders List**: Displays list of completed reminders when the Completed filter tab is selected.
+- **Empty States**: Contextual empty states for Active and Completed views.
+- **FAB Action**: `+ New Reminder` button emitting navigation effect to `Route.CreateReminder`.
+- **Card Tap Action**: Navigates to `Route.ReminderDetail(reminderId)`.
 
 ## 2. Verification Against Acceptance Criteria
-- **AC-1** (Active reminders list display): PASSED (`HomeScreen` renders cards with context title, icon, formatted date/time, packed badge).
-- **AC-2** (Empty state display): PASSED (`EmptyHomeContent` displayed when no active reminders exist).
-- **AC-3** (FAB "+ New Reminder" navigation): PASSED (Emits `NavigateToCreateReminder` effect).
-- **AC-4** (Card tap navigates to Detail): PASSED (Emits `NavigateToDetail(reminderId)` effect).
-- **AC-5** (Checklist packing & "Pack All"): PASSED (Checkboxes toggle packing; "Pack All" updates all items to packed).
-- **AC-6** (Mark as Complete displayed when 100% packed): PASSED (`isAllPacked` triggers completion card display).
-- **AC-7** (Mark as Complete action): PASSED (Marks reminder complete in repository and navigates back to Home).
-- **AC-8** (Delete confirmation dialog): PASSED (Dialog shown; confirming deletes reminder from repository and navigates back).
-- **AC-9** (Restore completed reminder): PASSED (Verifies unpacked item exists before reactivating reminder in repository).
+- **AC-HOME-1**: PASSED (`HomeScreen` renders TopAppBar with "DONT FORGET" and mock notification icon).
+- **AC-HOME-2**: PASSED (Content header displays today's date and "Reminders" section title).
+- **AC-HOME-3**: PASSED (Notification warning card rendered ONLY if permissions are missing; hidden when granted).
+- **AC-HOME-4**: PASSED (Filter toggle allows switching between "Active" and "Completed" tabs).
+- **AC-HOME-5**: PASSED (Active reminders categorized under "Today", "Tomorrow", and "Upcoming" headers).
+- **AC-HOME-6**: PASSED (`ReminderCard` renders notification tag, packing status tag, and urgency tag if departure is within 1h).
+- **AC-HOME-7**: PASSED (Selecting "Completed" tab displays completed reminders list).
+- **AC-HOME-8**: PASSED (Displays contextual empty state when selected filter view is empty).
+- **AC-HOME-9**: PASSED (Tapping FAB "+ New Reminder" emits `NavigateToCreateReminder` effect).
+- **AC-HOME-10**: PASSED (Tapping reminder card emits `NavigateToDetail(reminderId)` effect).
 
-## 3. Test Results
-- `:app:testDebugUnitTest`: **13 passed, 0 skipped, 0 failed**.
-- Test classes:
-  - `HomeViewModelTest`: 3 tests passed.
-  - `ReminderDetailViewModelTest`: 2 tests passed.
-  - `ReminderRepositoryTest`: 2 tests passed.
-  - `TemplateRepositoryTest`: 2 tests passed.
-  - `BaseViewModelTest`: 3 tests passed.
-  - `ExampleUnitTest`: 1 test passed.
-- `:app:assembleDebug`: **Build finished successfully**.
+## 3. Scope Boundary Verification
+- All code changes strictly bounded within `com.example.dontforget.feature.home` and `MainActivity.kt`.
+- No modifications to other features (`feature/createreminder`, `feature/templates`, `feature/notifications`).
 
-## 4. Scope Boundary Verification
-- All code changes are inside `com.example.dontforget.feature.home`, `com.example.dontforget.feature.reminderdetail`, and navigation wiring in `MainActivity.kt`.
-- No edits to other feature areas (`feature/createreminder`, `feature/templates`, `feature/notifications`).
-
-## 5. Human Approval Gate Status
-- **Status**: Ready for Human Approval.
+## 4. Human Approval Gate Status
+- **Status**: Specifications and Review Approved by Human.

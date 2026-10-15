@@ -11,16 +11,29 @@ class HomeViewModel(
 ) : BaseViewModel<HomeUiState, HomeUiEvent, HomeUiSideEffect>(HomeUiState()) {
 
     init {
-        observeReminders()
+        observeActiveReminders()
+        observeCompletedReminders()
     }
 
-    private fun observeReminders() {
+    private fun observeActiveReminders() {
         reminderRepository.getActiveReminders()
-            .onEach { reminders ->
+            .onEach { active ->
                 updateState {
                     copy(
                         isLoading = false,
-                        reminders = reminders
+                        activeReminders = active
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeCompletedReminders() {
+        reminderRepository.getCompletedReminders()
+            .onEach { completed ->
+                updateState {
+                    copy(
+                        completedReminders = completed
                     )
                 }
             }
@@ -32,14 +45,20 @@ class HomeViewModel(
             is HomeUiEvent.OnReminderClick -> {
                 sendEffect(HomeUiSideEffect.NavigateToDetail(event.reminderId))
             }
+            is HomeUiEvent.OnFilterTabSelected -> {
+                updateState { copy(selectedFilter = event.filterTab) }
+            }
             HomeUiEvent.OnCreateReminderClick -> {
                 sendEffect(HomeUiSideEffect.NavigateToCreateReminder)
             }
-            HomeUiEvent.OnTemplatesClick -> {
-                sendEffect(HomeUiSideEffect.NavigateToTemplates)
-            }
             HomeUiEvent.OnOpenNotificationSettingsClick -> {
                 sendEffect(HomeUiSideEffect.OpenNotificationSettings)
+            }
+            HomeUiEvent.OnNotificationIconClick -> {
+                // Mock notification action (no-op)
+            }
+            is HomeUiEvent.OnNotificationPermissionStatusChanged -> {
+                updateState { copy(isNotificationPermissionGranted = event.isGranted) }
             }
         }
     }

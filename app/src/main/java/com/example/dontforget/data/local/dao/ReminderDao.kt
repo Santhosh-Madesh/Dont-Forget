@@ -17,6 +17,10 @@ interface ReminderDao {
     fun getActiveReminders(): Flow<List<ReminderWithItems>>
 
     @Transaction
+    @Query("SELECT * FROM reminders WHERE isCompleted = 1 ORDER BY completedEpochMillis DESC")
+    fun getCompletedReminders(): Flow<List<ReminderWithItems>>
+
+    @Transaction
     @Query("SELECT * FROM reminders WHERE id = :id")
     fun getReminderById(id: Long): Flow<ReminderWithItems?>
 

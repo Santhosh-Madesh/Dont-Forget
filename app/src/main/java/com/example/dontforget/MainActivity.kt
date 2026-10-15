@@ -1,7 +1,10 @@
 package com.example.dontforget
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
@@ -17,6 +20,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,6 +36,7 @@ import com.example.dontforget.feature.createreminder.CreateReminderViewModel
 import com.example.dontforget.feature.editreminder.EditReminderScreen
 import com.example.dontforget.feature.editreminder.EditReminderViewModel
 import com.example.dontforget.feature.home.HomeScreen
+import com.example.dontforget.feature.home.HomeUiEvent
 import com.example.dontforget.feature.home.HomeViewModel
 import com.example.dontforget.feature.reminderdetail.ReminderDetailScreen
 import com.example.dontforget.feature.reminderdetail.ReminderDetailViewModel
@@ -66,6 +72,20 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Route.Home.route) {
                             val homeViewModel = remember { HomeViewModel(reminderRepo) }
+
+                            val context = LocalContext.current
+                            LaunchedEffect(Unit) {
+                                val hasPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    ContextCompat.checkSelfPermission(
+                                        context,
+                                        Manifest.permission.POST_NOTIFICATIONS
+                                    ) == PackageManager.PERMISSION_GRANTED
+                                } else {
+                                    true
+                                }
+                                homeViewModel.onEvent(HomeUiEvent.OnNotificationPermissionStatusChanged(hasPermission))
+                            }
+
                             HomeScreen(
                                 viewModel = homeViewModel,
                                 onNavigateToDetail = { reminderId ->
@@ -73,9 +93,6 @@ class MainActivity : ComponentActivity() {
                                 },
                                 onNavigateToCreateReminder = {
                                     navController.navigate(Route.CreateReminder.route)
-                                },
-                                onNavigateToTemplates = {
-                                    navController.navigate(Route.TemplateManagement.route)
                                 },
                                 onOpenNotificationSettings = {
                                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {

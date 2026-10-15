@@ -16,6 +16,10 @@ class ReminderRepositoryImpl(
         return reminderDao.getActiveReminders()
     }
 
+    override fun getCompletedReminders(): Flow<List<ReminderWithItems>> {
+        return reminderDao.getCompletedReminders()
+    }
+
     override fun getReminderById(id: Long): Flow<ReminderWithItems?> {
         return reminderDao.getReminderById(id)
     }

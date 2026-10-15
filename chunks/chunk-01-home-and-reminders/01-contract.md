@@ -1,55 +1,67 @@
-# Feature Contract — Chunk 01: Reminders & Home Screen (`chunk-01-home-and-reminders`)
+# Feature Contract — Chunk 01: Home Feature (`chunk-01-home-and-reminders`)
 
 ## 1. Goal
-Provide the Home Screen displaying active reminders (or empty state) and the Reminder Overview/Detail Screen with interactive item packing, "Pack All", "Mark as Complete" flow, deletion, and restore capabilities.
+Provide the Home Screen displaying today's date header, "Reminders" section header, notification warning card (only when permissions are missing), Active vs Completed filter toggle, active reminders categorized into "Today", "Tomorrow", and "Upcoming", completed reminders list, detailed reminder card tags (notification lead time, packing status, urgency tag), and FAB navigation to Create Reminder.
 
-## 2. Scope
+## 2. Scope (Home Feature Focus)
 
 ### In Scope
-- **Home Screen (`HomeScreen`)**:
-  - Top app bar with app name and navigation button to Template Management.
-  - Active reminders list sorted by departure date & time.
-  - Reminder Card showing Context icon, Context title, departure date & time, packed items ratio (e.g., "3/5Packed").
-  - Empty state view when no active reminders exist.
-  - Floating Action Button (FAB) "+ New Reminder" navigating to `Route.CreateReminder`.
-- **Reminder Detail / Overview Screen (`ReminderDetailScreen`)**:
-  - Context header with Context icon, title, departure date & time, notification lead time.
-  - Options menu / actions (Edit Reminder -> `Route.EditReminder(reminderId)`, Delete Reminder).
-  - Checklist items list with interactive checkboxes (Packed / Unpacked).
-  - "Pack All" CTA button to mark all items packed.
-  - "Update" button to persist item packing changes.
-  - "Mark as Complete" popup card / button (displayed when 100% of items are packed).
-  - "Delete Reminder" confirmation dialog.
-  - "Restore Reminder" flow for completed reminders (prompts user to mark at least 1 item unpacked to reactivate).
+- **Top App Bar**:
+  - Title: "DONT FORGET"
+  - Action: Mock notification icon button (no navigation action for now).
+- **Content Header Section**:
+  - Today's date header (e.g. "Thursday, Oct 15").
+  - "Reminders" section title.
+- **Notification Warning Card**:
+  - Rendered ONLY if notification permissions are NOT granted.
+  - Hidden completely when permissions are granted.
+  - Provides CTA button to open system settings.
+- **Active / Completed Filter Toggle**:
+  - Toggle buttons/card switch between "Active" and "Completed" views.
+- **Active Reminders Categorized List**:
+  - Reminders grouped into 3 date categories based on departure timestamp:
+    - **Today**: Departure date matches today's date.
+    - **Tomorrow**: Departure date matches tomorrow's date.
+    - **Upcoming**: Departure date is beyond tomorrow's date.
+- **Reminder Card Component Tags (`ReminderCard`)**:
+  - Context Icon + Context Title + Departure Date & Time.
+  - **Notification Lead Tag**: Notification bell icon + lead time text (e.g., "30 min before").
+  - **Packing Status Tag**: Status badge such as "Fully packed" (100% packed), "Not started" (0% packed), or "X/Y Packed".
+  - **Urgency Tag**: If departure is within 1 hour (<= 60 minutes), display an urgency tag (e.g., "Leaves in 45 min").
+- **Completed Reminders List**:
+  - Displays completed reminders when "Completed" tab is active.
+- **Empty States**:
+  - Displays contextual empty state when no active or completed reminders exist in the selected filter view.
+- **Floating Action Button (FAB)**:
+  - "+ New Reminder" button emitting navigation effect to `Route.CreateReminder`.
+- **Card Interaction**:
+  - Tapping a reminder card emits navigation effect to `Route.ReminderDetail(reminderId)`.
 
 ### Out of Scope
-- Reminder creation/edit form inputs (Chunk 2).
+- Reminder Overview / Detail screen checklist packing logic (separate feature scope).
+- Reminder Creation / Edit form inputs (Chunk 2).
 - Template management screens (Chunk 3).
-- System alarm triggers and notification permission requests (Chunk 4).
+- Real system notification receivers and trigger handling (Chunk 4).
 
 ## 3. Data & Dependencies
 - **Consumes**:
   - `ReminderRepository`:
     - `getActiveReminders(): Flow<List<ReminderWithItems>>`
-    - `getReminderById(id: Long): Flow<ReminderWithItems?>`
-    - `updateChecklistItemPacked(itemId: Long, isPacked: Boolean)`
-    - `packAllItems(reminderId: Long)`
-    - `markReminderComplete(reminderId: Long)`
-    - `restoreReminder(reminderId: Long)`
-    - `deleteReminder(reminderId: Long)`
+    - `getCompletedReminders(): Flow<List<ReminderWithItems>>` (or unified stream)
+    - `deleteInactiveRemindersOlderThan(cutoffEpochMillis: Long)`
 
 ## 4. Exposed Surface
 - `HomeScreen` composable
-- `ReminderDetailScreen` composable
-- Navigation events to `Route.CreateReminder`, `Route.EditReminder(reminderId)`, `Route.TemplateManagement`
+- Navigation events to `Route.CreateReminder`, `Route.ReminderDetail(reminderId)`, and System Settings.
 
-## 5. Acceptance Criteria
-- **AC-1**: `HomeScreen` displays active reminders with context title, icon, formatted departure date/time, and packed status badge.
-- **AC-2**: `HomeScreen` displays an empty state when no active reminders exist.
-- **AC-3**: Tapping "+ New Reminder" emits navigation effect to `Route.CreateReminder`.
-- **AC-4**: Tapping a reminder card on Home navigates to `ReminderDetailScreen(reminderId)`.
-- **AC-5**: On `ReminderDetailScreen`, toggling checkboxes modifies item packed status. "Pack All" marks all items packed.
-- **AC-6**: When all checklist items are packed, the "Mark as Complete" button/card is displayed.
-- **AC-7**: Selecting "Mark as Complete" marks the reminder complete in repository and returns to Home.
-- **AC-8**: Selecting "Delete" displays a delete confirmation dialog; confirming deletes the reminder and returns to Home.
-- **AC-9**: Restoring a completed reminder requires marking at least 1 item unpacked and reactivates the reminder in repository.
+## 5. Acceptance Criteria (Home Feature)
+- **AC-HOME-1**: `HomeScreen` top bar renders "DONT FORGET" title and mock notification icon button.
+- **AC-HOME-2**: Content header displays today's formatted date (Day, Month Date) followed by the "Reminders" section header.
+- **AC-HOME-3**: Notification Warning Card is visible ONLY when notification permissions are NOT granted, and hidden when granted.
+- **AC-HOME-4**: Filter toggle allows switching between "Active" and "Completed" views.
+- **AC-HOME-5**: Active reminders are categorized under "Today", "Tomorrow", and "Upcoming" headers based on departure dates.
+- **AC-HOME-6**: `ReminderCard` displays notification lead time tag (with bell icon), packing status ("Fully packed", "Not started", or "X/Y Packed"), and urgency tag ("Leaves in X min") if departure is within 1 hour.
+- **AC-HOME-7**: Selecting "Completed" tab displays the completed reminders list.
+- **AC-HOME-8**: Displays contextual empty state when no reminders exist in the selected filter view.
+- **AC-HOME-9**: Tapping FAB "+ New Reminder" navigates to `Route.CreateReminder`.
+- **AC-HOME-10**: Tapping a reminder card navigates to `Route.ReminderDetail(reminderId)`.

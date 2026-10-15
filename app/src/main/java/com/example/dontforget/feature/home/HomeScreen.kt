@@ -17,12 +17,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.NotificationsActive
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,7 +46,9 @@ import com.example.dontforget.core.ui.components.ContextIcons
 import com.example.dontforget.core.ui.components.WarningBanner
 import com.example.dontforget.data.local.model.ReminderWithItems
 import kotlinx.coroutines.flow.collectLatest
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,7 +56,6 @@ fun HomeScreen(
     viewModel: HomeViewModel,
     onNavigateToDetail: (Long) -> Unit,
     onNavigateToCreateReminder: () -> Unit,
-    onNavigateToTemplates: () -> Unit,
     onOpenNotificationSettings: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -64,7 +66,6 @@ fun HomeScreen(
             when (effect) {
                 is HomeUiSideEffect.NavigateToDetail -> onNavigateToDetail(effect.reminderId)
                 HomeUiSideEffect.NavigateToCreateReminder -> onNavigateToCreateReminder()
-                HomeUiSideEffect.NavigateToTemplates -> onNavigateToTemplates()
                 HomeUiSideEffect.OpenNotificationSettings -> onOpenNotificationSettings()
             }
         }
@@ -82,10 +83,10 @@ fun HomeScreen(
                     )
                 },
                 actions = {
-                    IconButton(onClick = { viewModel.onEvent(HomeUiEvent.OnTemplatesClick) }) {
+                    IconButton(onClick = { viewModel.onEvent(HomeUiEvent.OnNotificationIconClick) }) {
                         Icon(
-                            imageVector = Icons.Filled.Bookmark,
-                            contentDescription = "Templates"
+                            imageVector = Icons.Filled.Notifications,
+                            contentDescription = "Notifications"
                         )
                     }
                 },
@@ -108,46 +109,173 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            if (!state.isNotificationPermissionGranted) {
-                WarningBanner(
-                    message = "Notification permissions required to receive reminders before departure.",
-                    actionLabel = "Enable in Settings",
-                    onActionClick = { viewModel.onEvent(HomeUiEvent.OnOpenNotificationSettingsClick) }
-                )
-            }
-
-            if (state.reminders.isEmpty() && !state.isLoading) {
-                EmptyHomeContent(
-                    onCreateClick = { viewModel.onEvent(HomeUiEvent.OnCreateReminderClick) }
-                )
-            } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    item {
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-                    items(
-                        items = state.reminders,
-                        key = { it.reminder.id }
-                    ) { reminderWithItems ->
-                        ReminderCard(
-                            reminderWithItems = reminderWithItems,
-                            onClick = {
-                                viewModel.onEvent(HomeUiEvent.OnReminderClick(reminderWithItems.reminder.id))
-                            }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // Today's Date & Reminders Title Header
+                item {
+                    val formattedDate = SimpleDateFormat("EEEE, MMM d", Locale.getDefault()).format(Date())
+                    Column(modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)) {
+                        Text(
+                            text = formattedDate,
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = "Reminders",
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold
                         )
                     }
+                }
+
+                // Conditional Notification Warning Card
+                if (!state.isNotificationPermissionGranted) {
                     item {
-                        Spacer(modifier = Modifier.height(80.dp))
+                        WarningBanner(
+                            message = "Notification permissions required to receive reminders before departure.",
+                            actionLabel = "Enable in Settings",
+                            onActionClick = { viewModel.onEvent(HomeUiEvent.OnOpenNotificationSettingsClick) },
+                            modifier = Modifier.fillMaxWidth()
+                        )
                     }
+                }
+
+                // Active / Completed Filter Toggle
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        FilterChip(
+                            selected = state.selectedFilter == HomeFilterTab.ACTIVE,
+                            onClick = { viewModel.onEvent(HomeUiEvent.OnFilterTabSelected(HomeFilterTab.ACTIVE)) },
+                            label = { Text("Active") },
+                            modifier = Modifier.weight(1f)
+                        )
+                        FilterChip(
+                            selected = state.selectedFilter == HomeFilterTab.COMPLETED,
+                            onClick = { viewModel.onEvent(HomeUiEvent.OnFilterTabSelected(HomeFilterTab.COMPLETED)) },
+                            label = { Text("Completed") },
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+                }
+
+                // Content View Based on Selected Filter
+                if (state.selectedFilter == HomeFilterTab.ACTIVE) {
+                    if (state.activeReminders.isEmpty() && !state.isLoading) {
+                        item {
+                            EmptyHomeContent(
+                                title = "No Active Reminders",
+                                onCreateClick = { viewModel.onEvent(HomeUiEvent.OnCreateReminderClick) }
+                            )
+                        }
+                    } else {
+                        // Today Category
+                        if (state.todayReminders.isNotEmpty()) {
+                            item {
+                                CategoryHeader(title = "TODAY")
+                            }
+                            items(
+                                items = state.todayReminders,
+                                key = { "active_${it.reminder.id}" }
+                            ) { reminderWithItems ->
+                                ReminderCard(
+                                    reminderWithItems = reminderWithItems,
+                                    onClick = {
+                                        viewModel.onEvent(HomeUiEvent.OnReminderClick(reminderWithItems.reminder.id))
+                                    }
+                                )
+                            }
+                        }
+
+                        // Tomorrow Category
+                        if (state.tomorrowReminders.isNotEmpty()) {
+                            item {
+                                CategoryHeader(title = "TOMORROW")
+                            }
+                            items(
+                                items = state.tomorrowReminders,
+                                key = { "active_${it.reminder.id}" }
+                            ) { reminderWithItems ->
+                                ReminderCard(
+                                    reminderWithItems = reminderWithItems,
+                                    onClick = {
+                                        viewModel.onEvent(HomeUiEvent.OnReminderClick(reminderWithItems.reminder.id))
+                                    }
+                                )
+                            }
+                        }
+
+                        // Upcoming Category
+                        if (state.upcomingReminders.isNotEmpty()) {
+                            item {
+                                CategoryHeader(title = "UPCOMING")
+                            }
+                            items(
+                                items = state.upcomingReminders,
+                                key = { "active_${it.reminder.id}" }
+                            ) { reminderWithItems ->
+                                ReminderCard(
+                                    reminderWithItems = reminderWithItems,
+                                    onClick = {
+                                        viewModel.onEvent(HomeUiEvent.OnReminderClick(reminderWithItems.reminder.id))
+                                    }
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    // Completed Filter Selected
+                    if (state.completedReminders.isEmpty() && !state.isLoading) {
+                        item {
+                            EmptyHomeContent(
+                                title = "No Completed Reminders",
+                                onCreateClick = { viewModel.onEvent(HomeUiEvent.OnCreateReminderClick) }
+                            )
+                        }
+                    } else {
+                        items(
+                            items = state.completedReminders,
+                            key = { "completed_${it.reminder.id}" }
+                        ) { reminderWithItems ->
+                            ReminderCard(
+                                reminderWithItems = reminderWithItems,
+                                onClick = {
+                                    viewModel.onEvent(HomeUiEvent.OnReminderClick(reminderWithItems.reminder.id))
+                                }
+                            )
+                        }
+                    }
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(80.dp))
                 }
             }
         }
     }
+}
+
+@Composable
+fun CategoryHeader(
+    title: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.titleSmall,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.primary,
+        modifier = modifier.padding(top = 12.dp, bottom = 4.dp)
+    )
 }
 
 @Composable
@@ -165,6 +293,10 @@ fun ReminderCard(
     val iconVector = ContextIcons.getIconByName(reminder.contextIconName)
     val formattedDateTime = DateFormat.getDateFormat(context).format(Date(reminder.departureEpochMillis)) +
             " " + DateFormat.getTimeFormat(context).format(Date(reminder.departureEpochMillis))
+
+    val diffMillis = reminder.departureEpochMillis - System.currentTimeMillis()
+    val diffMinutes = (diffMillis / (1000 * 60)).toInt()
+    val isUrgent = diffMinutes in 1..60
 
     Card(
         modifier = modifier
@@ -208,19 +340,85 @@ fun ReminderCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Tags & Status Row
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // Notification Lead Time Tag
                 Surface(
                     shape = MaterialTheme.shapes.extraSmall,
-                    color = if (packedCount == totalCount && totalCount > 0)
-                        MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.secondaryContainer
+                    color = MaterialTheme.colorScheme.surface
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Notifications,
+                            contentDescription = null,
+                            modifier = Modifier.size(14.dp),
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "${reminder.notificationLeadMinutes} min before",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                // Urgency Tag ("Leaves in X min")
+                if (isUrgent) {
+                    Surface(
+                        shape = MaterialTheme.shapes.extraSmall,
+                        color = MaterialTheme.colorScheme.errorContainer
+                    ) {
+                        Text(
+                            text = "Leaves in $diffMinutes min",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onErrorContainer,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                // Packing Status Tag
+                val (statusText, badgeBg, badgeFg) = when {
+                    packedCount == totalCount && totalCount > 0 -> Triple(
+                        "Fully packed",
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.onPrimary
+                    )
+                    packedCount == 0 -> Triple(
+                        "Not started",
+                        MaterialTheme.colorScheme.surface,
+                        MaterialTheme.colorScheme.onSurface
+                    )
+                    else -> Triple(
+                        "$packedCount/$totalCount Packed",
+                        MaterialTheme.colorScheme.secondaryContainer,
+                        MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                }
+
+                Surface(
+                    shape = MaterialTheme.shapes.extraSmall,
+                    color = badgeBg
                 ) {
                     Text(
-                        text = "$packedCount/$totalCount Packed",
+                        text = statusText,
                         style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                        color = if (packedCount == totalCount && totalCount > 0)
-                            MaterialTheme.colorScheme.onPrimary
-                        else MaterialTheme.colorScheme.onSecondaryContainer
+                        color = badgeFg,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
                 }
             }
@@ -230,6 +428,7 @@ fun ReminderCard(
 
 @Composable
 fun EmptyHomeContent(
+    title: String,
     onCreateClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -249,7 +448,7 @@ fun EmptyHomeContent(
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "No Active Reminders",
+                text = title,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
