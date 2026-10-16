@@ -11,16 +11,23 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+
+val WarningYellowBg = Color(0xFFFFF3CD)
+val WarningYellowText = Color(0xFF856404)
+val WarningYellowIcon = Color(0xFFD97706)
+val WarningYellowButtonBg = Color(0xFFB45309)
 
 @Composable
 fun WarningBanner(
@@ -30,13 +37,10 @@ fun WarningBanner(
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-        ,
+        modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer,
-            contentColor = MaterialTheme.colorScheme.onErrorContainer
+            containerColor = WarningYellowBg,
+            contentColor = WarningYellowText
         )
     ) {
         Column(
@@ -48,12 +52,14 @@ fun WarningBanner(
                 Icon(
                     imageVector = Icons.Filled.Warning,
                     contentDescription = "Warning",
-                    tint = MaterialTheme.colorScheme.error
+                    tint = WarningYellowIcon
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     text = message,
                     style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium,
+                    color = WarningYellowText,
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -62,8 +68,14 @@ fun WarningBanner(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                Button(onClick = onActionClick) {
-                    Text(text = actionLabel)
+                Button(
+                    onClick = onActionClick,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = WarningYellowButtonBg,
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text(text = actionLabel, fontWeight = FontWeight.Bold)
                 }
             }
         }

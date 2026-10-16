@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Notifications
@@ -23,7 +25,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,8 +40,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.dontforget.core.ui.components.ContextIcons
 import com.example.dontforget.core.ui.components.WarningBanner
@@ -145,27 +148,14 @@ fun HomeScreen(
                     }
                 }
 
-                // Active / Completed Filter Toggle
+                // Active / Completed Segmented Filter Toggle
                 item {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        FilterChip(
-                            selected = state.selectedFilter == HomeFilterTab.ACTIVE,
-                            onClick = { viewModel.onEvent(HomeUiEvent.OnFilterTabSelected(HomeFilterTab.ACTIVE)) },
-                            label = { Text("Active") },
-                            modifier = Modifier.weight(1f)
-                        )
-                        FilterChip(
-                            selected = state.selectedFilter == HomeFilterTab.COMPLETED,
-                            onClick = { viewModel.onEvent(HomeUiEvent.OnFilterTabSelected(HomeFilterTab.COMPLETED)) },
-                            label = { Text("Completed") },
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
+                    SegmentedFilterToggle(
+                        selectedFilter = state.selectedFilter,
+                        onFilterTabSelected = { filterTab ->
+                            viewModel.onEvent(HomeUiEvent.OnFilterTabSelected(filterTab))
+                        }
+                    )
                 }
 
                 // Content View Based on Selected Filter
@@ -260,6 +250,80 @@ fun HomeScreen(
                     Spacer(modifier = Modifier.height(80.dp))
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun SegmentedFilterToggle(
+    selectedFilter: HomeFilterTab,
+    onFilterTabSelected: (HomeFilterTab) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+        ,
+        shape = RoundedCornerShape(50.dp),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        tonalElevation = 1.dp
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(4.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            FilterSegmentButton(
+                text = "Active",
+                isSelected = selectedFilter == HomeFilterTab.ACTIVE,
+                onClick = { onFilterTabSelected(HomeFilterTab.ACTIVE) },
+                modifier = Modifier.weight(1f)
+            )
+            FilterSegmentButton(
+                text = "Completed",
+                isSelected = selectedFilter == HomeFilterTab.COMPLETED,
+                onClick = { onFilterTabSelected(HomeFilterTab.COMPLETED) },
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+}
+
+@Composable
+fun FilterSegmentButton(
+    text: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        onClick = onClick,
+        modifier = modifier
+        ,
+        shape = RoundedCornerShape(50.dp),
+        color = if (isSelected)
+            MaterialTheme.colorScheme.primary
+        else
+            Color.Transparent
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                ,
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                textAlign = TextAlign.Center,
+                color = if (isSelected)
+                    MaterialTheme.colorScheme.onPrimary
+                else
+                    MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
