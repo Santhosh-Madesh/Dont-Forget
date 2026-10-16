@@ -1,6 +1,7 @@
 package com.example.dontforget.feature.home
 
 import android.text.format.DateFormat
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,11 +17,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.NotificationsActive
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -41,6 +45,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -343,6 +349,107 @@ fun CategoryHeader(
 }
 
 @Composable
+fun PackingProgressIndicator(
+    packedCount: Int,
+    totalCount: Int,
+    modifier: Modifier = Modifier
+) {
+    val isFullyPacked = packedCount == totalCount && totalCount > 0
+    val progressRatio = if (totalCount > 0) packedCount.toFloat() / totalCount.toFloat() else 0f
+
+    val trackColor = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f)
+    val progressColor = if (isFullyPacked) Color(0xFF2E7D32) else MaterialTheme.colorScheme.primary
+
+    Box(
+        modifier = modifier.size(40.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        if (isFullyPacked) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val strokeWidthPx = 3.dp.toPx()
+                drawCircle(
+                    color = progressColor,
+                    style = Stroke(width = strokeWidthPx)
+                )
+            }
+            Icon(
+                imageVector = Icons.Filled.Check,
+                contentDescription = "Fully packed",
+                tint = progressColor,
+                modifier = Modifier.size(20.dp)
+            )
+        } else {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val strokeWidthPx = 3.dp.toPx()
+                drawCircle(
+                    color = trackColor,
+                    style = Stroke(width = strokeWidthPx)
+                )
+                if (progressRatio > 0f) {
+                    drawArc(
+                        color = progressColor,
+                        startAngle = -90f,
+                        sweepAngle = 360f * progressRatio,
+                        useCenter = false,
+                        style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round)
+                    )
+                }
+            }
+            Text(
+                text = "$packedCount/$totalCount",
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.Bold,
+                color = if (packedCount > 0) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun PackingStatusBadge(
+    packedCount: Int,
+    totalCount: Int
+) {
+    if (packedCount == totalCount && totalCount > 0) {
+        Surface(
+            shape = RoundedCornerShape(50.dp),
+            color = Color(0xFFE8F5E9)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Check,
+                    contentDescription = null,
+                    modifier = Modifier.size(14.dp),
+                    tint = Color(0xFF2E7D32)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "Fully packed",
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF2E7D32)
+                )
+            }
+        }
+    } else if (packedCount == 0) {
+        Surface(
+            shape = RoundedCornerShape(50.dp),
+            color = MaterialTheme.colorScheme.surface
+        ) {
+            Text(
+                text = "Not started",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+            )
+        }
+    }
+}
+
+@Composable
 fun ReminderCard(
     reminderWithItems: ReminderWithItems,
     onClick: () -> Unit,
@@ -355,8 +462,16 @@ fun ReminderCard(
     val totalCount = items.size
 
     val iconVector = ContextIcons.getIconByName(reminder.contextIconName)
-    val formattedDateTime = DateFormat.getDateFormat(context).format(Date(reminder.departureEpochMillis)) +
-            " " + DateFormat.getTimeFormat(context).format(Date(reminder.departureEpochMillis))
+
+    val timeFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
+    val formattedTime = timeFormat.format(Date(reminder.departureEpochMillis))
+    val formattedDate = DateFormat.getDateFormat(context).format(Date(reminder.departureEpochMillis))
+
+    val subtitleText = when {
+        isToday(reminder.departureEpochMillis) -> "Today · $formattedTime"
+        isTomorrow(reminder.departureEpochMillis) -> "Tomorrow · $formattedTime"
+        else -> "Leaving at $formattedDate $formattedTime"
+    }
 
     val diffMillis = reminder.departureEpochMillis - System.currentTimeMillis()
     val diffMinutes = (diffMillis / (1000 * 60)).toInt()
@@ -373,12 +488,14 @@ fun ReminderCard(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
+            // Header Row: Icon avatar, Title/Subtitle, and Circular Progress
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // 1. Context Icon clipped full circle
                 Surface(
                     modifier = Modifier.size(40.dp),
-                    shape = MaterialTheme.shapes.small,
+                    shape = CircleShape,
                     color = MaterialTheme.colorScheme.primaryContainer
                 ) {
                     Box(contentAlignment = Alignment.Center) {
@@ -391,6 +508,8 @@ fun ReminderCard(
                     }
                 }
                 Spacer(modifier = Modifier.width(12.dp))
+
+                // 2. Title & Subtitle Column
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = reminder.contextTitle,
@@ -399,91 +518,127 @@ fun ReminderCard(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "Leaving at $formattedDateTime",
+                        text = subtitleText,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
+                Spacer(modifier = Modifier.width(8.dp))
+
+                // 3. Circular Progress Ring (3rd item of header row)
+                PackingProgressIndicator(
+                    packedCount = packedCount,
+                    totalCount = totalCount
+                )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            // Tags Section (Only displayed if reminder is NOT completed)
+            if (!reminder.isCompleted) {
+                Spacer(modifier = Modifier.height(12.dp))
 
-            // Tags & Status Row
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                // Notification Lead Time Tag
-                Surface(
-                    shape = MaterialTheme.shapes.extraSmall,
-                    color = MaterialTheme.colorScheme.surface
-                ) {
+                val showPackingBadge = (packedCount == totalCount && totalCount > 0) || (packedCount == 0)
+
+                if (isUrgent) {
+                    // Urgent State: Primary tags in row 1, Status badge in separate right-aligned row 2
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.Notifications,
-                            contentDescription = null,
-                            modifier = Modifier.size(14.dp),
-                            tint = MaterialTheme.colorScheme.onSurface
-                        )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text(
-                            text = "${reminder.notificationLeadMinutes} min before",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
+                        // Notification Lead Time Pill Tag
+                        Surface(
+                            shape = RoundedCornerShape(50.dp),
+                            color = MaterialTheme.colorScheme.surface
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Notifications,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(14.dp),
+                                    tint = MaterialTheme.colorScheme.onSurface
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "${reminder.notificationLeadMinutes} min before",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
 
-                // Urgency Tag ("Leaves in X min")
-                if (isUrgent) {
-                    Surface(
-                        shape = MaterialTheme.shapes.extraSmall,
-                        color = MaterialTheme.colorScheme.errorContainer
+                        // Urgency Pill Tag ("Leaves in X min")
+                        Surface(
+                            shape = RoundedCornerShape(50.dp),
+                            color = MaterialTheme.colorScheme.errorContainer
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Schedule,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(14.dp),
+                                    tint = MaterialTheme.colorScheme.onErrorContainer
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "Leaves in $diffMinutes min",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                )
+                            }
+                        }
+                    }
+
+                    // Row 2: Right-aligned packing status badge
+                    if (showPackingBadge) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+                            PackingStatusBadge(packedCount, totalCount)
+                        }
+                    }
+                } else {
+                    // Non-urgent State: Single row
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text(
-                            text = "Leaves in $diffMinutes min",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onErrorContainer,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                        )
+                        // Notification Lead Time Pill Tag
+                        Surface(
+                            shape = RoundedCornerShape(50.dp),
+                            color = MaterialTheme.colorScheme.surface
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Notifications,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(14.dp),
+                                    tint = MaterialTheme.colorScheme.onSurface
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text(
+                                    text = "${reminder.notificationLeadMinutes} min before",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+
+                        if (showPackingBadge) {
+                            Spacer(modifier = Modifier.weight(1f))
+                            PackingStatusBadge(packedCount, totalCount)
+                        }
                     }
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                // Packing Status Tag
-                val (statusText, badgeBg, badgeFg) = when {
-                    packedCount == totalCount && totalCount > 0 -> Triple(
-                        "Fully packed",
-                        MaterialTheme.colorScheme.primary,
-                        MaterialTheme.colorScheme.onPrimary
-                    )
-                    packedCount == 0 -> Triple(
-                        "Not started",
-                        MaterialTheme.colorScheme.surface,
-                        MaterialTheme.colorScheme.onSurface
-                    )
-                    else -> Triple(
-                        "$packedCount/$totalCount Packed",
-                        MaterialTheme.colorScheme.secondaryContainer,
-                        MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                }
-
-                Surface(
-                    shape = MaterialTheme.shapes.extraSmall,
-                    color = badgeBg
-                ) {
-                    Text(
-                        text = statusText,
-                        style = MaterialTheme.typography.labelMedium,
-                        color = badgeFg,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
-                    )
                 }
             }
         }
