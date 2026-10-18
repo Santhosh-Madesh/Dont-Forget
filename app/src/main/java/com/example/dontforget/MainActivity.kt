@@ -13,11 +13,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,17 +42,26 @@ import com.example.dontforget.feature.home.HomeUiEvent
 import com.example.dontforget.feature.home.HomeViewModel
 import com.example.dontforget.feature.reminderdetail.ReminderDetailScreen
 import com.example.dontforget.feature.reminderdetail.ReminderDetailViewModel
+import com.example.dontforget.notification.NotificationConstants
+import com.example.dontforget.notification.ReminderNotificationManager
 import com.example.dontforget.ui.theme.DontForgetTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
+
+    private val pendingReminderIdState = mutableStateOf<Long?>(null)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ReminderNotificationManager.createChannel(applicationContext)
+        handleIntent(intent)
+
         enableEdgeToEdge()
 
         val db = DontForgetDatabase.getDatabase(applicationContext)
-        val reminderRepo = ReminderRepositoryImpl(db.reminderDao(), db.checklistItemDao())
+        val reminderRepo = ReminderRepositoryImpl(db.reminderDao(), db.checklistItemDao(), applicationContext)
         val templateRepo = TemplateRepositoryImpl(db.contextDao(), db.templateDao(), db.checklistItemDao())
 
         setContent {
@@ -66,7 +75,15 @@ class MainActivity : ComponentActivity() {
 
                 val navController = rememberNavController()
 
-                Surface (modifier = Modifier.fillMaxSize()) {
+                val pendingReminderId = pendingReminderIdState.value
+                LaunchedEffect(pendingReminderId) {
+                    if (pendingReminderId != null && pendingReminderId != NotificationConstants.DEFAULT_REMINDER_ID) {
+                        navController.navigate(Route.ReminderDetail.createRoute(pendingReminderId))
+                        pendingReminderIdState.value = null
+                    }
+                }
+
+                Surface(modifier = Modifier.fillMaxSize()) {
                     NavHost(
                         navController = navController,
                         startDestination = Route.Home.route,
@@ -74,10 +91,10 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Route.Home.route) {
                             val homeViewModel = remember { HomeViewModel(reminderRepo) }
-
                             val context = LocalContext.current
-                            LaunchedEffect(Unit) {
-                                val hasPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+                            fun checkPermission(): Boolean {
+                                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                     ContextCompat.checkSelfPermission(
                                         context,
                                         Manifest.permission.POST_NOTIFICATIONS
@@ -85,7 +102,27 @@ class MainActivity : ComponentActivity() {
                                 } else {
                                     true
                                 }
-                                homeViewModel.onEvent(HomeUiEvent.OnNotificationPermissionStatusChanged(hasPermission))
+                            }
+
+                            val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+                            androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+                                val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+                                    if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                                        homeViewModel.onEvent(
+                                            HomeUiEvent.OnNotificationPermissionStatusChanged(checkPermission())
+                                        )
+                                    }
+                                }
+                                lifecycleOwner.lifecycle.addObserver(observer)
+                                onDispose {
+                                    lifecycleOwner.lifecycle.removeObserver(observer)
+                                }
+                            }
+
+                            val permissionLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+                                androidx.activity.result.contract.ActivityResultContracts.RequestPermission()
+                            ) { isGranted ->
+                                homeViewModel.onEvent(HomeUiEvent.OnNotificationPermissionStatusChanged(isGranted))
                             }
 
                             HomeScreen(
@@ -97,10 +134,14 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate(Route.CreateReminder.route)
                                 },
                                 onOpenNotificationSettings = {
-                                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                        data = Uri.fromParts("package", packageName, null)
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !checkPermission()) {
+                                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                    } else {
+                                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                            data = Uri.fromParts("package", packageName, null)
+                                        }
+                                        startActivity(intent)
                                     }
-                                    startActivity(intent)
                                 }
                             )
                         }
@@ -168,6 +209,21 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        val reminderId = intent?.getLongExtra(
+            NotificationConstants.EXTRA_REMINDER_ID,
+            NotificationConstants.DEFAULT_REMINDER_ID
+        )
+        if (reminderId != null && reminderId != NotificationConstants.DEFAULT_REMINDER_ID) {
+            pendingReminderIdState.value = reminderId
         }
     }
 }
