@@ -675,7 +675,8 @@ fun EmptyHomeContent(
             Text(
                 text = "Add a reminder for your upcoming departure so you don't forget your essential items.",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(24.dp))
             Button(onClick = onCreateClick) {

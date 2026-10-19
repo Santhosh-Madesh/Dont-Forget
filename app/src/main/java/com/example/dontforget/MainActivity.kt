@@ -13,10 +13,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,12 +26,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.dontforget.core.navigation.BottomNavItem
 import com.example.dontforget.core.navigation.Route
+import com.example.dontforget.core.ui.components.AppBottomBar
 import com.example.dontforget.data.local.DontForgetDatabase
 import com.example.dontforget.data.repository.ReminderRepositoryImpl
 import com.example.dontforget.data.repository.TemplateRepositoryImpl
@@ -74,6 +80,13 @@ class MainActivity : ComponentActivity() {
                 }
 
                 val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+
+                val showBottomBar = currentRoute in listOf(
+                    Route.Home.route,
+                    Route.TemplateManagement.route
+                )
 
                 val pendingReminderId = pendingReminderIdState.value
                 LaunchedEffect(pendingReminderId) {
@@ -84,127 +97,148 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    NavHost(
-                        navController = navController,
-                        startDestination = Route.Home.route,
-                        modifier = Modifier.padding(10.dp)
-                    ) {
-                        composable(Route.Home.route) {
-                            val homeViewModel = remember { HomeViewModel(reminderRepo) }
-                            val context = LocalContext.current
-
-                            fun checkPermission(): Boolean {
-                                return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                    ContextCompat.checkSelfPermission(
-                                        context,
-                                        Manifest.permission.POST_NOTIFICATIONS
-                                    ) == PackageManager.PERMISSION_GRANTED
-                                } else {
-                                    true
-                                }
-                            }
-
-                            val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
-                            androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
-                                val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
-                                    if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
-                                        homeViewModel.onEvent(
-                                            HomeUiEvent.OnNotificationPermissionStatusChanged(checkPermission())
-                                        )
-                                    }
-                                }
-                                lifecycleOwner.lifecycle.addObserver(observer)
-                                onDispose {
-                                    lifecycleOwner.lifecycle.removeObserver(observer)
-                                }
-                            }
-
-                            val permissionLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
-                                androidx.activity.result.contract.ActivityResultContracts.RequestPermission()
-                            ) { isGranted ->
-                                homeViewModel.onEvent(HomeUiEvent.OnNotificationPermissionStatusChanged(isGranted))
-                            }
-
-                            HomeScreen(
-                                viewModel = homeViewModel,
-                                onNavigateToDetail = { reminderId ->
-                                    navController.navigate(Route.ReminderDetail.createRoute(reminderId))
-                                },
-                                onNavigateToCreateReminder = {
-                                    navController.navigate(Route.CreateReminder.route)
-                                },
-                                onOpenNotificationSettings = {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !checkPermission()) {
-                                        permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                                    } else {
-                                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                            data = Uri.fromParts("package", packageName, null)
+                    Scaffold(
+                        bottomBar = {
+                            if (showBottomBar) {
+                                AppBottomBar(
+                                    currentRoute = currentRoute,
+                                    onNavItemClick = { item ->
+                                        if (currentRoute != item.route) {
+                                            navController.navigate(item.route) {
+                                                popUpTo(navController.graph.findStartDestination().id) {
+                                                    saveState = true
+                                                }
+                                                launchSingleTop = true
+                                                restoreState = true
+                                            }
                                         }
-                                        startActivity(intent)
+                                    }
+                                )
+                            }
+                        }
+                    ) { innerPadding ->
+                        NavHost(
+                            navController = navController,
+                            startDestination = Route.Home.route,
+                            modifier = Modifier.padding(innerPadding)
+                        ) {
+                            composable(Route.Home.route) {
+                                val homeViewModel = remember { HomeViewModel(reminderRepo) }
+                                val context = LocalContext.current
+
+                                fun checkPermission(): Boolean {
+                                    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                        ContextCompat.checkSelfPermission(
+                                            context,
+                                            Manifest.permission.POST_NOTIFICATIONS
+                                        ) == PackageManager.PERMISSION_GRANTED
+                                    } else {
+                                        true
                                     }
                                 }
-                            )
-                        }
-                        composable(Route.CreateReminder.route) {
-                            val createViewModel = remember { CreateReminderViewModel(reminderRepo, templateRepo) }
-                            CreateReminderScreen(
-                                viewModel = createViewModel,
-                                onNavigateHome = {
-                                    navController.popBackStack(Route.Home.route, false)
-                                },
-                                onNavigateToReminderDetail = { reminderId ->
-                                    navController.navigate(Route.ReminderDetail.createRoute(reminderId)) {
-                                        popUpTo(Route.Home.route)
+
+                                val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+                                androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+                                    val observer = androidx.lifecycle.LifecycleEventObserver { _, event ->
+                                        if (event == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
+                                            homeViewModel.onEvent(
+                                                HomeUiEvent.OnNotificationPermissionStatusChanged(checkPermission())
+                                            )
+                                        }
+                                    }
+                                    lifecycleOwner.lifecycle.addObserver(observer)
+                                    onDispose {
+                                        lifecycleOwner.lifecycle.removeObserver(observer)
                                     }
                                 }
-                            )
-                        }
-                        composable(
-                            route = Route.EditReminder.ROUTE,
-                            arguments = listOf(navArgument("reminderId") { type = NavType.LongType })
-                        ) { backStackEntry ->
-                            val id = backStackEntry.arguments?.getLong("reminderId") ?: 0L
-                            val editViewModel = remember(id) { EditReminderViewModel(reminderRepo) }
-                            EditReminderScreen(
-                                reminderId = id,
-                                viewModel = editViewModel,
-                                onNavigateBack = {
-                                    navController.popBackStack()
+
+                                val permissionLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+                                    androidx.activity.result.contract.ActivityResultContracts.RequestPermission()
+                                ) { isGranted ->
+                                    homeViewModel.onEvent(HomeUiEvent.OnNotificationPermissionStatusChanged(isGranted))
                                 }
-                            )
-                        }
-                        composable(Route.TemplateManagement.route) {
-                            PlaceholderScreen(title = "Template Management Screen (Chunk 3)")
-                        }
-                        composable(
-                            route = Route.TemplateDetail.ROUTE,
-                            arguments = listOf(navArgument("templateId") { type = NavType.LongType })
-                        ) { backStackEntry ->
-                            val id = backStackEntry.arguments?.getLong("templateId") ?: 0L
-                            PlaceholderScreen(title = "Template Detail Screen #$id (Chunk 3)")
-                        }
-                        composable(
-                            route = Route.TemplateEdit.ROUTE,
-                            arguments = listOf(navArgument("templateId") { type = NavType.LongType })
-                        ) { backStackEntry ->
-                            val id = backStackEntry.arguments?.getLong("templateId") ?: 0L
-                            PlaceholderScreen(title = "Template Edit Screen #$id (Chunk 3)")
-                        }
-                        composable(
-                            route = Route.ReminderDetail.ROUTE,
-                            arguments = listOf(navArgument("reminderId") { type = NavType.LongType })
-                        ) { backStackEntry ->
-                            val id = backStackEntry.arguments?.getLong("reminderId") ?: 0L
-                            val detailViewModel = remember(id) { ReminderDetailViewModel(id, reminderRepo) }
-                            ReminderDetailScreen(
-                                viewModel = detailViewModel,
-                                onNavigateToEdit = { reminderId ->
-                                    navController.navigate(Route.EditReminder.createRoute(reminderId))
-                                },
-                                onNavigateBack = {
-                                    navController.popBackStack()
-                                }
-                            )
+
+                                HomeScreen(
+                                    viewModel = homeViewModel,
+                                    onNavigateToDetail = { reminderId ->
+                                        navController.navigate(Route.ReminderDetail.createRoute(reminderId))
+                                    },
+                                    onNavigateToCreateReminder = {
+                                        navController.navigate(Route.CreateReminder.route)
+                                    },
+                                    onOpenNotificationSettings = {
+                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !checkPermission()) {
+                                            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                                        } else {
+                                            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                                data = Uri.fromParts("package", packageName, null)
+                                            }
+                                            startActivity(intent)
+                                        }
+                                    }
+                                )
+                            }
+                            composable(Route.CreateReminder.route) {
+                                val createViewModel = remember { CreateReminderViewModel(reminderRepo, templateRepo) }
+                                CreateReminderScreen(
+                                    viewModel = createViewModel,
+                                    onNavigateHome = {
+                                        navController.popBackStack(Route.Home.route, false)
+                                    },
+                                    onNavigateToReminderDetail = { reminderId ->
+                                        navController.navigate(Route.ReminderDetail.createRoute(reminderId)) {
+                                            popUpTo(Route.Home.route)
+                                        }
+                                    }
+                                )
+                            }
+                            composable(
+                                route = Route.EditReminder.ROUTE,
+                                arguments = listOf(navArgument("reminderId") { type = NavType.LongType })
+                            ) { backStackEntry ->
+                                val id = backStackEntry.arguments?.getLong("reminderId") ?: 0L
+                                val editViewModel = remember(id) { EditReminderViewModel(reminderRepo) }
+                                EditReminderScreen(
+                                    reminderId = id,
+                                    viewModel = editViewModel,
+                                    onNavigateBack = {
+                                        navController.popBackStack()
+                                    }
+                                )
+                            }
+                            composable(Route.TemplateManagement.route) {
+                                PlaceholderScreen(title = "Template Management Screen (Chunk 3)")
+                            }
+                            composable(
+                                route = Route.TemplateDetail.ROUTE,
+                                arguments = listOf(navArgument("templateId") { type = NavType.LongType })
+                            ) { backStackEntry ->
+                                val id = backStackEntry.arguments?.getLong("templateId") ?: 0L
+                                PlaceholderScreen(title = "Template Detail Screen #$id (Chunk 3)")
+                            }
+                            composable(
+                                route = Route.TemplateEdit.ROUTE,
+                                arguments = listOf(navArgument("templateId") { type = NavType.LongType })
+                            ) { backStackEntry ->
+                                val id = backStackEntry.arguments?.getLong("templateId") ?: 0L
+                                PlaceholderScreen(title = "Template Edit Screen #$id (Chunk 3)")
+                            }
+                            composable(
+                                route = Route.ReminderDetail.ROUTE,
+                                arguments = listOf(navArgument("reminderId") { type = NavType.LongType })
+                            ) { backStackEntry ->
+                                val id = backStackEntry.arguments?.getLong("reminderId") ?: 0L
+                                val detailViewModel = remember(id) { ReminderDetailViewModel(id, reminderRepo) }
+                                ReminderDetailScreen(
+                                    viewModel = detailViewModel,
+                                    onNavigateToEdit = { reminderId ->
+                                        navController.navigate(Route.EditReminder.createRoute(reminderId))
+                                    },
+                                    onNavigateBack = {
+                                        navController.popBackStack()
+                                    }
+                                )
+                            }
                         }
                     }
                 }
