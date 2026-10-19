@@ -1,7 +1,7 @@
 # Feature Contract — Chunk 01: Home Feature (`chunk-01-home-and-reminders`)
 
 ## 1. Goal
-Provide the Home Screen displaying today's date header, "Reminders" section header, notification warning card (only when permissions are missing), Active vs Completed filter toggle, active reminders categorized into "Today", "Tomorrow", and "Upcoming", completed reminders list, detailed reminder card tags (notification lead time, packing status, urgency tag), and FAB navigation to Create Reminder.
+Provide the Home Screen displaying today's date header, "Reminders" section header, notification warning card (only when permissions are missing), Active vs Completed filter toggle, active reminders categorized into "Overdue", "Today", "Tomorrow", and "Upcoming", completed reminders list, detailed reminder card tags (notification lead time, packing status, urgency tag), and FAB navigation to Create Reminder.
 
 ## 2. Scope (Home Feature Focus)
 
@@ -19,7 +19,8 @@ Provide the Home Screen displaying today's date header, "Reminders" section head
 - **Active / Completed Filter Toggle**:
   - Toggle buttons/card switch between "Active" and "Completed" views.
 - **Active Reminders Categorized List**:
-  - Reminders grouped into 3 date categories based on departure timestamp:
+  - Reminders grouped into 4 date categories based on departure timestamp:
+    - **Overdue**: Departure date is prior to today's start of day (displayed with warning amber styling).
     - **Today**: Departure date matches today's date.
     - **Tomorrow**: Departure date matches tomorrow's date.
     - **Upcoming**: Departure date is beyond tomorrow's date.
@@ -59,7 +60,7 @@ Provide the Home Screen displaying today's date header, "Reminders" section head
 - **AC-HOME-2**: Content header displays today's formatted date (Day, Month Date) followed by the "Reminders" section header.
 - **AC-HOME-3**: Notification Warning Card is visible ONLY when notification permissions are NOT granted, and hidden when granted.
 - **AC-HOME-4**: Filter toggle allows switching between "Active" and "Completed" views.
-- **AC-HOME-5**: Active reminders are categorized under "Today", "Tomorrow", and "Upcoming" headers based on departure dates.
+- **AC-HOME-5**: Active reminders are categorized under "Overdue", "Today", "Tomorrow", and "Upcoming" headers based on departure dates.
 - **AC-HOME-6**: `ReminderCard` displays notification lead time tag (with bell icon), packing status ("Fully packed", "Not started", or "X/Y Packed"), and urgency tag ("Leaves in X min") if departure is within 1 hour.
 - **AC-HOME-7**: Selecting "Completed" tab displays the completed reminders list.
 - **AC-HOME-8**: Displays contextual empty state when no reminders exist in the selected filter view.

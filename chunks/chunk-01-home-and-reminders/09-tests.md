@@ -16,7 +16,7 @@
 6. **Permission State Update**:
    - `onNotificationPermissionStatusChanged updates isNotificationPermissionGranted in HomeUiState`
 7. **Active Categorization Logic**:
-   - `todayReminders, tomorrowReminders, and upcomingReminders correctly partition active reminders by departure date`
+   - `overdueReminders, todayReminders, tomorrowReminders, and upcomingReminders correctly partition active reminders by departure date`
 
 ## 2. Test File Location
 - [`app/src/test/java/com/example/dontforget/feature/home/HomeViewModelTest.kt`](file:///D:/DontForget/app/src/test/java/com/example/dontforget/feature/home/HomeViewModelTest.kt)

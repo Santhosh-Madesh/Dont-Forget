@@ -5,7 +5,7 @@
 - **Header Section**: Formatted today's date (Day, Month Date) and `"Reminders"` title.
 - **Conditional Notification Card**: Displayed ONLY when notification permission is NOT granted (`isNotificationPermissionGranted == false`), hugging container layout width/padding. Completely hidden when granted.
 - **Active / Completed Filter Toggle**: Allows toggling between viewing Active reminders and Completed reminders, hugging container layout width/padding.
-- **Active Reminders Categorization**: Active reminders partitioned into `"Today"`, `"Tomorrow"`, and `"Upcoming"` sections based on departure dates.
+- **Active Reminders Categorization**: Active reminders partitioned into `"Overdue"`, `"Today"`, `"Tomorrow"`, and `"Upcoming"` sections based on departure dates. Overdue section is styled in warning yellow/amber.
 - **Detailed Reminder Card (`ReminderCard`)**:
   - Context Icon + Context Title + Departure Date & Time string.
   - Notification Lead Time Tag (bell icon + `"X min before"`).
@@ -21,7 +21,7 @@
 - **AC-HOME-2**: PASSED (Content header displays today's date and "Reminders" section title).
 - **AC-HOME-3**: PASSED (Notification warning card rendered ONLY if permissions are missing; hidden when granted).
 - **AC-HOME-4**: PASSED (Filter toggle allows switching between "Active" and "Completed" tabs).
-- **AC-HOME-5**: PASSED (Active reminders categorized under "Today", "Tomorrow", and "Upcoming" headers).
+- **AC-HOME-5**: PASSED (Active reminders categorized under "Overdue", "Today", "Tomorrow", and "Upcoming" headers).
 - **AC-HOME-6**: PASSED (`ReminderCard` renders notification tag, packing status tag, and urgency tag if departure is within 1h).
 - **AC-HOME-7**: PASSED (Selecting "Completed" tab displays completed reminders list).
 - **AC-HOME-8**: PASSED (Displays contextual empty state when selected filter view is empty).

@@ -174,6 +174,28 @@ fun HomeScreen(
                             )
                         }
                     } else {
+                        // Overdue Category
+                        if (state.overdueReminders.isNotEmpty()) {
+                            item {
+                                CategoryHeader(
+                                    title = "OVERDUE",
+                                    titleColor = Color(0xFFD97706)
+                                )
+                            }
+                            items(
+                                items = state.overdueReminders,
+                                key = { "active_${it.reminder.id}" }
+                            ) { reminderWithItems ->
+                                ReminderCard(
+                                    reminderWithItems = reminderWithItems,
+                                    isOverdue = true,
+                                    onClick = {
+                                        viewModel.onEvent(HomeUiEvent.OnReminderClick(reminderWithItems.reminder.id))
+                                    }
+                                )
+                            }
+                        }
+
                         // Today Category
                         if (state.todayReminders.isNotEmpty()) {
                             item {
@@ -337,13 +359,14 @@ fun FilterSegmentButton(
 @Composable
 fun CategoryHeader(
     title: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    titleColor: Color = MaterialTheme.colorScheme.primary
 ) {
     Text(
         text = title,
         style = MaterialTheme.typography.titleSmall,
         fontWeight = FontWeight.Bold,
-        color = MaterialTheme.colorScheme.primary,
+        color = titleColor,
         modifier = modifier.padding(top = 12.dp, bottom = 4.dp)
     )
 }
@@ -453,7 +476,8 @@ private fun PackingStatusBadge(
 fun ReminderCard(
     reminderWithItems: ReminderWithItems,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isOverdue: Boolean = false
 ) {
     val context = LocalContext.current
     val reminder = reminderWithItems.reminder
@@ -468,6 +492,7 @@ fun ReminderCard(
     val formattedDate = DateFormat.getDateFormat(context).format(Date(reminder.departureEpochMillis))
 
     val subtitleText = when {
+        isOverdue -> "Overdue · $formattedDate $formattedTime"
         isToday(reminder.departureEpochMillis) -> "Today · $formattedTime"
         isTomorrow(reminder.departureEpochMillis) -> "Tomorrow · $formattedTime"
         else -> "Leaving at $formattedDate $formattedTime"
@@ -482,7 +507,7 @@ fun ReminderCard(
             .fillMaxWidth()
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
+            containerColor = if (isOverdue) Color(0xFFFFFBEB) else MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
         Column(

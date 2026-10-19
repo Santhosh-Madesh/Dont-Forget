@@ -19,6 +19,12 @@ data class HomeUiState(
 ) : UiState {
 
     /**
+     * Active reminders departing prior to today's start of day
+     */
+    val overdueReminders: List<ReminderWithItems>
+        get() = activeReminders.filter { isOverdue(it.reminder.departureEpochMillis) }
+
+    /**
      * Active reminders departing today
      */
     val todayReminders: List<ReminderWithItems>

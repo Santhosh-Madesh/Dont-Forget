@@ -19,6 +19,9 @@ data class HomeUiState(
     val isNotificationPermissionGranted: Boolean = true
 ) : UiState {
 
+    val overdueReminders: List<ReminderWithItems>
+        get() = activeReminders.filter { isOverdue(it.reminder.departureEpochMillis) }
+
     val todayReminders: List<ReminderWithItems>
         get() = activeReminders.filter { isToday(it.reminder.departureEpochMillis) }
 
@@ -48,6 +51,16 @@ sealed interface HomeUiSideEffect : UiSideEffect {
     data class NavigateToDetail(val reminderId: Long) : HomeUiSideEffect
     object NavigateToCreateReminder : HomeUiSideEffect
     object OpenNotificationSettings : HomeUiSideEffect
+}
+
+fun isOverdue(epochMillis: Long): Boolean {
+    val startOfToday = Calendar.getInstance().apply {
+        set(Calendar.HOUR_OF_DAY, 0)
+        set(Calendar.MINUTE, 0)
+        set(Calendar.SECOND, 0)
+        set(Calendar.MILLISECOND, 0)
+    }.timeInMillis
+    return epochMillis < startOfToday
 }
 
 fun isToday(epochMillis: Long): Boolean {

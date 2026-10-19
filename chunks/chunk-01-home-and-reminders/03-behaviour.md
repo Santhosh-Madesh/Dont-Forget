@@ -5,7 +5,8 @@
   - `HomeViewModel` observes `ReminderRepository.getActiveReminders()` and `ReminderRepository.getCompletedReminders()`.
   - When database changes occur in Room, state updates reactively.
 - **Categorization Logic (Active Reminders)**:
-  - Active reminders are partitioned into three categories based on departure timestamp:
+  - Active reminders are partitioned into four categories based on departure timestamp:
+    - **Overdue**: Departure date is prior to today's start of day (`isOverdue(departureEpochMillis)`). Displayed before "Today" with warning yellow/amber header and card container tint.
     - **Today**: Departure date falls on today's calendar day (`isToday(departureEpochMillis)`).
     - **Tomorrow**: Departure date falls on tomorrow's calendar day (`isTomorrow(departureEpochMillis)`).
     - **Upcoming**: Departure date is after tomorrow (`isUpcoming(departureEpochMillis)`).
@@ -13,7 +14,7 @@
 ## 2. Filter Tab Toggle Behaviour
 - User clicking "Active" or "Completed" toggle emits `OnFilterTabSelected(HomeFilterTab)`.
 - Updates `HomeUiState.selectedFilter`.
-- If `Active` is selected, renders the 3 categorized active sections ("Today", "Tomorrow", "Upcoming").
+- If `Active` is selected, renders the 4 categorized active sections ("Overdue", "Today", "Tomorrow", "Upcoming").
 - If `Completed` is selected, renders the list of completed reminders.
 
 ## 3. Notification Permission Warning Card Behaviour
