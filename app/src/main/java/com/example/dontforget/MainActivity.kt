@@ -48,6 +48,12 @@ import com.example.dontforget.feature.home.HomeUiEvent
 import com.example.dontforget.feature.home.HomeViewModel
 import com.example.dontforget.feature.reminderdetail.ReminderDetailScreen
 import com.example.dontforget.feature.reminderdetail.ReminderDetailViewModel
+import com.example.dontforget.feature.templates.detail.TemplateDetailScreen
+import com.example.dontforget.feature.templates.detail.TemplateDetailViewModel
+import com.example.dontforget.feature.templates.edit.TemplateEditScreen
+import com.example.dontforget.feature.templates.edit.TemplateEditViewModel
+import com.example.dontforget.feature.templates.management.TemplateManagementScreen
+import com.example.dontforget.feature.templates.management.TemplateManagementViewModel
 import com.example.dontforget.notification.NotificationConstants
 import com.example.dontforget.notification.ReminderNotificationManager
 import com.example.dontforget.ui.theme.DontForgetTheme
@@ -207,21 +213,46 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             composable(Route.TemplateManagement.route) {
-                                PlaceholderScreen(title = "Template Management Screen (Chunk 3)")
+                                val managementViewModel = remember { TemplateManagementViewModel(templateRepo) }
+                                TemplateManagementScreen(
+                                    viewModel = managementViewModel,
+                                    onNavigateToDetail = { templateId ->
+                                        navController.navigate(Route.TemplateDetail.createRoute(templateId))
+                                    },
+                                    onNavigateToCreate = {
+                                        navController.navigate(Route.TemplateEdit.createRoute(0L))
+                                    }
+                                )
                             }
                             composable(
                                 route = Route.TemplateDetail.ROUTE,
                                 arguments = listOf(navArgument("templateId") { type = NavType.LongType })
                             ) { backStackEntry ->
                                 val id = backStackEntry.arguments?.getLong("templateId") ?: 0L
-                                PlaceholderScreen(title = "Template Detail Screen #$id (Chunk 3)")
+                                val detailViewModel = remember(id) { TemplateDetailViewModel(id, templateRepo) }
+                                TemplateDetailScreen(
+                                    viewModel = detailViewModel,
+                                    onNavigateToEdit = { templateId ->
+                                        navController.navigate(Route.TemplateEdit.createRoute(templateId))
+                                    },
+                                    onNavigateBack = {
+                                        navController.popBackStack()
+                                    }
+                                )
                             }
                             composable(
                                 route = Route.TemplateEdit.ROUTE,
                                 arguments = listOf(navArgument("templateId") { type = NavType.LongType })
                             ) { backStackEntry ->
                                 val id = backStackEntry.arguments?.getLong("templateId") ?: 0L
-                                PlaceholderScreen(title = "Template Edit Screen #$id (Chunk 3)")
+                                val editViewModel = remember(id) { TemplateEditViewModel(id, templateRepo) }
+                                TemplateEditScreen(
+                                    templateId = id,
+                                    viewModel = editViewModel,
+                                    onNavigateBack = {
+                                        navController.popBackStack()
+                                    }
+                                )
                             }
                             composable(
                                 route = Route.ReminderDetail.ROUTE,

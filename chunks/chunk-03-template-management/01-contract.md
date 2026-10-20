@@ -8,14 +8,15 @@ Provide Template Management features allowing users to view, create, edit, and d
 ### In Scope
 - **Template Management Screen (`TemplateManagementScreen`)**:
   - Displays all available templates grouped by Context (Context title, icon, and template list).
+  - Accessible via bottom navigation bar ("Templates" tab) and direct route `Route.TemplateManagement`.
   - Empty state when no templates exist ("No Templates Yet" graphic + CTA "Create Template").
   - FAB "+ New Template" navigating to `TemplateEditScreen(templateId = 0)`.
 - **Template Detail Screen (`TemplateDetailScreen`)**:
   - Displays Template Context icon, Context title, Template title, and checklist items list.
   - Top bar actions: Edit (`Route.TemplateEdit(templateId)`) and Delete with confirmation dialog.
 - **Template Edit Screen (`TemplateEditScreen`)**:
-  - Create new template or edit existing template.
-  - Context selection (pick existing Context or enter new Context title & pick Material Vector icon).
+  - Create new template or edit existing template (`templateId = 0` for creation, `templateId > 0` for editing).
+  - Context selection (pick existing Context from `getAllContexts()` or create new Context title & pick Material Vector icon via `ContextIcons`).
   - Template title input field.
   - Checklist item manager (add item, remove item, edit text, reorder items).
   - Save CTA button: validates required fields and persists template + items to `TemplateRepository`.
@@ -32,6 +33,7 @@ Provide Template Management features allowing users to view, create, edit, and d
     - `getAllTemplates(): Flow<List<TemplateWithContextAndItems>>`
     - `getTemplateById(id: Long): Flow<TemplateWithContextAndItems?>`
     - `getAllContexts(): Flow<List<ContextEntity>>`
+    - `getContextByTitle(title: String): ContextEntity?`
     - `insertContext(context: ContextEntity): Long`
     - `insertTemplate(template: TemplateEntity, items: List<ChecklistItemEntity>): Long`
     - `updateTemplate(template: TemplateEntity, items: List<ChecklistItemEntity>)`

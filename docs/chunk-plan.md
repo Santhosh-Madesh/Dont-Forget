@@ -46,7 +46,7 @@ This document divides the DONT FORGET project into independent feature chunks fo
 
 ---
 
-## Chunk 3: Template Management (`chunk-03-template-management`) — **STATUS: READY TO START**
+## Chunk 3: Template Management (`chunk-03-template-management`) — **STATUS: COMPLETED & APPROVED**
 - **One-paragraph Scope**: Implements Template Management features allowing users to view all available templates (grouped or listed by Context), view Template details, create a new Template from scratch, edit existing Templates (context title, checklist items, re-order items), and delete Templates with confirmation dialogs. Enforces template isolation so mutating or deleting a template never alters existing reminders created from it.
 - **Spec Sections**: User Journeys 1, 3; Requirements 5, 6, 7, 8, 12, 13, 14, 15; Rules 2, 3, 4, 8; Screens 8 (Template Management), 11 (Template View), 12 (Template Edit).
 - **Files Owned**: `com/example/dontforget/feature/templates/**`.
@@ -67,7 +67,7 @@ This document divides the DONT FORGET project into independent feature chunks fo
 - **Interfaces Exposed**: `NotificationScheduler`, `ReminderAlarmReceiver`, `NotificationPermissionHandler`.
 - **Routes In/Out**:
   - Deep Link Intent -> `Route.ReminderDetail(reminderId)`.
-- **Status**: **Ready to start**
+- **Status**: **Completed & Approved**
 
 ---
 
