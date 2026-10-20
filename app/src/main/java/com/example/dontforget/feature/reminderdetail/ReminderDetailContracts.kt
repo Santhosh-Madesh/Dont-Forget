@@ -21,6 +21,7 @@ data class ReminderDetailUiState(
 sealed interface ReminderDetailUiEvent : UiEvent {
     data class OnToggleItemPacked(val itemId: Long, val isPacked: Boolean) : ReminderDetailUiEvent
     object OnPackAllClick : ReminderDetailUiEvent
+    object OnUnpackAllClick : ReminderDetailUiEvent
     object OnUpdateClick : ReminderDetailUiEvent
     object OnMarkCompleteClick : ReminderDetailUiEvent
     object OnConfirmDeleteClick : ReminderDetailUiEvent

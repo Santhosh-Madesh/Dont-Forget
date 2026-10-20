@@ -15,6 +15,9 @@ interface ChecklistItemDao {
     @Update
     suspend fun updateItem(item: ChecklistItemEntity)
 
+    @Update
+    suspend fun updateItems(items: List<ChecklistItemEntity>)
+
     @Query("UPDATE checklist_items SET isPacked = :isPacked WHERE id = :itemId")
     suspend fun updatePackedStatus(itemId: Long, isPacked: Boolean)
 

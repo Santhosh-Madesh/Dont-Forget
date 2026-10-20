@@ -13,6 +13,7 @@ interface ReminderRepository {
     suspend fun insertReminder(reminder: ReminderEntity, items: List<ChecklistItemEntity>): Long
     suspend fun updateReminder(reminder: ReminderEntity, items: List<ChecklistItemEntity>)
     suspend fun updateChecklistItemPacked(itemId: Long, isPacked: Boolean)
+    suspend fun updateChecklistItems(items: List<ChecklistItemEntity>)
     suspend fun packAllItems(reminderId: Long)
     suspend fun markReminderComplete(reminderId: Long, completedEpochMillis: Long = System.currentTimeMillis())
     suspend fun restoreReminder(reminderId: Long)

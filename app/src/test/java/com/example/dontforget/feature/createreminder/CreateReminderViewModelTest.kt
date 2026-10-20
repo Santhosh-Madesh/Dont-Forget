@@ -138,6 +138,8 @@ class FakeReminderRepository : ReminderRepository {
 
     override suspend fun updateChecklistItemPacked(itemId: Long, isPacked: Boolean) {}
 
+    override suspend fun updateChecklistItems(items: List<ChecklistItemEntity>) {}
+
     override suspend fun packAllItems(reminderId: Long) {}
 
     override suspend fun markReminderComplete(reminderId: Long, completedEpochMillis: Long) {}

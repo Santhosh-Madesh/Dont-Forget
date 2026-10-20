@@ -109,6 +109,15 @@ class FakeChecklistItemDao : ChecklistItemDao {
         }
     }
 
+    override suspend fun updateItems(items: List<ChecklistItemEntity>) {
+        items.forEach { updatedItem ->
+            val index = this.items.indexOfFirst { it.id == updatedItem.id }
+            if (index != -1) {
+                this.items[index] = updatedItem
+            }
+        }
+    }
+
     override suspend fun updatePackedStatus(itemId: Long, isPacked: Boolean) {
         val index = items.indexOfFirst { it.id == itemId }
         if (index != -1) {

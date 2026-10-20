@@ -238,8 +238,16 @@ fun ReminderDetailScreen(
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
-                TextButton(onClick = { viewModel.onEvent(ReminderDetailUiEvent.OnPackAllClick) }) {
-                    Text("Pack All")
+                TextButton(
+                    onClick = {
+                        if (state.isAllPacked) {
+                            viewModel.onEvent(ReminderDetailUiEvent.OnUnpackAllClick)
+                        } else {
+                            viewModel.onEvent(ReminderDetailUiEvent.OnPackAllClick)
+                        }
+                    }
+                ) {
+                    Text(if (state.isAllPacked) "Unpack All" else "Pack All")
                 }
             }
 

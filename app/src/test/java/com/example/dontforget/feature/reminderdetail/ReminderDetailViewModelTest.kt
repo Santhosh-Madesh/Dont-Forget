@@ -58,4 +58,58 @@ class ReminderDetailViewModelTest {
         assertEquals(ReminderDetailUiSideEffect.NavigateBack, effect)
         assertEquals(0, fakeReminderDao.reminders.size)
     }
+
+    @Test
+    fun `onToggleItemPacked updates UI state locally without updating repository until onUpdateClick`() = runTest(testDispatcher) {
+        val reminder = ReminderEntity(id = 1L, contextId = 1, contextTitle = "Work", contextIconName = "work", departureEpochMillis = 100)
+        fakeReminderDao.insertReminder(reminder)
+        fakeChecklistItemDao.insertItems(listOf(
+            com.example.dontforget.data.local.entity.ChecklistItemEntity(id = 10L, parentId = 1L, parentType = "REMINDER", text = "Keys", isPacked = false)
+        ))
+        val viewModel = ReminderDetailViewModel(1L, repository)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Toggle item
+        viewModel.onEvent(ReminderDetailUiEvent.OnToggleItemPacked(10L, true))
+
+        // UI state updated
+        assertEquals(true, viewModel.uiState.value.localItems.find { it.id == 10L }?.isPacked)
+        // Repo not updated yet
+        assertEquals(false, fakeChecklistItemDao.items.find { it.id == 10L }?.isPacked)
+
+        // Click update
+        viewModel.onEvent(ReminderDetailUiEvent.OnUpdateClick)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Repo updated now
+        assertEquals(true, fakeChecklistItemDao.items.find { it.id == 10L }?.isPacked)
+    }
+
+    @Test
+    fun `onPackAllClick and onUnpackAllClick update local items and are persisted on update`() = runTest(testDispatcher) {
+        val reminder = ReminderEntity(id = 1L, contextId = 1, contextTitle = "Work", contextIconName = "work", departureEpochMillis = 100)
+        fakeReminderDao.insertReminder(reminder)
+        fakeChecklistItemDao.insertItems(listOf(
+            com.example.dontforget.data.local.entity.ChecklistItemEntity(id = 10L, parentId = 1L, parentType = "REMINDER", text = "Keys", isPacked = false),
+            com.example.dontforget.data.local.entity.ChecklistItemEntity(id = 11L, parentId = 1L, parentType = "REMINDER", text = "Wallet", isPacked = false)
+        ))
+        val viewModel = ReminderDetailViewModel(1L, repository)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Pack All
+        viewModel.onEvent(ReminderDetailUiEvent.OnPackAllClick)
+        assertTrue(viewModel.uiState.value.isAllPacked)
+        assertEquals(false, fakeChecklistItemDao.items.all { it.isPacked })
+
+        // Unpack All
+        viewModel.onEvent(ReminderDetailUiEvent.OnUnpackAllClick)
+        assertTrue(viewModel.uiState.value.localItems.all { !it.isPacked })
+
+        // Pack All & Update
+        viewModel.onEvent(ReminderDetailUiEvent.OnPackAllClick)
+        viewModel.onEvent(ReminderDetailUiEvent.OnUpdateClick)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(fakeChecklistItemDao.items.all { it.isPacked })
+    }
 }

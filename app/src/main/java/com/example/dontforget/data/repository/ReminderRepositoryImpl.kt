@@ -85,6 +85,10 @@ class ReminderRepositoryImpl(
         checklistItemDao.updatePackedStatus(itemId, isPacked)
     }
 
+    override suspend fun updateChecklistItems(items: List<ChecklistItemEntity>) {
+        checklistItemDao.updateItems(items)
+    }
+
     override suspend fun packAllItems(reminderId: Long) {
         checklistItemDao.packAllForReminder(reminderId)
     }

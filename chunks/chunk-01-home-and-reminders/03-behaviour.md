@@ -36,3 +36,12 @@
 - Tapping a reminder card -> emits `OnReminderClick(reminderId)` -> sends `NavigateToDetail(reminderId)` side effect.
 - Tapping FAB "+ New Reminder" -> emits `OnCreateReminderClick` -> sends `NavigateToCreateReminder` side effect.
 - Tapping Top Bar Notification Icon -> emits `OnNotificationIconClick` -> mock handling (no navigation action for now).
+
+## 6. Reminder Detail Checklist & Packing Persistence Behaviour
+- **Deferred Persistence**:
+  - Checking/unchecking checklist items, clicking "Pack All", or clicking "Unpack All" updates `localItems` in `ReminderDetailUiState` **only** in memory.
+  - The repository / database is **not** written to immediately on item toggle or pack/unpack all clicks.
+  - Persistence to Room database occurs **only when the user clicks the "Update" button** (`OnUpdateClick`), which batch updates all items via `reminderRepository.updateChecklistItems(localItems)`.
+- **Dynamic "Pack All" / "Unpack All" Toggle**:
+  - When `isAllPacked == false`, the header button displays `"Pack All"` and dispatches `OnPackAllClick`.
+  - When `isAllPacked == true`, the header button displays `"Unpack All"` and dispatches `OnUnpackAllClick`.

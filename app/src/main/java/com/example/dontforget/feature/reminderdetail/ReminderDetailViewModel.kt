@@ -40,22 +40,24 @@ class ReminderDetailViewModel(
                     if (item.id == event.itemId) item.copy(isPacked = event.isPacked) else item
                 }
                 updateState { copy(localItems = updated, restoreWarning = null) }
-                viewModelScope.launch {
-                    reminderRepository.updateChecklistItemPacked(event.itemId, event.isPacked)
-                }
             }
             ReminderDetailUiEvent.OnPackAllClick -> {
                 val updated = currentState.localItems.map { it.copy(isPacked = true) }
                 updateState { copy(localItems = updated) }
-                viewModelScope.launch {
-                    reminderRepository.packAllItems(reminderId)
-                }
+            }
+            ReminderDetailUiEvent.OnUnpackAllClick -> {
+                val updated = currentState.localItems.map { it.copy(isPacked = false) }
+                updateState { copy(localItems = updated) }
             }
             ReminderDetailUiEvent.OnUpdateClick -> {
-                sendEffect(ReminderDetailUiSideEffect.ShowSnackbar("Checklist updated"))
+                viewModelScope.launch {
+                    reminderRepository.updateChecklistItems(currentState.localItems)
+                    sendEffect(ReminderDetailUiSideEffect.ShowSnackbar("Checklist updated"))
+                }
             }
             ReminderDetailUiEvent.OnMarkCompleteClick -> {
                 viewModelScope.launch {
+                    reminderRepository.updateChecklistItems(currentState.localItems)
                     reminderRepository.markReminderComplete(reminderId)
                     sendEffect(ReminderDetailUiSideEffect.NavigateBack)
                 }
@@ -82,6 +84,7 @@ class ReminderDetailViewModel(
                     updateState { copy(restoreWarning = "Uncheck at least 1 item to restore reminder") }
                 } else {
                     viewModelScope.launch {
+                        reminderRepository.updateChecklistItems(currentState.localItems)
                         reminderRepository.restoreReminder(reminderId)
                         updateState { copy(isCompleted = false, restoreWarning = null) }
                         sendEffect(ReminderDetailUiSideEffect.ShowSnackbar("Reminder restored as active"))
