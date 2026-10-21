@@ -55,9 +55,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.dontforget.R
 import com.example.dontforget.core.ui.components.ConfirmationDialog
 import com.example.dontforget.core.ui.components.ContextIcons
 import java.text.SimpleDateFormat
@@ -94,7 +96,7 @@ fun EditReminderScreen(
         modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text(text = "Edit Reminder") },
+                title = { Text(text = stringResource(id = R.string.edit_reminder_title)) },
                 navigationIcon = {
                     IconButton(onClick = { viewModel.onEvent(EditReminderUiEvent.RequestDiscard) }) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -156,7 +158,7 @@ fun EditReminderScreen(
                     }
 
                     item {
-                        Text(text = "Select Icon:", style = MaterialTheme.typography.titleMedium)
+                        Text(text = stringResource(id = R.string.edit_reminder_select_icon), style = MaterialTheme.typography.titleMedium)
                         Spacer(modifier = Modifier.height(8.dp))
                         FlowRow(
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -193,7 +195,7 @@ fun EditReminderScreen(
                     }
 
                     item {
-                        Text(text = "Departure Date & Time:", style = MaterialTheme.typography.titleMedium)
+                        Text(text = stringResource(id = R.string.edit_reminder_departure_title), style = MaterialTheme.typography.titleMedium)
                         Spacer(modifier = Modifier.height(8.dp))
                         Card(
                             modifier = Modifier.fillMaxWidth(),
@@ -247,7 +249,7 @@ fun EditReminderScreen(
                     }
 
                     item {
-                        Text(text = "Notification Lead Time:", style = MaterialTheme.typography.titleMedium)
+                        Text(text = stringResource(id = R.string.edit_reminder_lead_time_title), style = MaterialTheme.typography.titleMedium)
                         Spacer(modifier = Modifier.height(8.dp))
                         FlowRow(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -266,7 +268,7 @@ fun EditReminderScreen(
                             FilterChip(
                                 selected = state.isCustomLeadTime,
                                 onClick = { viewModel.onEvent(EditReminderUiEvent.UpdateCustomLeadMinutes(state.customLeadMinutesInput)) },
-                                label = { Text("Custom") }
+                                label = { Text(stringResource(id = R.string.create_reminder_custom_lead)) }
                             )
                         }
 
@@ -275,7 +277,7 @@ fun EditReminderScreen(
                             OutlinedTextField(
                                 value = state.customLeadMinutesInput,
                                 onValueChange = { viewModel.onEvent(EditReminderUiEvent.UpdateCustomLeadMinutes(it)) },
-                                label = { Text("Lead Time in Minutes") },
+                                label = { Text(stringResource(id = R.string.create_reminder_lead_time_label)) },
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -283,7 +285,7 @@ fun EditReminderScreen(
                     }
 
                     item {
-                        Text(text = "Checklist Items:", style = MaterialTheme.typography.titleMedium)
+                        Text(text = stringResource(id = R.string.edit_reminder_checklist_title), style = MaterialTheme.typography.titleMedium)
                         Spacer(modifier = Modifier.height(8.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -292,7 +294,7 @@ fun EditReminderScreen(
                             OutlinedTextField(
                                 value = newItemText,
                                 onValueChange = { newItemText = it },
-                                label = { Text("Add Item") },
+                                label = { Text(stringResource(id = R.string.create_reminder_add_item_label)) },
                                 modifier = Modifier.weight(1f),
                                 singleLine = true,
                                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -360,7 +362,7 @@ fun EditReminderScreen(
                             onClick = { viewModel.onEvent(EditReminderUiEvent.SaveChanges) },
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(text = "Save Changes")
+                            Text(text = stringResource(id = R.string.edit_reminder_btn_save))
                         }
                     }
                 }
@@ -370,10 +372,10 @@ fun EditReminderScreen(
 
     if (state.showDiscardDialog) {
         ConfirmationDialog(
-            title = "Discard Changes?",
-            message = "Are you sure you want to discard your changes? Unsaved modifications will be lost.",
-            confirmText = "Discard",
-            dismissText = "Cancel",
+            title = stringResource(id = R.string.edit_reminder_discard_title),
+            message = stringResource(id = R.string.edit_reminder_discard_msg),
+            confirmText = stringResource(id = R.string.common_btn_discard),
+            dismissText = stringResource(id = R.string.common_btn_cancel),
             onConfirm = { viewModel.onEvent(EditReminderUiEvent.ConfirmDiscard) },
             onDismiss = { viewModel.onEvent(EditReminderUiEvent.DismissDiscardDialog) }
         )

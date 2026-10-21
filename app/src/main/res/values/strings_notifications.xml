@@ -1,0 +1,6 @@
+<resources>
+    <!-- Notifications & Scheduling -->
+    <string name="notif_channel_name">Reminder Notifications</string>
+    <string name="notif_channel_desc">Channel for scheduling and receiving reminder alerts</string>
+    <string name="notif_content_title_prefix">Departure Reminder: %s</string>
+</resources>

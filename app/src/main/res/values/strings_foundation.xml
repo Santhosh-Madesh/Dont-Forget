@@ -1,0 +1,12 @@
+<resources>
+    <!-- Foundation & Shared Components -->
+    <string name="common_app_name">DONT FORGET</string>
+    <string name="common_btn_confirm">Confirm</string>
+    <string name="common_btn_cancel">Cancel</string>
+    <string name="common_btn_delete">Delete</string>
+    <string name="common_btn_discard">Discard</string>
+    <string name="common_btn_dismiss">Dismiss</string>
+    <string name="common_nav_reminders">Reminders</string>
+    <string name="common_nav_templates">Templates</string>
+    <string name="common_warning_icon_desc">Warning</string>
+</resources>

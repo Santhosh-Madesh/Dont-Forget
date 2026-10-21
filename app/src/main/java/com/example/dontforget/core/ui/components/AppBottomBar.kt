@@ -8,6 +8,7 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.example.dontforget.core.navigation.BottomNavItem
 
 @Composable
@@ -23,17 +24,18 @@ fun AppBottomBar(
     ) {
         BottomNavItem.items.forEach { item ->
             val isSelected = currentRoute == item.route
+            val itemTitle = stringResource(id = item.titleResId)
             NavigationBarItem(
                 selected = isSelected,
                 onClick = { onNavItemClick(item) },
                 icon = {
                     Icon(
                         imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
-                        contentDescription = item.title
+                        contentDescription = itemTitle
                     )
                 },
                 label = {
-                    Text(text = item.title)
+                    Text(text = itemTitle)
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,

@@ -18,12 +18,14 @@ object ReminderNotificationManager {
 
     fun createChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelName = context.getString(R.string.notif_channel_name)
+            val channelDesc = context.getString(R.string.notif_channel_desc)
             val channel = NotificationChannel(
                 NotificationConstants.CHANNEL_ID,
-                NotificationConstants.CHANNEL_NAME,
+                channelName,
                 NotificationManager.IMPORTANCE_HIGH
             ).apply {
-                description = NotificationConstants.CHANNEL_DESCRIPTION
+                description = channelDesc
             }
 
             val notificationManager: NotificationManager =
@@ -52,7 +54,7 @@ object ReminderNotificationManager {
 
         val builder = NotificationCompat.Builder(context, NotificationConstants.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(title.ifBlank { context.getString(R.string.app_name) })
+            .setContentTitle(title.ifBlank { context.getString(R.string.common_app_name) })
             .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)

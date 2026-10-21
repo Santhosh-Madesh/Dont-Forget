@@ -23,7 +23,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -32,9 +31,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -63,9 +60,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.dontforget.R
 import com.example.dontforget.core.ui.components.ConfirmationDialog
 import com.example.dontforget.core.ui.components.ContextIcons
 import java.text.SimpleDateFormat
@@ -73,7 +73,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateReminderScreen(
     viewModel: CreateReminderViewModel,
@@ -83,7 +83,7 @@ fun CreateReminderScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(viewModel.effect) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 CreateReminderUiSideEffect.NavigateHome -> onNavigateHome()
@@ -94,11 +94,11 @@ fun CreateReminderScreen(
     }
 
     val title = when (state.currentStep) {
-        CreateReminderStep.SELECT_TEMPLATE -> "Select Template"
-        CreateReminderStep.CONTEXT -> "Context Details"
-        CreateReminderStep.CHECKLIST -> "Checklist Items"
-        CreateReminderStep.DATE_TIME_NOTIFICATION -> "Departure & Notification"
-        CreateReminderStep.PREVIEW -> "Reminder Preview"
+        CreateReminderStep.SELECT_TEMPLATE -> stringResource(id = R.string.create_reminder_title_template)
+        CreateReminderStep.CONTEXT -> stringResource(id = R.string.create_reminder_title_context)
+        CreateReminderStep.CHECKLIST -> stringResource(id = R.string.create_reminder_title_checklist)
+        CreateReminderStep.DATE_TIME_NOTIFICATION -> stringResource(id = R.string.create_reminder_title_date_time)
+        CreateReminderStep.PREVIEW -> stringResource(id = R.string.create_reminder_title_preview)
     }
 
     Scaffold(
@@ -113,7 +113,7 @@ fun CreateReminderScreen(
                 },
                 actions = {
                     TextButton(onClick = { viewModel.onEvent(CreateReminderUiEvent.RequestDiscard) }) {
-                        Text(text = "Cancel")
+                        Text(text = stringResource(id = R.string.common_btn_cancel))
                     }
                 }
             )
@@ -200,10 +200,10 @@ fun CreateReminderScreen(
 
     if (state.showDiscardDialog) {
         ConfirmationDialog(
-            title = "Discard Reminder?",
-            message = "Are you sure you want to discard this reminder? All unsaved changes will be lost.",
-            confirmText = "Discard",
-            dismissText = "Continue Editing",
+            title = stringResource(id = R.string.create_reminder_discard_title),
+            message = stringResource(id = R.string.create_reminder_discard_msg),
+            confirmText = stringResource(id = R.string.common_btn_discard),
+            dismissText = stringResource(id = R.string.common_btn_cancel),
             onConfirm = { viewModel.onEvent(CreateReminderUiEvent.ConfirmDiscard) },
             onDismiss = { viewModel.onEvent(CreateReminderUiEvent.DismissDiscardDialog) }
         )
@@ -218,17 +218,12 @@ private fun StepSelectTemplate(
     Column(modifier = Modifier.fillMaxSize()) {
         OutlinedButton(
             onClick = { onEvent(CreateReminderUiEvent.SkipTemplate) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         ) {
-            Text(text = "Create Custom Reminder from Scratch")
+            Text(text = stringResource(id = R.string.create_reminder_skip_template))
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Or select a Template:",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
 
         if (state.availableTemplates.isEmpty()) {
             Box(
@@ -238,7 +233,7 @@ private fun StepSelectTemplate(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "No saved templates found.",
+                    text = "No saved templates available.\nClick above to create a custom reminder.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -248,36 +243,45 @@ private fun StepSelectTemplate(
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(state.availableTemplates) { templateWithItems ->
+                items(
+                    items = state.availableTemplates,
+                    key = { it.template.id }
+                ) { templateData ->
+                    val isSelected = state.selectedTemplateId == templateData.template.id
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { onEvent(CreateReminderUiEvent.SelectTemplate(templateWithItems.template.id)) },
+                            .clickable { onEvent(CreateReminderUiEvent.SelectTemplate(templateData.template.id)) },
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                            containerColor = if (isSelected)
+                                MaterialTheme.colorScheme.primaryContainer
+                            else
+                                MaterialTheme.colorScheme.surfaceVariant
                         )
                     ) {
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
+                            modifier = Modifier.padding(16.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                imageVector = ContextIcons.getIconByName(templateWithItems.context.iconName),
+                                imageVector = ContextIcons.getIconByName(templateData.context.iconName),
                                 contentDescription = null,
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(32.dp)
+                                modifier = Modifier.size(32.dp),
+                                tint = if (isSelected)
+                                    MaterialTheme.colorScheme.onPrimaryContainer
+                                else
+                                    MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Spacer(modifier = Modifier.width(16.dp))
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = templateWithItems.template.title,
-                                    style = MaterialTheme.typography.titleMedium
+                                    text = templateData.template.title,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold
                                 )
                                 Text(
-                                    text = "${templateWithItems.context.title} • ${templateWithItems.items.size} items",
-                                    style = MaterialTheme.typography.bodySmall,
+                                    text = "${templateData.context.title} • ${templateData.items.size} items",
+                                    style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
@@ -299,7 +303,7 @@ private fun StepContext(
         OutlinedTextField(
             value = state.contextTitle,
             onValueChange = { onEvent(CreateReminderUiEvent.UpdateContextTitle(it)) },
-            label = { Text("Context Title (e.g. College, Work, Gym)") },
+            label = { Text(stringResource(id = R.string.create_reminder_context_label)) },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )
@@ -350,7 +354,7 @@ private fun StepContext(
             onClick = { onEvent(CreateReminderUiEvent.NextStep) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Next: Checklist Items")
+            Text(text = stringResource(id = R.string.create_reminder_btn_next_checklist))
         }
     }
 }
@@ -370,7 +374,7 @@ private fun StepChecklist(
             OutlinedTextField(
                 value = newItemText,
                 onValueChange = { newItemText = it },
-                label = { Text("Add Checklist Item") },
+                label = { Text(stringResource(id = R.string.create_reminder_add_item_label)) },
                 modifier = Modifier.weight(1f),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
@@ -468,7 +472,7 @@ private fun StepChecklist(
             onClick = { onEvent(CreateReminderUiEvent.NextStep) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Next: Departure & Notification")
+            Text(text = stringResource(id = R.string.create_reminder_btn_next_date_time))
         }
     }
 }
@@ -568,7 +572,7 @@ private fun StepDateTimeNotification(
             FilterChip(
                 selected = state.isCustomLeadTime,
                 onClick = { onEvent(CreateReminderUiEvent.UpdateCustomLeadMinutes(state.customLeadMinutesInput)) },
-                label = { Text("Custom") }
+                label = { Text(stringResource(id = R.string.create_reminder_custom_lead)) }
             )
         }
 
@@ -577,7 +581,7 @@ private fun StepDateTimeNotification(
             OutlinedTextField(
                 value = state.customLeadMinutesInput,
                 onValueChange = { onEvent(CreateReminderUiEvent.UpdateCustomLeadMinutes(it)) },
-                label = { Text("Lead Time in Minutes") },
+                label = { Text(stringResource(id = R.string.create_reminder_lead_time_label)) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -589,7 +593,7 @@ private fun StepDateTimeNotification(
             onClick = { onEvent(CreateReminderUiEvent.NextStep) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Next: Preview")
+            Text(text = stringResource(id = R.string.create_reminder_btn_next_preview))
         }
     }
 }
@@ -707,7 +711,7 @@ private fun StepPreview(
             OutlinedTextField(
                 value = state.templateTitleInput,
                 onValueChange = { onEvent(CreateReminderUiEvent.UpdateTemplateTitle(it)) },
-                label = { Text("Template Title") },
+                label = { Text(stringResource(id = R.string.create_reminder_template_title_label)) },
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -718,7 +722,7 @@ private fun StepPreview(
             onClick = { onEvent(CreateReminderUiEvent.SaveReminder) },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Confirm & Create Reminder")
+            Text(text = stringResource(id = R.string.create_reminder_btn_confirm_create))
         }
     }
 }

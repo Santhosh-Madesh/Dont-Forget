@@ -44,8 +44,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.dontforget.R
 import com.example.dontforget.core.ui.components.AppTopBar
 import com.example.dontforget.core.ui.components.ConfirmationDialog
 import com.example.dontforget.core.ui.components.ContextIcons
@@ -76,10 +78,10 @@ fun TemplateEditScreen(
 
     if (uiState.showDiscardDialog) {
         ConfirmationDialog(
-            title = "Discard Changes",
-            message = "Are you sure you want to discard your unsaved changes?",
-            confirmText = "Discard",
-            dismissText = "Cancel",
+            title = stringResource(id = R.string.template_edit_discard_title),
+            message = stringResource(id = R.string.template_edit_discard_msg),
+            confirmText = stringResource(id = R.string.common_btn_discard),
+            dismissText = stringResource(id = R.string.common_btn_cancel),
             onConfirm = { viewModel.onEvent(TemplateEditUiEvent.OnConfirmDiscardClick) },
             onDismiss = { viewModel.onEvent(TemplateEditUiEvent.OnDismissDiscardDialogClick) }
         )
@@ -89,7 +91,10 @@ fun TemplateEditScreen(
         modifier = modifier,
         topBar = {
             AppTopBar(
-                title = if (templateId > 0L) "Edit Template" else "Create Template",
+                title = if (templateId > 0L)
+                    stringResource(id = R.string.template_edit_title_edit)
+                else
+                    stringResource(id = R.string.template_edit_title_create),
                 onBackClick = { viewModel.onEvent(TemplateEditUiEvent.OnBackClick) }
             )
         },
@@ -115,7 +120,7 @@ fun TemplateEditScreen(
                         if (uiState.validationError != null) {
                             WarningBanner(
                                 message = uiState.validationError!!,
-                                actionLabel = "Dismiss",
+                                actionLabel = stringResource(id = R.string.common_btn_dismiss),
                                 onActionClick = { viewModel.onEvent(TemplateEditUiEvent.OnTemplateTitleChange(uiState.templateTitleInput)) },
                                 modifier = Modifier.fillMaxWidth()
                             )
@@ -124,7 +129,7 @@ fun TemplateEditScreen(
 
                         // Template Title
                         Text(
-                            text = "Template Title",
+                            text = stringResource(id = R.string.template_edit_section_title),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -132,7 +137,7 @@ fun TemplateEditScreen(
                         OutlinedTextField(
                             value = uiState.templateTitleInput,
                             onValueChange = { viewModel.onEvent(TemplateEditUiEvent.OnTemplateTitleChange(it)) },
-                            placeholder = { Text("e.g. Daily College Packing") },
+                            placeholder = { Text(stringResource(id = R.string.template_edit_placeholder_title)) },
                             modifier = Modifier.fillMaxWidth(),
                             singleLine = true
                         )
@@ -141,7 +146,7 @@ fun TemplateEditScreen(
 
                         // Context Selection
                         Text(
-                            text = "Context",
+                            text = stringResource(id = R.string.template_edit_section_context),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -154,12 +159,12 @@ fun TemplateEditScreen(
                             FilterChip(
                                 selected = !uiState.isNewContext,
                                 onClick = { viewModel.onEvent(TemplateEditUiEvent.OnToggleNewContext(false)) },
-                                label = { Text("Select Existing Context") }
+                                label = { Text(stringResource(id = R.string.template_edit_chip_existing)) }
                             )
                             FilterChip(
                                 selected = uiState.isNewContext,
                                 onClick = { viewModel.onEvent(TemplateEditUiEvent.OnToggleNewContext(true)) },
-                                label = { Text("+ Create New Context") }
+                                label = { Text(stringResource(id = R.string.template_edit_chip_new)) }
                             )
                         }
 
@@ -168,7 +173,7 @@ fun TemplateEditScreen(
                         if (!uiState.isNewContext) {
                             if (uiState.availableContexts.isEmpty()) {
                                 Text(
-                                    text = "No existing contexts found. Toggle '+ Create New Context' above.",
+                                    text = stringResource(id = R.string.template_edit_no_existing_contexts),
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -201,14 +206,14 @@ fun TemplateEditScreen(
                             OutlinedTextField(
                                 value = uiState.contextTitleInput,
                                 onValueChange = { viewModel.onEvent(TemplateEditUiEvent.OnContextTitleChange(it)) },
-                                label = { Text("New Context Title") },
-                                placeholder = { Text("e.g. Gym, Library, Office") },
+                                label = { Text(stringResource(id = R.string.template_edit_label_new_context)) },
+                                placeholder = { Text(stringResource(id = R.string.template_edit_placeholder_new_context)) },
                                 modifier = Modifier.fillMaxWidth(),
                                 singleLine = true
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
-                                text = "Select Icon for Context",
+                                text = stringResource(id = R.string.template_edit_label_icon_picker),
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.SemiBold
                             )
@@ -253,7 +258,7 @@ fun TemplateEditScreen(
 
                         // Checklist Items Manager
                         Text(
-                            text = "Checklist Items",
+                            text = stringResource(id = R.string.template_edit_section_checklist),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -266,7 +271,7 @@ fun TemplateEditScreen(
                             OutlinedTextField(
                                 value = uiState.newItemInput,
                                 onValueChange = { viewModel.onEvent(TemplateEditUiEvent.OnNewItemInputChange(it)) },
-                                placeholder = { Text("Add checklist item...") },
+                                placeholder = { Text(stringResource(id = R.string.template_edit_placeholder_add_item)) },
                                 modifier = Modifier.weight(1f),
                                 singleLine = true
                             )
@@ -369,7 +374,10 @@ fun TemplateEditScreen(
                                 )
                             } else {
                                 Text(
-                                    text = if (templateId > 0L) "Save Template Changes" else "Save Template",
+                                    text = if (templateId > 0L)
+                                        stringResource(id = R.string.template_edit_btn_save_changes)
+                                    else
+                                        stringResource(id = R.string.template_edit_btn_save),
                                     fontWeight = FontWeight.Bold
                                 )
                             }

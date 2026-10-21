@@ -35,8 +35,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.dontforget.R
 import com.example.dontforget.core.ui.components.AppTopBar
 import com.example.dontforget.core.ui.components.ConfirmationDialog
 import com.example.dontforget.core.ui.components.ContextIcons
@@ -69,10 +71,10 @@ fun TemplateDetailScreen(
 
     if (uiState.showDeleteDialog) {
         ConfirmationDialog(
-            title = "Delete Template",
-            message = "Are you sure you want to delete this template? Existing reminders created from this template will not be affected.",
-            confirmText = "Delete",
-            dismissText = "Cancel",
+            title = stringResource(id = R.string.template_detail_delete_title),
+            message = stringResource(id = R.string.template_detail_delete_msg),
+            confirmText = stringResource(id = R.string.common_btn_delete),
+            dismissText = stringResource(id = R.string.common_btn_cancel),
             onConfirm = { viewModel.onEvent(TemplateDetailUiEvent.OnConfirmDeleteClick) },
             onDismiss = { viewModel.onEvent(TemplateDetailUiEvent.OnDismissDeleteDialogClick) }
         )
@@ -82,7 +84,7 @@ fun TemplateDetailScreen(
         modifier = modifier,
         topBar = {
             AppTopBar(
-                title = "Template Details",
+                title = stringResource(id = R.string.template_detail_app_bar_title),
                 onBackClick = { viewModel.onEvent(TemplateDetailUiEvent.OnBackClick) },
                 actions = {
                     if (uiState.templateWithContextAndItems != null) {
@@ -115,7 +117,7 @@ fun TemplateDetailScreen(
                 }
                 uiState.templateWithContextAndItems == null -> {
                     Text(
-                        text = "Template not found",
+                        text = stringResource(id = R.string.template_detail_not_found),
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -163,7 +165,7 @@ fun TemplateDetailScreen(
 
                         val itemsSorted = templateData.items.sortedBy { it.displayOrder }
                         Text(
-                            text = "Checklist Items (${itemsSorted.size})",
+                            text = stringResource(id = R.string.template_detail_items_header, itemsSorted.size),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface

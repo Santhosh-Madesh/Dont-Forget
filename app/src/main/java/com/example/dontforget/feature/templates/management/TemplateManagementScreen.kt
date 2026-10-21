@@ -35,9 +35,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.dontforget.R
 import com.example.dontforget.core.ui.components.AppTopBar
 import com.example.dontforget.core.ui.components.ContextIcons
 import com.example.dontforget.data.local.model.TemplateWithContextAndItems
@@ -67,7 +69,7 @@ fun TemplateManagementScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            AppTopBar(title = "Template Management")
+            AppTopBar(title = stringResource(id = R.string.template_mgt_app_bar_title))
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -77,7 +79,7 @@ fun TemplateManagementScreen(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = "New Template"
+                    contentDescription = stringResource(id = R.string.template_mgt_fab_new)
                 )
             }
         }
@@ -191,7 +193,10 @@ fun TemplateCard(
                 Spacer(modifier = Modifier.height(4.dp))
                 val itemCount = templateWithItems.items.size
                 Text(
-                    text = if (itemCount == 1) "1 item" else "$itemCount items",
+                    text = if (itemCount == 1)
+                        stringResource(id = R.string.template_mgt_card_single_item)
+                    else
+                        stringResource(id = R.string.template_mgt_card_multi_items, itemCount),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                 )
@@ -225,14 +230,14 @@ fun EmptyTemplateContent(
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "No Templates Yet",
+            text = stringResource(id = R.string.template_mgt_empty_title),
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Create reusable templates to quickly generate checklists for frequent activities.",
+            text = stringResource(id = R.string.template_mgt_empty_desc),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -245,7 +250,7 @@ fun EmptyTemplateContent(
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Create Template")
+            Text(text = stringResource(id = R.string.template_mgt_btn_create))
         }
     }
 }

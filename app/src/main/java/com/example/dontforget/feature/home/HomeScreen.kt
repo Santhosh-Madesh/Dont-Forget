@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,7 +38,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -48,13 +46,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.dontforget.R
 import com.example.dontforget.core.ui.components.ContextIcons
 import com.example.dontforget.core.ui.components.WarningBanner
 import com.example.dontforget.data.local.model.ReminderWithItems
-import kotlinx.coroutines.flow.collectLatest
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -70,12 +69,18 @@ fun HomeScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.effect.collectLatest { effect ->
+    androidx.compose.runtime.LaunchedEffect(viewModel.effect) {
+        viewModel.effect.collect { effect ->
             when (effect) {
-                is HomeUiSideEffect.NavigateToDetail -> onNavigateToDetail(effect.reminderId)
-                HomeUiSideEffect.NavigateToCreateReminder -> onNavigateToCreateReminder()
-                HomeUiSideEffect.OpenNotificationSettings -> onOpenNotificationSettings()
+                is HomeUiSideEffect.NavigateToDetail -> {
+                    onNavigateToDetail(effect.reminderId)
+                }
+                is HomeUiSideEffect.NavigateToCreateReminder -> {
+                    onNavigateToCreateReminder()
+                }
+                is HomeUiSideEffect.OpenNotificationSettings -> {
+                    onOpenNotificationSettings()
+                }
             }
         }
     }
@@ -86,7 +91,7 @@ fun HomeScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "DONT FORGET",
+                        text = stringResource(id = R.string.home_app_bar_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
@@ -108,7 +113,7 @@ fun HomeScreen(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Add,
-                    contentDescription = "New Reminder"
+                    contentDescription = stringResource(id = R.string.home_btn_create_reminder)
                 )
             }
         }
@@ -135,7 +140,7 @@ fun HomeScreen(
                         )
                         Spacer(modifier = Modifier.height(2.dp))
                         Text(
-                            text = "Reminders",
+                            text = stringResource(id = R.string.home_header_title),
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -146,8 +151,8 @@ fun HomeScreen(
                 if (!state.isNotificationPermissionGranted) {
                     item {
                         WarningBanner(
-                            message = "Notification permissions required to receive reminders before departure.",
-                            actionLabel = "Enable in Settings",
+                            message = stringResource(id = R.string.home_notif_banner_message),
+                            actionLabel = stringResource(id = R.string.home_notif_banner_action),
                             onActionClick = { viewModel.onEvent(HomeUiEvent.OnOpenNotificationSettingsClick) },
                             modifier = Modifier.fillMaxWidth()
                         )
@@ -169,7 +174,7 @@ fun HomeScreen(
                     if (state.activeReminders.isEmpty() && !state.isLoading) {
                         item {
                             EmptyHomeContent(
-                                title = "No Active Reminders",
+                                title = stringResource(id = R.string.home_empty_active_title),
                                 onCreateClick = { viewModel.onEvent(HomeUiEvent.OnCreateReminderClick) }
                             )
                         }
@@ -178,7 +183,7 @@ fun HomeScreen(
                         if (state.overdueReminders.isNotEmpty()) {
                             item {
                                 CategoryHeader(
-                                    title = "OVERDUE",
+                                    title = stringResource(id = R.string.home_category_overdue),
                                     titleColor = Color(0xFFD97706)
                                 )
                             }
@@ -199,7 +204,7 @@ fun HomeScreen(
                         // Today Category
                         if (state.todayReminders.isNotEmpty()) {
                             item {
-                                CategoryHeader(title = "TODAY")
+                                CategoryHeader(title = stringResource(id = R.string.home_category_today))
                             }
                             items(
                                 items = state.todayReminders,
@@ -217,7 +222,7 @@ fun HomeScreen(
                         // Tomorrow Category
                         if (state.tomorrowReminders.isNotEmpty()) {
                             item {
-                                CategoryHeader(title = "TOMORROW")
+                                CategoryHeader(title = stringResource(id = R.string.home_category_tomorrow))
                             }
                             items(
                                 items = state.tomorrowReminders,
@@ -235,7 +240,7 @@ fun HomeScreen(
                         // Upcoming Category
                         if (state.upcomingReminders.isNotEmpty()) {
                             item {
-                                CategoryHeader(title = "UPCOMING")
+                                CategoryHeader(title = stringResource(id = R.string.home_category_upcoming))
                             }
                             items(
                                 items = state.upcomingReminders,
@@ -255,7 +260,7 @@ fun HomeScreen(
                     if (state.completedReminders.isEmpty() && !state.isLoading) {
                         item {
                             EmptyHomeContent(
-                                title = "No Completed Reminders",
+                                title = stringResource(id = R.string.home_empty_completed_title),
                                 onCreateClick = { viewModel.onEvent(HomeUiEvent.OnCreateReminderClick) }
                             )
                         }
@@ -289,9 +294,7 @@ fun SegmentedFilterToggle(
     modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = modifier
-            .fillMaxWidth()
-        ,
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(50.dp),
         color = MaterialTheme.colorScheme.surfaceVariant,
         tonalElevation = 1.dp
@@ -303,13 +306,13 @@ fun SegmentedFilterToggle(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             FilterSegmentButton(
-                text = "Active",
+                text = stringResource(id = R.string.home_tab_active),
                 isSelected = selectedFilter == HomeFilterTab.ACTIVE,
                 onClick = { onFilterTabSelected(HomeFilterTab.ACTIVE) },
                 modifier = Modifier.weight(1f)
             )
             FilterSegmentButton(
-                text = "Completed",
+                text = stringResource(id = R.string.home_tab_completed),
                 isSelected = selectedFilter == HomeFilterTab.COMPLETED,
                 onClick = { onFilterTabSelected(HomeFilterTab.COMPLETED) },
                 modifier = Modifier.weight(1f)
@@ -327,8 +330,7 @@ fun FilterSegmentButton(
 ) {
     Surface(
         onClick = onClick,
-        modifier = modifier
-        ,
+        modifier = modifier,
         shape = RoundedCornerShape(50.dp),
         color = if (isSelected)
             MaterialTheme.colorScheme.primary
@@ -338,8 +340,7 @@ fun FilterSegmentButton(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp)
-                ,
+                .height(48.dp),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -397,7 +398,7 @@ fun PackingProgressIndicator(
             }
             Icon(
                 imageVector = Icons.Filled.Check,
-                contentDescription = "Fully packed",
+                contentDescription = stringResource(id = R.string.home_tag_fully_packed),
                 tint = progressColor,
                 modifier = Modifier.size(20.dp)
             )
@@ -450,7 +451,7 @@ private fun PackingStatusBadge(
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = "Fully packed",
+                    text = stringResource(id = R.string.home_tag_fully_packed),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF2E7D32)
@@ -463,7 +464,7 @@ private fun PackingStatusBadge(
             color = MaterialTheme.colorScheme.surface
         ) {
             Text(
-                text = "Not started",
+                text = stringResource(id = R.string.home_tag_not_started),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
@@ -586,7 +587,7 @@ fun ReminderCard(
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
-                                    text = "${reminder.notificationLeadMinutes} min before",
+                                    text = stringResource(id = R.string.home_tag_lead_time_mins, reminder.notificationLeadMinutes),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
@@ -610,7 +611,7 @@ fun ReminderCard(
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
-                                    text = "Leaves in $diffMinutes min",
+                                    text = stringResource(id = R.string.home_tag_leaves_in_mins, diffMinutes),
                                     style = MaterialTheme.typography.labelSmall,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onErrorContainer
@@ -652,7 +653,7 @@ fun ReminderCard(
                                 )
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Text(
-                                    text = "${reminder.notificationLeadMinutes} min before",
+                                    text = stringResource(id = R.string.home_tag_lead_time_mins, reminder.notificationLeadMinutes),
                                     style = MaterialTheme.typography.labelSmall,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
@@ -707,7 +708,7 @@ fun EmptyHomeContent(
             Button(onClick = onCreateClick) {
                 Icon(imageVector = Icons.Filled.Add, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(text = "Create Reminder")
+                Text(text = stringResource(id = R.string.home_btn_create_reminder))
             }
         }
     }

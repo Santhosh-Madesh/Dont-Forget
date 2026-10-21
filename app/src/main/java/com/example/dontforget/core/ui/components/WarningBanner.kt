@@ -21,8 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.dontforget.R
 
 val WarningYellowBg = Color(0xFFFFF3CD)
 val WarningYellowText = Color(0xFF856404)
@@ -51,7 +53,7 @@ fun WarningBanner(
             ) {
                 Icon(
                     imageVector = Icons.Filled.Warning,
-                    contentDescription = "Warning",
+                    contentDescription = stringResource(id = R.string.common_warning_icon_desc),
                     tint = WarningYellowIcon
                 )
                 Spacer(modifier = Modifier.width(12.dp))

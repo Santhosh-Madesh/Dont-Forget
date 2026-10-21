@@ -48,9 +48,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import com.example.dontforget.R
 import com.example.dontforget.core.ui.components.ConfirmationDialog
 import com.example.dontforget.core.ui.components.ContextIcons
 import com.example.dontforget.data.local.entity.ChecklistItemEntity
@@ -83,10 +85,10 @@ fun ReminderDetailScreen(
 
     if (state.showDeleteDialog) {
         ConfirmationDialog(
-            title = "Delete Reminder?",
-            message = "Are you sure you want to delete this reminder? This action cannot be undone.",
-            confirmText = "Delete",
-            dismissText = "Cancel",
+            title = stringResource(id = R.string.reminder_detail_delete_title),
+            message = stringResource(id = R.string.reminder_detail_delete_message),
+            confirmText = stringResource(id = R.string.common_btn_delete),
+            dismissText = stringResource(id = R.string.common_btn_cancel),
             onConfirm = { viewModel.onEvent(ReminderDetailUiEvent.OnConfirmDeleteClick) },
             onDismiss = { viewModel.onEvent(ReminderDetailUiEvent.OnDismissDeleteDialogClick) }
         )
@@ -97,7 +99,7 @@ fun ReminderDetailScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text(text = "Reminder Overview") },
+                title = { Text(text = stringResource(id = R.string.reminder_detail_app_bar_title)) },
                 navigationIcon = {
                     IconButton(onClick = { viewModel.onEvent(ReminderDetailUiEvent.OnBackClick) }) {
                         Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -113,7 +115,7 @@ fun ReminderDetailScreen(
                             onDismissRequest = { showMenu = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Edit") },
+                                text = { Text(stringResource(id = R.string.reminder_detail_action_edit)) },
                                 leadingIcon = { Icon(Icons.Filled.Edit, contentDescription = null) },
                                 onClick = {
                                     showMenu = false
@@ -121,7 +123,7 @@ fun ReminderDetailScreen(
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Delete") },
+                                text = { Text(stringResource(id = R.string.reminder_detail_action_delete)) },
                                 leadingIcon = { Icon(Icons.Filled.Delete, contentDescription = null) },
                                 onClick = {
                                     showMenu = false
@@ -142,7 +144,7 @@ fun ReminderDetailScreen(
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Loading reminder...")
+                Text(stringResource(id = R.string.reminder_detail_loading))
             }
             return@Scaffold
         }
@@ -247,7 +249,12 @@ fun ReminderDetailScreen(
                         }
                     }
                 ) {
-                    Text(if (state.isAllPacked) "Unpack All" else "Pack All")
+                    Text(
+                        if (state.isAllPacked)
+                            stringResource(id = R.string.reminder_detail_btn_unpack_all)
+                        else
+                            stringResource(id = R.string.reminder_detail_btn_pack_all)
+                    )
                 }
             }
 
@@ -294,7 +301,7 @@ fun ReminderDetailScreen(
                         ) {
                             Icon(Icons.Filled.Check, contentDescription = null)
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Mark as Complete")
+                            Text(stringResource(id = R.string.reminder_detail_btn_complete))
                         }
                     }
                 }
@@ -307,7 +314,7 @@ fun ReminderDetailScreen(
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)
                 ) {
-                    Text("Restore Reminder")
+                    Text(stringResource(id = R.string.reminder_detail_btn_restore))
                 }
             } else {
                 Button(
@@ -316,7 +323,7 @@ fun ReminderDetailScreen(
                         .fillMaxWidth()
                         .padding(bottom = 16.dp)
                 ) {
-                    Text("Update")
+                    Text(stringResource(id = R.string.reminder_detail_btn_update))
                 }
             }
         }

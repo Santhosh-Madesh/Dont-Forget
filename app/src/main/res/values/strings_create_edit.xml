@@ -1,0 +1,29 @@
+<resources>
+    <!-- Create & Edit Reminder Flow -->
+    <string name="create_reminder_title_template">Select Template</string>
+    <string name="create_reminder_title_context">Context</string>
+    <string name="create_reminder_title_checklist">Checklist</string>
+    <string name="create_reminder_title_date_time">Departure &amp; Notification</string>
+    <string name="create_reminder_title_preview">Reminder Preview</string>
+    <string name="create_reminder_discard_title">Discard Reminder?</string>
+    <string name="create_reminder_discard_msg">Are you sure you want to discard this reminder? All unsaved changes will be lost.</string>
+    <string name="create_reminder_skip_template">Create Custom Reminder from Scratch</string>
+    <string name="create_reminder_btn_next_checklist">Next: Checklist Items</string>
+    <string name="create_reminder_btn_next_date_time">Next: Departure &amp; Notification</string>
+    <string name="create_reminder_btn_next_preview">Next: Preview</string>
+    <string name="create_reminder_btn_confirm_create">Confirm &amp; Create Reminder</string>
+    <string name="create_reminder_context_label">Context Title (e.g. College, Work, Gym)</string>
+    <string name="create_reminder_add_item_label">Add Checklist Item</string>
+    <string name="create_reminder_lead_time_label">Lead Time in Minutes</string>
+    <string name="create_reminder_custom_lead">Custom</string>
+    <string name="create_reminder_template_title_label">Template Title</string>
+
+    <string name="edit_reminder_title">Edit Reminder</string>
+    <string name="edit_reminder_select_icon">Select Icon:</string>
+    <string name="edit_reminder_departure_title">Departure Date &amp; Time:</string>
+    <string name="edit_reminder_lead_time_title">Notification Lead Time:</string>
+    <string name="edit_reminder_checklist_title">Checklist Items:</string>
+    <string name="edit_reminder_btn_save">Save Changes</string>
+    <string name="edit_reminder_discard_title">Discard Changes?</string>
+    <string name="edit_reminder_discard_msg">Are you sure you want to discard your changes? Unsaved modifications will be lost.</string>
+</resources>
