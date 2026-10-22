@@ -1,5 +1,6 @@
 package com.example.dontforget.feature.reminderdetail
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.dontforget.core.mvi.BaseViewModel
 import com.example.dontforget.data.repository.ReminderRepository
@@ -13,7 +14,9 @@ class ReminderDetailViewModel(
 ) : BaseViewModel<ReminderDetailUiState, ReminderDetailUiEvent, ReminderDetailUiSideEffect>(ReminderDetailUiState()) {
 
     init {
+        Log.d("viewModel", "viewModel is initiaizling & calling observeReminder")
         observeReminder()
+        Log.d("viewModel", "Called observeReminder")
     }
 
     private fun observeReminder() {

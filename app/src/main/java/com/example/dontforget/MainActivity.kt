@@ -26,6 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -59,6 +61,7 @@ import com.example.dontforget.notification.ReminderNotificationManager
 import com.example.dontforget.ui.theme.DontForgetTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -128,8 +131,17 @@ class MainActivity : ComponentActivity() {
                             startDestination = Route.Home.route,
                             modifier = Modifier.padding(innerPadding)
                         ) {
+
                             composable(Route.Home.route) {
-                                val homeViewModel = remember { HomeViewModel(reminderRepo) }
+                                val homeViewModel: HomeViewModel = viewModel(
+                                    factory = object: ViewModelProvider.Factory {
+                                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                            return HomeViewModel(
+                                                reminderRepo
+                                            ) as T
+                                        }
+                                    }
+                                )
                                 val context = LocalContext.current
 
                                 fun checkPermission(): Boolean {
@@ -185,7 +197,16 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             composable(Route.CreateReminder.route) {
-                                val createViewModel = remember { CreateReminderViewModel(reminderRepo, templateRepo) }
+                                val createViewModel: CreateReminderViewModel = viewModel(
+                                    factory = object: ViewModelProvider.Factory {
+                                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                            return CreateReminderViewModel(
+                                                reminderRepo,
+                                                templateRepo
+                                            ) as T
+                                        }
+                                    }
+                                )
                                 CreateReminderScreen(
                                     viewModel = createViewModel,
                                     onNavigateHome = {
@@ -203,7 +224,15 @@ class MainActivity : ComponentActivity() {
                                 arguments = listOf(navArgument("reminderId") { type = NavType.LongType })
                             ) { backStackEntry ->
                                 val id = backStackEntry.arguments?.getLong("reminderId") ?: 0L
-                                val editViewModel = remember(id) { EditReminderViewModel(reminderRepo) }
+                                val editViewModel: EditReminderViewModel = viewModel(
+                                    factory = object: ViewModelProvider.Factory {
+                                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                            return EditReminderViewModel(
+                                                reminderRepo
+                                            ) as T
+                                        }
+                                    }
+                                )
                                 EditReminderScreen(
                                     reminderId = id,
                                     viewModel = editViewModel,
@@ -213,7 +242,15 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             composable(Route.TemplateManagement.route) {
-                                val managementViewModel = remember { TemplateManagementViewModel(templateRepo) }
+                                val managementViewModel: TemplateManagementViewModel = viewModel(
+                                    factory = object: ViewModelProvider.Factory {
+                                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                            return TemplateManagementViewModel(
+                                                templateRepo
+                                            ) as T
+                                        }
+                                    }
+                                )
                                 TemplateManagementScreen(
                                     viewModel = managementViewModel,
                                     onNavigateToDetail = { templateId ->
@@ -229,7 +266,16 @@ class MainActivity : ComponentActivity() {
                                 arguments = listOf(navArgument("templateId") { type = NavType.LongType })
                             ) { backStackEntry ->
                                 val id = backStackEntry.arguments?.getLong("templateId") ?: 0L
-                                val detailViewModel = remember(id) { TemplateDetailViewModel(id, templateRepo) }
+                                val detailViewModel: TemplateDetailViewModel = viewModel(
+                                    factory = object: ViewModelProvider.Factory {
+                                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                            return TemplateDetailViewModel(
+                                                id,
+                                                templateRepo
+                                            ) as T
+                                        }
+                                    }
+                                )
                                 TemplateDetailScreen(
                                     viewModel = detailViewModel,
                                     onNavigateToEdit = { templateId ->
@@ -245,7 +291,16 @@ class MainActivity : ComponentActivity() {
                                 arguments = listOf(navArgument("templateId") { type = NavType.LongType })
                             ) { backStackEntry ->
                                 val id = backStackEntry.arguments?.getLong("templateId") ?: 0L
-                                val editViewModel = remember(id) { TemplateEditViewModel(id, templateRepo) }
+                                val editViewModel: TemplateEditViewModel = viewModel(
+                                    factory = object: ViewModelProvider.Factory {
+                                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                            return TemplateEditViewModel(
+                                                id,
+                                                templateRepo
+                                            ) as T
+                                        }
+                                    }
+                                )
                                 TemplateEditScreen(
                                     templateId = id,
                                     viewModel = editViewModel,
@@ -259,7 +314,16 @@ class MainActivity : ComponentActivity() {
                                 arguments = listOf(navArgument("reminderId") { type = NavType.LongType })
                             ) { backStackEntry ->
                                 val id = backStackEntry.arguments?.getLong("reminderId") ?: 0L
-                                val detailViewModel = remember(id) { ReminderDetailViewModel(id, reminderRepo) }
+                                val detailViewModel: ReminderDetailViewModel = viewModel(
+                                    factory = object: ViewModelProvider.Factory {
+                                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                            return ReminderDetailViewModel(
+                                                id,
+                                                reminderRepo
+                                            ) as T
+                                        }
+                                    }
+                                )
                                 ReminderDetailScreen(
                                     viewModel = detailViewModel,
                                     onNavigateToEdit = { reminderId ->
