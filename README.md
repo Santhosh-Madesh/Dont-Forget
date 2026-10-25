@@ -24,6 +24,33 @@
 
 ---
 
+## 🔮 Upcoming Features & Roadmap (v2.0)
+
+The upcoming **v2.0 release** brings major feature expansions, user experience refinements, and system enhancements:
+
+### ✨ New Features
+- **Centralized Notification Center**: A dedicated screen to view upcoming scheduled notifications and review past notification history.
+- **Recurring & Custom Repeat Schedules**: Flexible repeating options for reminders (e.g., Weekdays `Mon–Fri`, `Mon–Sat`, `Mon–Sun`, or custom selected days).
+- **Multi-Day Calendar View**: Integrated calendar picker allowing users to schedule and manage reminders spanning across multiple days.
+- **Interactive First-Time Onboarding**: Guided demo screens introducing new users to core features and workflows.
+- **Multi-Language & Localization**: Full internationalization support including Tamil, Hindi, Spanish, French, and additional languages.
+
+### 🎨 User Interface & Experience
+- **Drag-and-Drop Checklist Reordering**: Fluid drag-and-drop gestures for reordering checklist items, replacing button controls.
+- **Refreshed Brand Identity**: Redesigned application icon and modernized visual logo.
+- **Overdue Card Visual Contrast**: Improved color contrast on "OVERDUE" status cards for higher readability across light and dark themes.
+
+### ⚡ Fixes & Functional Refinements
+- **Seamless Creation Navigation**: Automatic redirection back to the Home screen immediately upon saving a new reminder.
+- **Chronological Upcoming Reminders**: Display upcoming reminders strictly in ascending order by scheduled departure time.
+- **Precise Overdue Evaluation**: Refined overdue calculation using exact timestamp comparisons (hours and minutes) rather than date boundaries alone.
+
+### ♿ Accessibility & Responsiveness
+- **Adaptive Screen Layouts**: Responsive UI design optimized across Compact (phones), Medium (foldables), and Expanded (tablets/desktops) window size classes.
+- **Comprehensive Accessibility Enhancements**: Expanded TalkBack screen reader support, optimized touch target sizes, and enriched accessibility semantics across all screens.
+
+---
+
 ## 🏗 Architecture & Design Patterns
 
 The project strictly follows **Clean Architecture** principles paired with the **MVI (Model-View-Intent)** presentation pattern for unidirectional data flow (UDF) and predictable state management.
