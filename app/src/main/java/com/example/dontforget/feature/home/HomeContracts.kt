@@ -54,13 +54,8 @@ sealed interface HomeUiSideEffect : UiSideEffect {
 }
 
 fun isOverdue(epochMillis: Long): Boolean {
-    val startOfToday = Calendar.getInstance().apply {
-        set(Calendar.HOUR_OF_DAY, 0)
-        set(Calendar.MINUTE, 0)
-        set(Calendar.SECOND, 0)
-        set(Calendar.MILLISECOND, 0)
-    }.timeInMillis
-    return epochMillis < startOfToday
+    val currentTimeInMillis = Calendar.getInstance().timeInMillis
+    return epochMillis < currentTimeInMillis
 }
 
 fun isToday(epochMillis: Long): Boolean {
