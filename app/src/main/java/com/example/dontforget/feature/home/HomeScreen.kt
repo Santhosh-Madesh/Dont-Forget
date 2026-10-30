@@ -1,6 +1,7 @@
 package com.example.dontforget.feature.home
 
 import android.text.format.DateFormat
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -189,8 +190,9 @@ fun HomeScreen(
                             }
                             items(
                                 items = state.overdueReminders,
-                                key = { "active_${it.reminder.id}" }
+                                key = { "active_overdue_${it.reminder.id}" }
                             ) { reminderWithItems ->
+                                Log.d("item rendered", "item_no_${reminderWithItems.reminder.id}")
                                 ReminderCard(
                                     reminderWithItems = reminderWithItems,
                                     isOverdue = true,
@@ -208,7 +210,7 @@ fun HomeScreen(
                             }
                             items(
                                 items = state.todayReminders,
-                                key = { "active_${it.reminder.id}" }
+                                key = { "active_today_${it.reminder.id}" }
                             ) { reminderWithItems ->
                                 ReminderCard(
                                     reminderWithItems = reminderWithItems,
@@ -226,7 +228,7 @@ fun HomeScreen(
                             }
                             items(
                                 items = state.tomorrowReminders,
-                                key = { "active_${it.reminder.id}" }
+                                key = { "active_tomorrow_${it.reminder.id}" }
                             ) { reminderWithItems ->
                                 ReminderCard(
                                     reminderWithItems = reminderWithItems,
@@ -244,7 +246,7 @@ fun HomeScreen(
                             }
                             items(
                                 items = state.upcomingReminders,
-                                key = { "active_${it.reminder.id}" }
+                                key = { "active_upcoming_${it.reminder.id}" }
                             ) { reminderWithItems ->
                                 ReminderCard(
                                     reminderWithItems = reminderWithItems,

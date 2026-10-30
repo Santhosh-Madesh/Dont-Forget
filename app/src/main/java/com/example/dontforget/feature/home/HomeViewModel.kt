@@ -1,5 +1,6 @@
 package com.example.dontforget.feature.home
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.dontforget.core.mvi.BaseViewModel
 import com.example.dontforget.data.repository.ReminderRepository
@@ -13,6 +14,7 @@ class HomeViewModel(
     init {
         observeActiveReminders()
         observeCompletedReminders()
+
     }
 
     private fun observeActiveReminders() {
@@ -26,6 +28,7 @@ class HomeViewModel(
                 }
             }
             .launchIn(viewModelScope)
+
     }
 
     private fun observeCompletedReminders() {

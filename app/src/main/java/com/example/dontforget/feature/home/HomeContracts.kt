@@ -62,7 +62,8 @@ fun isToday(epochMillis: Long): Boolean {
     val calNow = Calendar.getInstance()
     val calTarget = Calendar.getInstance().apply { timeInMillis = epochMillis }
     return calNow.get(Calendar.YEAR) == calTarget.get(Calendar.YEAR) &&
-            calNow.get(Calendar.DAY_OF_YEAR) == calTarget.get(Calendar.DAY_OF_YEAR)
+            calNow.get(Calendar.DAY_OF_YEAR) == calTarget.get(Calendar.DAY_OF_YEAR) &&
+            Calendar.getInstance().timeInMillis < calTarget.timeInMillis
 }
 
 fun isTomorrow(epochMillis: Long): Boolean {
