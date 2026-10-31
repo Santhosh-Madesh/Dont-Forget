@@ -51,6 +51,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.LaunchedEffect
 import com.example.dontforget.R
 import com.example.dontforget.core.ui.components.ContextIcons
 import com.example.dontforget.core.ui.components.WarningBanner
@@ -70,7 +71,7 @@ fun HomeScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    androidx.compose.runtime.LaunchedEffect(viewModel.effect) {
+    LaunchedEffect(viewModel.effect) {
         viewModel.effect.collect { effect ->
             when (effect) {
                 is HomeUiSideEffect.NavigateToDetail -> {

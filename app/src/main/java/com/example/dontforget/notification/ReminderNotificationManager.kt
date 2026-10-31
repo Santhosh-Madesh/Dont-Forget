@@ -53,7 +53,7 @@ object ReminderNotificationManager {
         )
 
         val builder = NotificationCompat.Builder(context, NotificationConstants.CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.dont_forget_icon)
             .setContentTitle(title.ifBlank { context.getString(R.string.common_app_name) })
             .setContentText(content)
             .setPriority(NotificationCompat.PRIORITY_HIGH)

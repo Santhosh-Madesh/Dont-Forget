@@ -254,7 +254,7 @@ class CreateReminderViewModel(
                 )
             }
 
-            val newReminderId = reminderRepository.insertReminder(reminder, checklistEntities)
+            reminderRepository.insertReminder(reminder, checklistEntities)
 
             // Save as Template if toggled
             if (state.saveAsTemplate) {
@@ -276,7 +276,7 @@ class CreateReminderViewModel(
             }
 
             updateState { copy(isLoading = false) }
-            sendEffect(CreateReminderUiSideEffect.NavigateToReminderDetail(newReminderId))
+            sendEffect(CreateReminderUiSideEffect.NavigateHome)
         }
     }
 }
