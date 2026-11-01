@@ -29,7 +29,7 @@ data class HomeUiState(
         get() = activeReminders.filter { isTomorrow(it.reminder.departureEpochMillis) }
 
     val upcomingReminders: List<ReminderWithItems>
-        get() = activeReminders.filter { isUpcoming(it.reminder.departureEpochMillis) }
+        get() = activeReminders.filter { isUpcoming(it.reminder.departureEpochMillis) }.sortedBy { it.reminder.departureEpochMillis }
 
     val isCurrentViewEmpty: Boolean
         get() = when (selectedFilter) {

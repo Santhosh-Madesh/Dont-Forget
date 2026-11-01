@@ -511,7 +511,7 @@ fun ReminderCard(
             .fillMaxWidth()
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = if (isOverdue) Color(0xFFFFFBEB) else MaterialTheme.colorScheme.surfaceVariant
+            containerColor = if (isOverdue) Color(0xFF4A211D) else MaterialTheme.colorScheme.surfaceVariant
         )
     ) {
         Column(
@@ -531,7 +531,7 @@ fun ReminderCard(
                         Icon(
                             imageVector = iconVector,
                             contentDescription = reminder.contextTitle,
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            tint = if(isOverdue) Color(0xFFFFB4AB) else MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier.size(24.dp)
                         )
                     }
@@ -549,7 +549,7 @@ fun ReminderCard(
                     Text(
                         text = subtitleText,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = if(isOverdue) Color(0xFFFFDAD4) else MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))
