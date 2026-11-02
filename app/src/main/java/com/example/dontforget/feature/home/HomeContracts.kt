@@ -51,6 +51,7 @@ sealed interface HomeUiSideEffect : UiSideEffect {
     data class NavigateToDetail(val reminderId: Long) : HomeUiSideEffect
     object NavigateToCreateReminder : HomeUiSideEffect
     object OpenNotificationSettings : HomeUiSideEffect
+    object NavigateToNotification : HomeUiSideEffect
 }
 
 fun isOverdue(epochMillis: Long): Boolean {

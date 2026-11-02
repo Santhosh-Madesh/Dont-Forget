@@ -58,7 +58,7 @@ class HomeViewModel(
                 sendEffect(HomeUiSideEffect.OpenNotificationSettings)
             }
             HomeUiEvent.OnNotificationIconClick -> {
-                // Mock notification action (no-op)
+                sendEffect(HomeUiSideEffect.NavigateToNotification)
             }
             is HomeUiEvent.OnNotificationPermissionStatusChanged -> {
                 updateState { copy(isNotificationPermissionGranted = event.isGranted) }

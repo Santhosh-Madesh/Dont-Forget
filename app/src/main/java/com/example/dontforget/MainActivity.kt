@@ -48,6 +48,8 @@ import com.example.dontforget.feature.editreminder.EditReminderViewModel
 import com.example.dontforget.feature.home.HomeScreen
 import com.example.dontforget.feature.home.HomeUiEvent
 import com.example.dontforget.feature.home.HomeViewModel
+import com.example.dontforget.feature.notifications.screen.NotificationScreen
+import com.example.dontforget.feature.notifications.screen.NotificationViewModel
 import com.example.dontforget.feature.reminderdetail.ReminderDetailScreen
 import com.example.dontforget.feature.reminderdetail.ReminderDetailViewModel
 import com.example.dontforget.feature.templates.detail.TemplateDetailScreen
@@ -193,6 +195,26 @@ class MainActivity : ComponentActivity() {
                                             }
                                             startActivity(intent)
                                         }
+                                    },
+                                    onNavigateToNotification = {
+                                        navController.navigate(Route.Notification.route)
+                                    }
+                                )
+                            }
+                            composable(Route.Notification.route) {
+                                val notificationViewModel: NotificationViewModel = viewModel(
+                                    factory = object: ViewModelProvider.Factory {
+                                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                            return NotificationViewModel(
+                                                reminderRepo
+                                            ) as T
+                                        }
+                                    }
+                                )
+                                NotificationScreen(
+                                    viewModel = notificationViewModel,
+                                    onNavigateBack = {
+                                        navController.popBackStack()
                                     }
                                 )
                             }

@@ -67,6 +67,7 @@ fun HomeScreen(
     onNavigateToDetail: (Long) -> Unit,
     onNavigateToCreateReminder: () -> Unit,
     onOpenNotificationSettings: () -> Unit,
+    onNavigateToNotification: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -82,6 +83,9 @@ fun HomeScreen(
                 }
                 is HomeUiSideEffect.OpenNotificationSettings -> {
                     onOpenNotificationSettings()
+                }
+                is HomeUiSideEffect.NavigateToNotification -> {
+                    onNavigateToNotification()
                 }
             }
         }

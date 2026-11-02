@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Notification Display Screen -->
+    <string name="notif_display_top_bar_title">Notifications</string>
+    <string name="notif_display_back_desc">Back</string>
+    <string name="notif_display_category_upcoming">UPCOMING</string>
+    <string name="notif_display_category_previous">PREVIOUS</string>
+    <string name="notif_display_footer">DONT FORGET · LOCAL HISTORY</string>
+    <string name="notif_display_empty_title">No Notifications</string>
+    <string name="notif_display_empty_desc">You don\'t have any upcoming or previous notifications at the moment.</string>
+    <string name="notif_display_content_prefix">Reminder: %s</string>
+    <string name="notif_display_time_today">Today · %s</string>
+    <string name="notif_display_time_tomorrow">Tomorrow · %s</string>
+</resources>

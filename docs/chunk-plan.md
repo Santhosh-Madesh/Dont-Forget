@@ -71,6 +71,18 @@ This document divides the DONT FORGET project into independent feature chunks fo
 
 ---
 
+## Chunk 5: Notification Display Screen (`chunk-05-notification-display`) — **STATUS: COMPLETED & APPROVED**
+- **One-paragraph Scope**: Implements the Notification Screen UI displaying all notifications categorized by "UPCOMING" (yet to be triggered in the future) and "PREVIOUS" (already triggered in the past) sections, featuring section header inline badge counts, identical notification builder content text, empty state illustration when no notifications exist, and back navigation.
+- **Files Owned**: `com/example/dontforget/feature/notifications/screen/**`.
+- **Interfaces Consumed**: `ReminderRepository`, `Route.Notification`.
+- **Interfaces Exposed**: `NotificationScreen`, `NotificationViewModel`.
+- **Routes In/Out**:
+  - In: `Route.Notification`
+  - Out: `Route.Home`
+- **Status**: **Completed & Approved**
+
+---
+
 ## Summary of Run Order
 1. **Chunk 0: Shared Foundation** (**COMPLETED**)
 2. **Chunk 1: Home & Reminders** (**COMPLETED**)
@@ -78,3 +90,4 @@ This document divides the DONT FORGET project into independent feature chunks fo
    - Chunk 2: Create & Edit Reminder (**READY TO START**)
    - Chunk 3: Template Management (**READY TO START**)
    - Chunk 4: Notifications & Deep Linking (**READY TO START**)
+4. **Chunk 5: Notification Display Screen** (**COMPLETED**)

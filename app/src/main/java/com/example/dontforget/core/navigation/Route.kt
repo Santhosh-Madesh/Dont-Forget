@@ -3,6 +3,7 @@ package com.example.dontforget.core.navigation
 sealed class Route(val route: String) {
     object Home : Route("home")
     object CreateReminder : Route("create_reminder")
+    object Notification : Route("notification")
     data class EditReminder(val reminderId: Long) : Route("edit_reminder/$reminderId") {
         companion object {
             const val ROUTE = "edit_reminder/{reminderId}"
