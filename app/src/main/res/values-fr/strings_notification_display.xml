@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Notification Display Screen -->
+    <string name="notif_display_top_bar_title">Notifications</string>
+    <string name="notif_display_back_desc">Retour</string>
+    <string name="notif_display_category_upcoming">À VENIR</string>
+    <string name="notif_display_category_previous">PRÉCÉDENTES</string>
+    <string name="notif_display_footer">DONT FORGET · HISTORIQUE LOCAL</string>
+    <string name="notif_display_empty_title">Aucune notification</string>
+    <string name="notif_display_empty_desc">Vous n\'avez aucune notification à venir ou précédente pour le moment.</string>
+    <string name="notif_display_content_prefix">Rappel : %s</string>
+    <string name="notif_display_time_today">Aujourd\'hui · %s</string>
+    <string name="notif_display_time_tomorrow">Demain · %s</string>
+</resources>

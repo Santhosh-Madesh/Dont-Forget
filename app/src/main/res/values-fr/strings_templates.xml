@@ -1,0 +1,34 @@
+<resources>
+    <!-- Template Management -->
+    <string name="template_mgt_app_bar_title">Gestion des modèles</string>
+    <string name="template_mgt_fab_new">Nouveau modèle</string>
+    <string name="template_mgt_empty_title">Aucun modèle pour l\'instant</string>
+    <string name="template_mgt_empty_desc">Créer des modèles réutilisables pour générer rapidement des listes de contrôle pour les activités fréquentes.</string>
+    <string name="template_mgt_btn_create">Créer un modèle</string>
+    <string name="template_mgt_card_single_item">1 élément</string>
+    <string name="template_mgt_card_multi_items">%d éléments</string>
+
+    <string name="template_detail_app_bar_title">Détails du modèle</string>
+    <string name="template_detail_delete_title">Supprimer le modèle</string>
+    <string name="template_detail_delete_msg">Voulez-vous vraiment supprimer ce modèle ? Les rappels existants créés à partir de ce modèle ne seront pas affectés.</string>
+    <string name="template_detail_items_header">Éléments de la liste (%d)</string>
+    <string name="template_detail_not_found">Modèle introuvable</string>
+
+    <string name="template_edit_title_create">Créer un modèle</string>
+    <string name="template_edit_title_edit">Modifier le modèle</string>
+    <string name="template_edit_section_title">Titre du modèle</string>
+    <string name="template_edit_placeholder_title">ex. Préparation quotidienne université</string>
+    <string name="template_edit_section_context">Contexte</string>
+    <string name="template_edit_chip_existing">Sélectionner un contexte existant</string>
+    <string name="template_edit_chip_new">+ Créer un nouveau contexte</string>
+    <string name="template_edit_no_existing_contexts">Aucun contexte existant trouvé. Basculez \'+ Créer un nouveau contexte\' ci-dessus.</string>
+    <string name="template_edit_label_new_context">Nouveau titre de contexte</string>
+    <string name="template_edit_placeholder_new_context">ex. Salle de sport, Bibliothèque, Bureau</string>
+    <string name="template_edit_label_icon_picker">Sélectionner une icône de contexte</string>
+    <string name="template_edit_section_checklist">Éléments de la liste</string>
+    <string name="template_edit_placeholder_add_item">Ajouter un élément...</string>
+    <string name="template_edit_btn_save">Enregistrer le modèle</string>
+    <string name="template_edit_btn_save_changes">Enregistrer les modifications</string>
+    <string name="template_edit_discard_title">Abandonner les modifications</string>
+    <string name="template_edit_discard_msg">Voulez-vous vraiment abandonner vos modifications non enregistrées ?</string>
+</resources>

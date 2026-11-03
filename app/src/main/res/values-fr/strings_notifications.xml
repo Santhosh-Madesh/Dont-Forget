@@ -1,0 +1,6 @@
+<resources>
+    <!-- Notifications & Scheduling -->
+    <string name="notif_channel_name">Notifications de rappel</string>
+    <string name="notif_channel_desc">Canal pour programmer et recevoir des alertes de rappel</string>
+    <string name="notif_content_title_prefix">Rappel de départ : %s</string>
+</resources>

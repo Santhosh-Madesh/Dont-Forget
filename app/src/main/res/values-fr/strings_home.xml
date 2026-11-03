@@ -1,0 +1,35 @@
+<resources>
+    <!-- Home & Reminder Overview -->
+    <string name="home_app_bar_title">DONT FORGET</string>
+    <string name="home_header_title">Rappels</string>
+    <string name="home_tab_active">Actifs</string>
+    <string name="home_tab_completed">Terminés</string>
+    <string name="home_category_overdue">EN RETARD</string>
+    <string name="home_category_today">AUJOURD\'HUI</string>
+    <string name="home_category_tomorrow">DEMAIN</string>
+    <string name="home_category_upcoming">À VENIR</string>
+    <string name="home_notif_banner_message">Autorisation de notification requise pour recevoir des rappels avant le départ.</string>
+    <string name="home_notif_banner_action">Activer dans les paramètres</string>
+    <string name="home_empty_active_title">Aucun rappel actif</string>
+    <string name="home_empty_completed_title">Aucun rappel terminé</string>
+    <string name="home_btn_create_reminder">Créer un rappel</string>
+    <string name="home_tag_fully_packed">Totalement emballé</string>
+    <string name="home_tag_not_started">Non commencé</string>
+    <string name="home_tag_packed_status">%1$d/%2$d emballés</string>
+    <string name="home_tag_leaves_in_mins">Départ dans %d min</string>
+    <string name="home_tag_lead_time_mins">%d min avant</string>
+
+    <string name="reminder_detail_app_bar_title">Aperçu du rappel</string>
+    <string name="reminder_detail_action_edit">Modifier</string>
+    <string name="reminder_detail_action_delete">Supprimer</string>
+    <string name="reminder_detail_delete_title">Supprimer le rappel ?</string>
+    <string name="reminder_detail_delete_message">Voulez-vous vraiment supprimer ce rappel ? Cette action est irréversible.</string>
+    <string name="reminder_detail_loading">Chargement du rappel...</string>
+    <string name="reminder_detail_btn_pack_all">Tout emballer</string>
+    <string name="reminder_detail_btn_unpack_all">Tout déballer</string>
+    <string name="reminder_detail_btn_complete">Marquer comme terminé</string>
+    <string name="reminder_detail_btn_restore">Rétablir le rappel</string>
+    <string name="reminder_detail_btn_update">Mettre à jour</string>
+    <string name="reminder_detail_checklist_updated">Liste de contrôle mise à jour</string>
+    <string name="reminder_detail_restored">Rappel rétabli comme actif</string>
+</resources>

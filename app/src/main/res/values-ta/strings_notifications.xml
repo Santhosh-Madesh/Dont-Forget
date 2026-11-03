@@ -1,0 +1,6 @@
+<resources>
+    <!-- Notifications & Scheduling -->
+    <string name="notif_channel_name">நினைவூட்டல் அறிவிப்புகள்</string>
+    <string name="notif_channel_desc">நினைவூட்டல் எச்சரிக்கைகளைப் பெறுவதற்கான சேனல்</string>
+    <string name="notif_content_title_prefix">புறப்பாட்டு நினைவூட்டல்: %s</string>
+</resources>

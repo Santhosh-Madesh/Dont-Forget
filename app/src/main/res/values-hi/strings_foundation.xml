@@ -1,0 +1,24 @@
+<resources>
+    <!-- Foundation & Shared Components -->
+    <string name="common_app_name">DONT FORGET</string>
+    <string name="common_btn_confirm">पुष्टि करें</string>
+    <string name="common_btn_cancel">रद्द करें</string>
+    <string name="common_btn_delete">हटाएं</string>
+    <string name="common_btn_discard">अस्वीकार करें</string>
+    <string name="common_btn_dismiss">बंद करें</string>
+    <string name="common_nav_reminders">रिमाइंडर</string>
+    <string name="common_nav_templates">टैम्प्लेट</string>
+    <string name="common_warning_icon_desc">चेतावनी</string>
+
+    <!-- Context Icon Labels -->
+    <string name="context_icon_college">कॉलेज / स्कूल</string>
+    <string name="context_icon_work">काम</string>
+    <string name="context_icon_office">कार्यालय</string>
+    <string name="context_icon_temple">मंदिर / पूजा स्थल</string>
+    <string name="context_icon_home">घर</string>
+    <string name="context_icon_gym">जिम / फिटनेस</string>
+    <string name="context_icon_shopping">खरीदारी</string>
+    <string name="context_icon_travel">यात्रा / उड़ान</string>
+    <string name="context_icon_sports">खेल</string>
+    <string name="context_icon_event">कार्यक्रम</string>
+</resources>

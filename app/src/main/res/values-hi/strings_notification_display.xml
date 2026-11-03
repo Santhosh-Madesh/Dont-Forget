@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Notification Display Screen -->
+    <string name="notif_display_top_bar_title">अधिसूचनाएं</string>
+    <string name="notif_display_back_desc">वापस</string>
+    <string name="notif_display_category_upcoming">आगामी</string>
+    <string name="notif_display_category_previous">पिछली</string>
+    <string name="notif_display_footer">DONT FORGET · स्थानीय इतिहास</string>
+    <string name="notif_display_empty_title">कोई अधिसूचना नहीं</string>
+    <string name="notif_display_empty_desc">आपके पास इस समय कोई आगामी या पिछली अधिसूचनाएं नहीं हैं।</string>
+    <string name="notif_display_content_prefix">रिमाइंडर: %s</string>
+    <string name="notif_display_time_today">आज · %s</string>
+    <string name="notif_display_time_tomorrow">कल · %s</string>
+</resources>

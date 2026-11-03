@@ -1,0 +1,35 @@
+<resources>
+    <!-- Home & Reminder Overview -->
+    <string name="home_app_bar_title">DONT FORGET</string>
+    <string name="home_header_title">रिमाइंडर</string>
+    <string name="home_tab_active">सक्रिय</string>
+    <string name="home_tab_completed">पूर्ण</string>
+    <string name="home_category_overdue">समय सीमा समाप्त</string>
+    <string name="home_category_today">आज</string>
+    <string name="home_category_tomorrow">कल</string>
+    <string name="home_category_upcoming">आगामी</string>
+    <string name="home_notif_banner_message">प्रस्थान से पहले रिमाइंडर प्राप्त करने के लिए नोटिफिकेशन अनुमति आवश्यक है।</string>
+    <string name="home_notif_banner_action">सेटिंग्स में सक्षम करें</string>
+    <string name="home_empty_active_title">कोई सक्रिय रिमाइंडर नहीं</string>
+    <string name="home_empty_completed_title">कोई पूर्ण रिमाइंडर नहीं</string>
+    <string name="home_btn_create_reminder">रिमाइंडर बनाएं</string>
+    <string name="home_tag_fully_packed">पूरी तरह से पैक किया गया</string>
+    <string name="home_tag_not_started">शुरू नहीं हुआ</string>
+    <string name="home_tag_packed_status">%1$d/%2$d पैक किया गया</string>
+    <string name="home_tag_leaves_in_mins">%d मिनट में प्रस्थान</string>
+    <string name="home_tag_lead_time_mins">%d मिनट पहले</string>
+
+    <string name="reminder_detail_app_bar_title">रिमाइंडर विवरण</string>
+    <string name="reminder_detail_action_edit">संपादित करें</string>
+    <string name="reminder_detail_action_delete">हटाएं</string>
+    <string name="reminder_detail_delete_title">रिमाइंडर हटाएं?</string>
+    <string name="reminder_detail_delete_message">क्या आप वाकई इस रिमाइंडर को हटाना चाहते हैं? यह क्रिया वापस नहीं ली जा सकती।</string>
+    <string name="reminder_detail_loading">रिमाइंडर लोड हो रहा है...</string>
+    <string name="reminder_detail_btn_pack_all">सभी पैक करें</string>
+    <string name="reminder_detail_btn_unpack_all">सभी अनपैक करें</string>
+    <string name="reminder_detail_btn_complete">पूर्ण के रूप में चिह्नित करें</string>
+    <string name="reminder_detail_btn_restore">रिमाइंडर पुनर्स्थापित करें</string>
+    <string name="reminder_detail_btn_update">अद्यतन करें</string>
+    <string name="reminder_detail_checklist_updated">चेकलिस्ट अद्यतित की गई</string>
+    <string name="reminder_detail_restored">रिमाइंडर फिर से सक्रिय किया गया</string>
+</resources>

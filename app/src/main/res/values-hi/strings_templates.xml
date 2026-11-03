@@ -1,0 +1,34 @@
+<resources>
+    <!-- Template Management -->
+    <string name="template_mgt_app_bar_title">टैम्प्लेट प्रबंधन</string>
+    <string name="template_mgt_fab_new">नया टैम्प्लेट</string>
+    <string name="template_mgt_empty_title">अभी तक कोई टैम्प्लेट नहीं</string>
+    <string name="template_mgt_empty_desc">बार-बार की गतिविधियों के लिए जल्दी से चेकलिस्ट बनाने के लिए पुन: प्रयोज्य टैम्प्लेट बनाएं।</string>
+    <string name="template_mgt_btn_create">टैम्प्लेट बनाएं</string>
+    <string name="template_mgt_card_single_item">1 आइटम</string>
+    <string name="template_mgt_card_multi_items">%d आइटम</string>
+
+    <string name="template_detail_app_bar_title">टैम्प्लेट विवरण</string>
+    <string name="template_detail_delete_title">टैम्प्लेट हटाएं</string>
+    <string name="template_detail_delete_msg">क्या आप वाकई इस टैम्प्लेट को हटाना चाहते हैं? इस टैम्प्लेट से बनाए गए मौजूदा रिमाइंडर प्रभावित नहीं होंगे।</string>
+    <string name="template_detail_items_header">चेकलिस्ट आइटम (%d)</string>
+    <string name="template_detail_not_found">टैम्प्लेट नहीं मिला</string>
+
+    <string name="template_edit_title_create">टैम्प्लेट बनाएं</string>
+    <string name="template_edit_title_edit">टैम्प्लेट संपादित करें</string>
+    <string name="template_edit_section_title">टैम्प्लेट शीर्षक</string>
+    <string name="template_edit_placeholder_title">जैसे दैनिक कॉलेज पैकिंग</string>
+    <string name="template_edit_section_context">संदर्भ</string>
+    <string name="template_edit_chip_existing">मौजूदा संदर्भ चुनें</string>
+    <string name="template_edit_chip_new">+ नया संदर्भ बनाएं</string>
+    <string name="template_edit_no_existing_contexts">कोई मौजूदा संदर्भ नहीं मिला। ऊपर \'+ नया संदर्भ बनाएं\' चुनें।</string>
+    <string name="template_edit_label_new_context">नया संदर्भ शीर्षक</string>
+    <string name="template_edit_placeholder_new_context">जैसे जिम, पुस्तकालय, कार्यालय</string>
+    <string name="template_edit_label_icon_picker">संदर्भ के लिए आइकन चुनें</string>
+    <string name="template_edit_section_checklist">चेकलिस्ट आइटम</string>
+    <string name="template_edit_placeholder_add_item">चेकलिस्ट आइटम जोड़ें...</string>
+    <string name="template_edit_btn_save">टैम्प्लेट सहेजें</string>
+    <string name="template_edit_btn_save_changes">टैम्प्लेट परिवर्तन सहेजें</string>
+    <string name="template_edit_discard_title">परिवर्तन रद्द करें</string>
+    <string name="template_edit_discard_msg">क्या आप वाकई अपने असहेजे गए परिवर्तनों को रद्द करना चाहते हैं?</string>
+</resources>

@@ -1,0 +1,29 @@
+<resources>
+    <!-- Create & Edit Reminder Flow -->
+    <string name="create_reminder_title_template">முன்னமைவைத் தேர்ந்தெடு</string>
+    <string name="create_reminder_title_context">சூழ்நிலை</string>
+    <string name="create_reminder_title_checklist">சரிபார்ப்புப் பட்டியல்</string>
+    <string name="create_reminder_title_date_time">புறப்பாடு &amp; அறிவிப்பு</string>
+    <string name="create_reminder_title_preview">நினைவூட்டல் முன்னோட்டம்</string>
+    <string name="create_reminder_discard_title">நினைவூட்டலை நிராகரிக்கவா?</string>
+    <string name="create_reminder_discard_msg">இந்த நினைவூட்டலை நிராகரிக்க விரும்புகிறீர்களா? சேமிக்கப்படாத மாற்றங்கள் இழக்கப்படும்.</string>
+    <string name="create_reminder_skip_template">புதிய நினைவூட்டலை உருவாக்கு</string>
+    <string name="create_reminder_btn_next_checklist">அடுத்து: சரிபார்ப்புப் பட்டியல்</string>
+    <string name="create_reminder_btn_next_date_time">அடுத்து: புறப்பாடு &amp; அறிவிப்பு</string>
+    <string name="create_reminder_btn_next_preview">அடுத்து: முன்னோட்டம்</string>
+    <string name="create_reminder_btn_confirm_create">உறுதி செய்து உருவாக்கு</string>
+    <string name="create_reminder_context_label">சூழ்நிலைத் தலைப்பு (எ.கா. கல்லூரி, வேலை, ஜிம்)</string>
+    <string name="create_reminder_add_item_label">பொருளைச் சேர்</string>
+    <string name="create_reminder_lead_time_label">முன்னறிவிப்பு நேரம் (நிமிடங்களில்)</string>
+    <string name="create_reminder_custom_lead">விருப்பப்படி</string>
+    <string name="create_reminder_template_title_label">முன்னமைவுத் தலைப்பு</string>
+
+    <string name="edit_reminder_title">நினைவூட்டலைத் திருத்து</string>
+    <string name="edit_reminder_select_icon">ஐகானைத் தேர்ந்தெடு:</string>
+    <string name="edit_reminder_departure_title">புறப்படும் தேதி &amp; நேரம்:</string>
+    <string name="edit_reminder_lead_time_title">அறிவிப்பு முன்னறிவிப்பு நேரம்:</string>
+    <string name="edit_reminder_checklist_title">சரிபார்ப்புப் பட்டியல் பொருட்கள்:</string>
+    <string name="edit_reminder_btn_save">மாற்றங்களைச் சேமி</string>
+    <string name="edit_reminder_discard_title">மாற்றங்களை நிராகரிக்கவா?</string>
+    <string name="edit_reminder_discard_msg">மாற்றங்களை நிராகரிக்க விரும்புகிறீர்களா? சேமிக்கப்படாத மாற்றங்கள் இழக்கப்படும்.</string>
+</resources>

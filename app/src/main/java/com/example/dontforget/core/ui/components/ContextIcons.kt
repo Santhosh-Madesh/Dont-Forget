@@ -1,5 +1,6 @@
 package com.example.dontforget.core.ui.components
 
+import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Business
 import androidx.compose.material.icons.filled.Event
@@ -12,25 +13,26 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.SportsSoccer
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.dontforget.R
 
 data class ContextIconItem(
     val name: String,
-    val label: String,
+    @param:StringRes val labelResId: Int,
     val icon: ImageVector
 )
 
 object ContextIcons {
     val AVAILABLE_ICONS = listOf(
-        ContextIconItem("school", "College / School", Icons.Filled.School),
-        ContextIconItem("work", "Work", Icons.Filled.Work),
-        ContextIconItem("office", "Office", Icons.Filled.Business),
-        ContextIconItem("temple", "Temple / Worship", Icons.Filled.Place),
-        ContextIconItem("home", "Home", Icons.Filled.Home),
-        ContextIconItem("gym", "Gym / Fitness", Icons.Filled.FitnessCenter),
-        ContextIconItem("shopping", "Shopping", Icons.Filled.ShoppingCart),
-        ContextIconItem("travel", "Travel / Flight", Icons.Filled.Flight),
-        ContextIconItem("sports", "Sports", Icons.Filled.SportsSoccer),
-        ContextIconItem("event", "Event", Icons.Filled.Event)
+        ContextIconItem("school", R.string.context_icon_college, Icons.Filled.School),
+        ContextIconItem("work", R.string.context_icon_work, Icons.Filled.Work),
+        ContextIconItem("office", R.string.context_icon_office, Icons.Filled.Business),
+        ContextIconItem("temple", R.string.context_icon_temple, Icons.Filled.Place),
+        ContextIconItem("home", R.string.context_icon_home, Icons.Filled.Home),
+        ContextIconItem("gym", R.string.context_icon_gym, Icons.Filled.FitnessCenter),
+        ContextIconItem("shopping", R.string.context_icon_shopping, Icons.Filled.ShoppingCart),
+        ContextIconItem("travel", R.string.context_icon_travel, Icons.Filled.Flight),
+        ContextIconItem("sports", R.string.context_icon_sports, Icons.Filled.SportsSoccer),
+        ContextIconItem("event", R.string.context_icon_event, Icons.Filled.Event)
     )
 
     fun getIconByName(name: String): ImageVector {

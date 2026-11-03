@@ -1,0 +1,35 @@
+<resources>
+    <!-- Home & Reminder Overview -->
+    <string name="home_app_bar_title">DONT FORGET</string>
+    <string name="home_header_title">நினைவூட்டல்கள்</string>
+    <string name="home_tab_active">செயலில் உள்ளவை</string>
+    <string name="home_tab_completed">முடிந்தவை</string>
+    <string name="home_category_overdue">காலாவதியானவை</string>
+    <string name="home_category_today">இன்று</string>
+    <string name="home_category_tomorrow">நாளை</string>
+    <string name="home_category_upcoming">வரவிருப்பவை</string>
+    <string name="home_notif_banner_message">புறப்படுவதற்கு முன் நினைவூட்டல்களைப் பெற அறிவிப்பு அனுமதி தேவை.</string>
+    <string name="home_notif_banner_action">அமைப்புகளில் அனுமதிக்கவும்</string>
+    <string name="home_empty_active_title">செயலில் உள்ள நினைவூட்டல்கள் எதுவும் இல்லை</string>
+    <string name="home_empty_completed_title">முடிந்த நினைவூட்டல்கள் எதுவும் இல்லை</string>
+    <string name="home_btn_create_reminder">நினைவூட்டலை உருவாக்கு</string>
+    <string name="home_tag_fully_packed">முழுமையாக எடுத்து வைக்கப்பட்டது</string>
+    <string name="home_tag_not_started">தொடங்கப்படவில்லை</string>
+    <string name="home_tag_packed_status">%1$d/%2$d பேக் செய்யப்பட்டது</string>
+    <string name="home_tag_leaves_in_mins">%d நிமிடங்களில் புறப்படும்</string>
+    <string name="home_tag_lead_time_mins">%d நிமிடத்திற்கு முன்</string>
+
+    <string name="reminder_detail_app_bar_title">நினைவூட்டல் விவரம்</string>
+    <string name="reminder_detail_action_edit">திருத்து</string>
+    <string name="reminder_detail_action_delete">நீக்கு</string>
+    <string name="reminder_detail_delete_title">நினைவூட்டலை நீக்கவா?</string>
+    <string name="reminder_detail_delete_message">இந்த நினைவூட்டலை நிச்சயம் நீக்க விரும்புகிறீர்களா? இந்தச் செயலைத் திரும்பப் பெற முடியாது.</string>
+    <string name="reminder_detail_loading">நினைவூட்டல் ஏற்றப்படுகிறது...</string>
+    <string name="reminder_detail_btn_pack_all">அனைத்தையும் பேக் செய்</string>
+    <string name="reminder_detail_btn_unpack_all">அனைத்தையும் பேக் செய்யாமல் விடு</string>
+    <string name="reminder_detail_btn_complete">முடிந்ததாகக் குறி</string>
+    <string name="reminder_detail_btn_restore">நினைவூட்டலை மீட்டெடு</string>
+    <string name="reminder_detail_btn_update">புதுப்பி</string>
+    <string name="reminder_detail_checklist_updated">சரிபார்ப்புப் பட்டியல் புதுப்பிக்கப்பட்டது</string>
+    <string name="reminder_detail_restored">நினைவூட்டல் மீண்டும் செயலில் உள்ளது</string>
+</resources>

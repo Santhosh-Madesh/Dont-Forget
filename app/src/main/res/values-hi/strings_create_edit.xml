@@ -1,0 +1,29 @@
+<resources>
+    <!-- Create & Edit Reminder Flow -->
+    <string name="create_reminder_title_template">टैम्प्लेट चुनें</string>
+    <string name="create_reminder_title_context">संदर्भ</string>
+    <string name="create_reminder_title_checklist">चेकलिस्ट</string>
+    <string name="create_reminder_title_date_time">प्रस्थान और अधिसूचना</string>
+    <string name="create_reminder_title_preview">रिमाइंडर पूर्वावलोकन</string>
+    <string name="create_reminder_discard_title">रिमाइंडर रद्द करें?</string>
+    <string name="create_reminder_discard_msg">क्या आप वाकई इस रिमाइंडर को रद्द करना चाहते हैं? सभी असहेजे गए परिवर्तन खो जाएंगे।</string>
+    <string name="create_reminder_skip_template">नया रिमाइंडर बनाएं</string>
+    <string name="create_reminder_btn_next_checklist">आगे: चेकलिस्ट आइटम</string>
+    <string name="create_reminder_btn_next_date_time">आगे: प्रस्थान और अधिसूचना</string>
+    <string name="create_reminder_btn_next_preview">आगे: पूर्वावलोकन</string>
+    <string name="create_reminder_btn_confirm_create">पुष्टि करें और बनाएं</string>
+    <string name="create_reminder_context_label">संदर्भ शीर्षक (जैसे कॉलेज, काम, जिम)</string>
+    <string name="create_reminder_add_item_label">चेकलिस्ट आइटम जोड़ें</string>
+    <string name="create_reminder_lead_time_label">अग्रिम समय (मिनटों में)</string>
+    <string name="create_reminder_custom_lead">कस्टम</string>
+    <string name="create_reminder_template_title_label">टैम्प्लेट शीर्षक</string>
+
+    <string name="edit_reminder_title">रिमाइंडर संपादित करें</string>
+    <string name="edit_reminder_select_icon">आइकन चुनें:</string>
+    <string name="edit_reminder_departure_title">प्रस्थान तिथि और समय:</string>
+    <string name="edit_reminder_lead_time_title">अधिसूचना अग्रिम समय:</string>
+    <string name="edit_reminder_checklist_title">चेकलिस्ट आइटम:</string>
+    <string name="edit_reminder_btn_save">सहेजें</string>
+    <string name="edit_reminder_discard_title">परिवर्तन रद्द करें?</string>
+    <string name="edit_reminder_discard_msg">क्या आप वाकई अपने परिवर्तनों को रद्द करना चाहते हैं? असहेजे गए परिवर्तन खो जाएंगे।</string>
+</resources>

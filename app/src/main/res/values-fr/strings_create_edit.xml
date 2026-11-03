@@ -1,0 +1,29 @@
+<resources>
+    <!-- Create & Edit Reminder Flow -->
+    <string name="create_reminder_title_template">Sélectionner un modèle</string>
+    <string name="create_reminder_title_context">Contexte</string>
+    <string name="create_reminder_title_checklist">Liste de contrôle</string>
+    <string name="create_reminder_title_date_time">Départ &amp; Notification</string>
+    <string name="create_reminder_title_preview">Aperçu du rappel</string>
+    <string name="create_reminder_discard_title">Abandonner le rappel ?</string>
+    <string name="create_reminder_discard_msg">Voulez-vous vraiment abandonner ce rappel ? Toutes les modifications non enregistrées seront perdues.</string>
+    <string name="create_reminder_skip_template">Créer un rappel personnalisé</string>
+    <string name="create_reminder_btn_next_checklist">Suivant : Éléments de la liste</string>
+    <string name="create_reminder_btn_next_date_time">Suivant : Départ &amp; Notification</string>
+    <string name="create_reminder_btn_next_preview">Suivant : Aperçu</string>
+    <string name="create_reminder_btn_confirm_create">Confirmer &amp; Créer le rappel</string>
+    <string name="create_reminder_context_label">Titre du contexte (ex. Université, Travail, Gym)</string>
+    <string name="create_reminder_add_item_label">Ajouter un élément</string>
+    <string name="create_reminder_lead_time_label">Délai en minutes</string>
+    <string name="create_reminder_custom_lead">Personnalisé</string>
+    <string name="create_reminder_template_title_label">Titre du modèle</string>
+
+    <string name="edit_reminder_title">Modifier le rappel</string>
+    <string name="edit_reminder_select_icon">Sélectionner l\'icône :</string>
+    <string name="edit_reminder_departure_title">Date &amp; Heure de départ :</string>
+    <string name="edit_reminder_lead_time_title">Délai de notification :</string>
+    <string name="edit_reminder_checklist_title">Éléments de la liste :</string>
+    <string name="edit_reminder_btn_save">Enregistrer</string>
+    <string name="edit_reminder_discard_title">Abandonner les modifications ?</string>
+    <string name="edit_reminder_discard_msg">Voulez-vous vraiment abandonner vos modifications ? Les modifications non enregistrées seront perdues.</string>
+</resources>

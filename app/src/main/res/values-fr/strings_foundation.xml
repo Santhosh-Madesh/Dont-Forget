@@ -1,0 +1,24 @@
+<resources>
+    <!-- Foundation & Shared Components -->
+    <string name="common_app_name">DONT FORGET</string>
+    <string name="common_btn_confirm">Confirmer</string>
+    <string name="common_btn_cancel">Annuler</string>
+    <string name="common_btn_delete">Supprimer</string>
+    <string name="common_btn_discard">Abandonner</string>
+    <string name="common_btn_dismiss">Fermer</string>
+    <string name="common_nav_reminders">Rappels</string>
+    <string name="common_nav_templates">Modèles</string>
+    <string name="common_warning_icon_desc">Avertissement</string>
+
+    <!-- Context Icon Labels -->
+    <string name="context_icon_college">Université / École</string>
+    <string name="context_icon_work">Travail</string>
+    <string name="context_icon_office">Bureau</string>
+    <string name="context_icon_temple">Temple / Lieu de culte</string>
+    <string name="context_icon_home">Maison</string>
+    <string name="context_icon_gym">Salle de sport</string>
+    <string name="context_icon_shopping">Achats</string>
+    <string name="context_icon_travel">Voyage / Vol</string>
+    <string name="context_icon_sports">Sports</string>
+    <string name="context_icon_event">Événement</string>
+</resources>

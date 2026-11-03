@@ -245,7 +245,7 @@ fun TemplateEditScreen(
                                     ) {
                                         Icon(
                                             imageVector = iconItem.icon,
-                                            contentDescription = iconItem.label,
+                                            contentDescription = stringResource(id = iconItem.labelResId),
                                             tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
                                             modifier = Modifier.size(24.dp)
                                         )

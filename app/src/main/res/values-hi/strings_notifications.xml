@@ -1,0 +1,6 @@
+<resources>
+    <!-- Notifications & Scheduling -->
+    <string name="notif_channel_name">रिमाइंडर अधिसूचनाएं</string>
+    <string name="notif_channel_desc">रिमाइंडर अलर्ट प्राप्त करने के लिए चैनल</string>
+    <string name="notif_content_title_prefix">प्रस्थान रिमाइंडर: %s</string>
+</resources>

@@ -1,0 +1,24 @@
+<resources>
+    <!-- Foundation & Shared Components -->
+    <string name="common_app_name">DONT FORGET</string>
+    <string name="common_btn_confirm">உறுதிசெய்</string>
+    <string name="common_btn_cancel">ரத்துசெய்</string>
+    <string name="common_btn_delete">நீக்கு</string>
+    <string name="common_btn_discard">நிராகரி</string>
+    <string name="common_btn_dismiss">மூடு</string>
+    <string name="common_nav_reminders">நினைவூட்டல்கள்</string>
+    <string name="common_nav_templates">முன்னமைவுகள்</string>
+    <string name="common_warning_icon_desc">எச்சரிக்கை</string>
+
+    <!-- Context Icon Labels -->
+    <string name="context_icon_college">கல்லூரி / பள்ளி</string>
+    <string name="context_icon_work">வேலை</string>
+    <string name="context_icon_office">அலுவலகம்</string>
+    <string name="context_icon_temple">கோவில் / வழிபாட்டுத் தலம்</string>
+    <string name="context_icon_home">வீடு</string>
+    <string name="context_icon_gym">உடற்பயிற்சிகூடம்</string>
+    <string name="context_icon_shopping">காரியக் கடை</string>
+    <string name="context_icon_travel">பயணம் / விமானம்</string>
+    <string name="context_icon_sports">விளையாட்டு</string>
+    <string name="context_icon_event">நிகழ்வு</string>
+</resources>
