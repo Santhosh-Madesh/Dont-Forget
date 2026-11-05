@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- Screen 1: Welcome -->
+    <string name="onboarding_welcome_title">निकलने से पहले कोई भी चीज़ कभी न भूलें।</string>
+    <string name="onboarding_welcome_subtitle">आप जहाँ जा रहे हैं उसके लिए एक चेकलिस्ट बनाएं और निकलने से पहले रिमाइंडर पाएं।</string>
+    <string name="onboarding_welcome_get_started">शुरू करें</string>
+    <string name="onboarding_welcome_skip">छोड़ें</string>
+
+    <!-- Header & Step indicators -->
+    <string name="onboarding_header_title">नया रिमाइंडर</string>
+    <string name="onboarding_step_1_of_5">चरण 1 / 5</string>
+    <string name="onboarding_step_2_of_5">चरण 2 / 5</string>
+    <string name="onboarding_step_3_of_5">चरण 3 / 5</string>
+    <string name="onboarding_step_4_of_5">चरण 4 / 5</string>
+    <string name="onboarding_step_5_of_5">चरण 5 / 5</string>
+
+    <!-- Screen 2: Choose Context -->
+    <string name="onboarding_context_title">आप कहाँ जा रहे हैं?</string>
+    <string name="onboarding_context_subtitle">उन चीज़ों के लिए एक संदर्भ चुनें जिन्हें आपको याद रखना है।</string>
+    <string name="onboarding_context_field_label">गंतव्य या स्थान</string>
+    <string name="onboarding_context_field_placeholder">संदर्भ दर्ज करें</string>
+    <string name="onboarding_context_field_hint">जैसे, जिम, वर्क डेस्क, फ्लाइट गेट</string>
+    <string name="onboarding_action_next">आगे -></string>
+
+    <!-- Screen 3: Add Items -->
+    <string name="onboarding_items_title">आपको क्या ले जाने की आवश्यकता है?</string>
+    <string name="onboarding_items_subtitle">%1$s के लिए निकलते समय जिन चीज़ों को आप भूलना नहीं चाहते, उन्हें जोड़ें।</string>
+    <string name="onboarding_items_input_placeholder">एक आइटम जोड़ें</string>
+
+    <!-- Screen 4: Configure Timing -->
+    <string name="onboarding_timing_title">हमें आपको कब याद दिलाना चाहिए?</string>
+    <string name="onboarding_timing_departure_label">प्रस्थान का समय</string>
+    <string name="onboarding_timing_local_time">स्थानीय समय</string>
+    <string name="onboarding_timing_notification_label">नोटिफिकेशन का समय</string>
+    <string name="onboarding_timing_now_title">अभी</string>
+    <string name="onboarding_timing_now_badge">टेस्ट अलर्ट</string>
+    <string name="onboarding_timing_now_subtitle">सेटअप पूरा करते ही लाइव प्रस्थान रिमाइंडर का अनुभव करें।</string>
+    <string name="onboarding_timing_info_text">ऐप के भीतर, आप प्रस्थान से 30 मिनट पहले जैसे लचीले समय चुन सकते हैं या अपना बफ़र समय कस्टमाइज़ कर सकते हैं।</string>
+
+    <!-- Screen 5: Confirmation Summary -->
+    <string name="onboarding_summary_title">रिमाइंडर बन गया!</string>
+    <string name="onboarding_summary_subtitle">आप पूरी तरह तैयार हैं। आपके निकलने से पहले हम आपको याद दिलाएंगे।</string>
+    <string name="onboarding_summary_status_active">सक्रिय</string>
+    <string name="onboarding_summary_departure_header">प्रस्थान</string>
+    <string name="onboarding_summary_reminder_header">रिमाइंडर</string>
+    <string name="onboarding_summary_packing_header">पैकिंग चेकलिस्ट</string>
+    <string name="onboarding_summary_items_count">%1$d आइटम</string>
+    <string name="onboarding_action_done">हो गया ✓</string>
+
+    <!-- Screen 6: Interactive Packing -->
+    <string name="onboarding_packing_banner">लाइव टेस्ट अलर्ट प्राप्त हुआ</string>
+    <string name="onboarding_packing_destination_chip">गंतव्य: %1$s</string>
+    <string name="onboarding_packing_title">देखिए, आपका फोन वाइब्रेट हुआ।</string>
+    <string name="onboarding_packing_subtitle">क्या आपने ध्यान दिया, या आप खाली हाथ बाहर निकलने वाले थे? हमने अपना काम कर दिया। अब साबित करें कि आप तैयार हैं।</string>
+    <string name="onboarding_packing_cargo_header">आपका सामान</string>
+    <string name="onboarding_packing_cargo_count">%1$d / %2$d</string>
+    <string name="onboarding_packing_pack_all">✓ सब पैक करें</string>
+    <string name="onboarding_packing_finish">ऊपर दिए गए आइटम टिक करें</string>
+
+    <!-- Screen 7: Completion Victory -->
+    <string name="onboarding_victory_brand_tag">• DON\'T FORGET V2</string>
+    <string name="onboarding_victory_pill">✓ सक्रिय • 4 आइटम पैक • संकट टल गया</string>
+    <string name="onboarding_victory_title">खुद को देखिए। पूरी तरह से तैयार।</string>
+    <string name="onboarding_victory_body">बधाई हो! आपने अभी-अभी एक रिमाइंडर सेट किया है, और हमने यह सुनिश्चित किया कि आपकी सूची का हर एक आइटम वास्तव में पैक है। अपनी सभी चीज़ों के साथ घर से निकलना एक संभव सपना है।</string>
+    <string name="onboarding_victory_inventory_header">सत्यापित इन्वेंट्री</string>
+    <string name="onboarding_victory_inventory_sub">सभी 4 तैयार</string>
+    <string name="onboarding_action_roll">समझ गया, चलिए शुरू करते हैं -></string>
+</resources>

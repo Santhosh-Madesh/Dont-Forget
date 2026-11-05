@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- Screen 1: Welcome -->
+    <string name="onboarding_welcome_title">கிளம்பும் முன் எதையும் மறக்காதீர்கள்.</string>
+    <string name="onboarding_welcome_subtitle">நீங்கள் செல்லும் இடத்திற்கான சரிபார்ப்பு பட்டியலை உருவாக்கி, கிளம்புவதற்கு முன் நினைவூட்டல் பெறுங்கள்.</string>
+    <string name="onboarding_welcome_get_started">தொடங்குங்கள்</string>
+    <string name="onboarding_welcome_skip">தவிர்க்கவும்</string>
+
+    <!-- Header & Step indicators -->
+    <string name="onboarding_header_title">புதிய நினைவூட்டல்</string>
+    <string name="onboarding_step_1_of_5">படி 1 / 5</string>
+    <string name="onboarding_step_2_of_5">படி 2 / 5</string>
+    <string name="onboarding_step_3_of_5">படி 3 / 5</string>
+    <string name="onboarding_step_4_of_5">படி 4 / 5</string>
+    <string name="onboarding_step_5_of_5">படி 5 / 5</string>
+
+    <!-- Screen 2: Choose Context -->
+    <string name="onboarding_context_title">எங்கே செல்கிறீர்கள்?</string>
+    <string name="onboarding_context_subtitle">நீங்கள் நினைவில் கொள்ள வேண்டிய பொருட்களுக்கான சூழலைத் தேர்ந்தெடுக்கவும்.</string>
+    <string name="onboarding_context_field_label">செல்லுமிடம் அல்லது இடம்</string>
+    <string name="onboarding_context_field_placeholder">ஒரு சூழலை உள்ளிடவும்</string>
+    <string name="onboarding_context_field_hint">எ.கா., உடற்பயிற்சி கூடம், அலுவலக மேஜை, விமான வாயில்</string>
+    <string name="onboarding_action_next">அடுத்து -></string>
+
+    <!-- Screen 3: Add Items -->
+    <string name="onboarding_items_title">என்னென்ன எடுத்துச் செல்ல வேண்டும்?</string>
+    <string name="onboarding_items_subtitle">%1$s-க்கு கிளம்பும்போது மறக்கக்கூடாத பொருட்களைச் சேர்க்கவும்.</string>
+    <string name="onboarding_items_input_placeholder">ஒரு பொருளைச் சேர்க்கவும்</string>
+
+    <!-- Screen 4: Configure Timing -->
+    <string name="onboarding_timing_title">எப்போது உங்களுக்கு நினைவூட்ட வேண்டும்?</string>
+    <string name="onboarding_timing_departure_label">புறப்படும் நேரம்</string>
+    <string name="onboarding_timing_local_time">உள்ளூர் நேரம்</string>
+    <string name="onboarding_timing_notification_label">அறிவிப்பு நேரம்</string>
+    <string name="onboarding_timing_now_title">இப்போது</string>
+    <string name="onboarding_timing_now_badge">சோதனை எச்சரிக்கை</string>
+    <string name="onboarding_timing_now_subtitle">அமைப்பை முடித்தவுடன் நேரலை புறப்பாடு நினைவூட்டல்கள் எவ்வாறு செயல்படுகின்றன என்பதை உணருங்கள்.</string>
+    <string name="onboarding_timing_info_text">செயலியில், புறப்படுவதற்கு 30 நிமிடங்களுக்கு முன்பு போன்ற நேரங்களையும் அல்லது உங்களுக்கான நேர இடைவெளியையும் தனிப்பயனாக்கலாம்.</string>
+
+    <!-- Screen 5: Confirmation Summary -->
+    <string name="onboarding_summary_title">நினைவூட்டல் உருவாக்கப்பட்டது!</string>
+    <string name="onboarding_summary_subtitle">எல்லாம் தயார். நீங்கள் கிளம்புவதற்கு முன் நினைவூட்டுவோம்.</string>
+    <string name="onboarding_summary_status_active">செயலில் உள்ளது</string>
+    <string name="onboarding_summary_departure_header">புறப்பாடு</string>
+    <string name="onboarding_summary_reminder_header">நினைவூட்டல்</string>
+    <string name="onboarding_summary_packing_header">பேக்கிங் சரிபார்ப்பு பட்டியல்</string>
+    <string name="onboarding_summary_items_count">%1$d பொருட்கள்</string>
+    <string name="onboarding_action_done">முடிந்தது ✓</string>
+
+    <!-- Screen 6: Interactive Packing -->
+    <string name="onboarding_packing_banner">நேரலை சோதனை எச்சரிக்கை பெறப்பட்டது</string>
+    <string name="onboarding_packing_destination_chip">செல்லுமிடம்: %1$s</string>
+    <string name="onboarding_packing_title">பாருங்கள், உங்கள் தொலைபேசி அதிர்ந்தது.</string>
+    <string name="onboarding_packing_subtitle">அதை கவனித்தீர்களா அல்லது வெறும் கையுடன் வெளியில் செல்லவிருந்தீர்களா? நாங்கள் எங்கள் கடமையைச் செய்துவிட்டோம். இப்போது நீங்கள் தயாராக உள்ளீர்கள் என்பதை நிரூபியுங்கள்.</string>
+    <string name="onboarding_packing_cargo_header">உங்கள் பொருட்கள்</string>
+    <string name="onboarding_packing_cargo_count">%1$d / %2$d</string>
+    <string name="onboarding_packing_pack_all">✓ அனைத்தையும் பேக் செய்</string>
+    <string name="onboarding_packing_finish">மேலே உள்ள பொருட்களைச் சரிபார்க்கவும்</string>
+
+    <!-- Screen 7: Completion Victory -->
+    <string name="onboarding_victory_brand_tag">• DON\'T FORGET V2</string>
+    <string name="onboarding_victory_pill">✓ செயலில் உள்ளது • 4 பொருட்கள் பேக் செய்யப்பட்டன • பிரச்சனை தவிர்க்கப்பட்டது</string>
+    <string name="onboarding_victory_title">பாருங்கள். முழுமையாகத் தயாராகிவிட்டீர்கள்.</string>
+    <string name="onboarding_victory_body">வாழ்த்துகள்! நீங்கள் நினைவூட்டலை அமைத்துவிட்டீர்கள், உங்கள் பட்டியலில் உள்ள ஒவ்வொரு பொருளும் பேக் செய்யப்பட்டுள்ளதை உறுதி செய்துள்ளோம். அனைத்து பொருட்களுடனும் வீட்டை விட்டு வெளியேறுவது சாத்தியமான ஒன்றே.</string>
+    <string name="onboarding_victory_inventory_header">சரிபார்க்கப்பட்ட பொருட்கள்</string>
+    <string name="onboarding_victory_inventory_sub">அனைத்தும் 4 தயார்</string>
+    <string name="onboarding_action_roll">புரிந்தது, தொடங்குவோம் -></string>
+</resources>

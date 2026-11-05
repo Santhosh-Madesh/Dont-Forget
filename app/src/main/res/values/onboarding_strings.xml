@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <!-- Screen 1: Welcome -->
+    <string name="onboarding_welcome_title">Never forget a thing before leaving.</string>
+    <string name="onboarding_welcome_subtitle">Create a checklist for where you\'re going and get reminded before you leave.</string>
+    <string name="onboarding_welcome_get_started">Get Started</string>
+    <string name="onboarding_welcome_skip">Skip</string>
+
+    <!-- Header & Step indicators -->
+    <string name="onboarding_header_title">New Reminder</string>
+    <string name="onboarding_step_1_of_5">STEP 1 OF 5</string>
+    <string name="onboarding_step_2_of_5">STEP 2 OF 5</string>
+    <string name="onboarding_step_3_of_5">STEP 3 OF 5</string>
+    <string name="onboarding_step_4_of_5">STEP 4 OF 5</string>
+    <string name="onboarding_step_5_of_5">STEP 5 OF 5</string>
+
+    <!-- Screen 2: Choose Context -->
+    <string name="onboarding_context_title">Where are you going?</string>
+    <string name="onboarding_context_subtitle">Choose a context for the things you need to remember.</string>
+    <string name="onboarding_context_field_label">Destination or Place</string>
+    <string name="onboarding_context_field_placeholder">Enter a context</string>
+    <string name="onboarding_context_field_hint">e.g., Gym, Work desk, Flight gate</string>
+    <string name="onboarding_action_next">Next -></string>
+
+    <!-- Screen 3: Add Items -->
+    <string name="onboarding_items_title">What do you need to take?</string>
+    <string name="onboarding_items_subtitle">Add the things you don\'t want to forget when leaving for %1$s.</string>
+    <string name="onboarding_items_input_placeholder">Add an item</string>
+
+    <!-- Screen 4: Configure Timing -->
+    <string name="onboarding_timing_title">When should we remind you?</string>
+    <string name="onboarding_timing_departure_label">DEPARTURE TIME</string>
+    <string name="onboarding_timing_local_time">Local Time</string>
+    <string name="onboarding_timing_notification_label">NOTIFICATION TIMING</string>
+    <string name="onboarding_timing_now_title">Now</string>
+    <string name="onboarding_timing_now_badge">Test Alert</string>
+    <string name="onboarding_timing_now_subtitle">Experience how live departure reminders work immediately upon finishing setup.</string>
+    <string name="onboarding_timing_info_text">Inside the app, you can choose flexible lead times like 30 minutes before departure or customize your own buffer times.</string>
+
+    <!-- Screen 5: Confirmation Summary -->
+    <string name="onboarding_summary_title">Reminder Created!</string>
+    <string name="onboarding_summary_subtitle">You\'re all set. We\'ll remind you before you leave.</string>
+    <string name="onboarding_summary_status_active">Active</string>
+    <string name="onboarding_summary_departure_header">Departure</string>
+    <string name="onboarding_summary_reminder_header">Reminder</string>
+    <string name="onboarding_summary_packing_header">Packing Checklist</string>
+    <string name="onboarding_summary_items_count">%1$d items</string>
+    <string name="onboarding_action_done">Done ✓</string>
+
+    <!-- Screen 6: Interactive Packing -->
+    <string name="onboarding_packing_banner">Live Test Alert Received</string>
+    <string name="onboarding_packing_destination_chip">Destination: %1$s</string>
+    <string name="onboarding_packing_title">Look at that, your phone buzzed.</string>
+    <string name="onboarding_packing_subtitle">Did you actually notice, or were you about to walk out into the cold empty-handed? We did our part. Now prove you\'re ready.</string>
+    <string name="onboarding_packing_cargo_header">Your Cargo</string>
+    <string name="onboarding_packing_cargo_count">%1$d of %2$d</string>
+    <string name="onboarding_packing_pack_all">✓ Pack all</string>
+    <string name="onboarding_packing_finish">Check off items above</string>
+
+    <!-- Screen 7: Completion Victory -->
+    <string name="onboarding_victory_brand_tag">• DON\'T FORGET V2</string>
+    <string name="onboarding_victory_pill">✓ Active • 4 items packed • Crisis averted</string>
+    <string name="onboarding_victory_title">Look at you. Fully prepared.</string>
+    <string name="onboarding_victory_body">Congrats! You just set a reminder, and we made sure every single item on your list is actually packed. Turns out leaving the house with all your things is an achievable dream.</string>
+    <string name="onboarding_victory_inventory_header">VERIFIED INVENTORY</string>
+    <string name="onboarding_victory_inventory_sub">ALL 4 READY</string>
+    <string name="onboarding_action_roll">Got it, let\'s roll -></string>
+</resources>
