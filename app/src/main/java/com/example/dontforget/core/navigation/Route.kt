@@ -1,6 +1,7 @@
 package com.example.dontforget.core.navigation
 
 sealed class Route(val route: String) {
+    object Onboarding : Route("onboarding")
     object Home : Route("home")
     object CreateReminder : Route("create_reminder")
     object Notification : Route("notification")

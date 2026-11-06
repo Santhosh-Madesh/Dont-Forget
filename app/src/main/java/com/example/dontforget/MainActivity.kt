@@ -13,21 +13,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -35,10 +36,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.dontforget.core.navigation.BottomNavItem
 import com.example.dontforget.core.navigation.Route
 import com.example.dontforget.core.ui.components.AppBottomBar
 import com.example.dontforget.data.local.DontForgetDatabase
+import com.example.dontforget.data.preferences.PreferencesRepositoryImpl
 import com.example.dontforget.data.repository.ReminderRepositoryImpl
 import com.example.dontforget.data.repository.TemplateRepositoryImpl
 import com.example.dontforget.feature.createreminder.CreateReminderScreen
@@ -50,6 +51,9 @@ import com.example.dontforget.feature.home.HomeUiEvent
 import com.example.dontforget.feature.home.HomeViewModel
 import com.example.dontforget.feature.notifications.screen.NotificationScreen
 import com.example.dontforget.feature.notifications.screen.NotificationViewModel
+import com.example.dontforget.feature.onboarding.OnboardingScreen
+import com.example.dontforget.feature.onboarding.OnboardingViewModel
+import com.example.dontforget.feature.onboarding.PreferencesViewModel
 import com.example.dontforget.feature.reminderdetail.ReminderDetailScreen
 import com.example.dontforget.feature.reminderdetail.ReminderDetailViewModel
 import com.example.dontforget.feature.templates.detail.TemplateDetailScreen
@@ -59,11 +63,11 @@ import com.example.dontforget.feature.templates.edit.TemplateEditViewModel
 import com.example.dontforget.feature.templates.management.TemplateManagementScreen
 import com.example.dontforget.feature.templates.management.TemplateManagementViewModel
 import com.example.dontforget.notification.NotificationConstants
+import com.example.dontforget.notification.ReminderAlarmScheduler
 import com.example.dontforget.notification.ReminderNotificationManager
 import com.example.dontforget.ui.theme.DontForgetTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -80,9 +84,25 @@ class MainActivity : ComponentActivity() {
         val db = DontForgetDatabase.getDatabase(applicationContext)
         val reminderRepo = ReminderRepositoryImpl(db.reminderDao(), db.checklistItemDao(), applicationContext)
         val templateRepo = TemplateRepositoryImpl(db.contextDao(), db.templateDao(), db.checklistItemDao())
+        val preferencesRepo = PreferencesRepositoryImpl(applicationContext)
 
         setContent {
             DontForgetTheme {
+                val preferencesViewModel: PreferencesViewModel = viewModel(
+                    factory = PreferencesViewModel.Factory(preferencesRepo)
+                )
+                val isOnboardingCompleted by preferencesViewModel.isOnboardingCompleted.collectAsState()
+
+                if (isOnboardingCompleted == null) {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                    return@DontForgetTheme
+                }
+
                 LaunchedEffect(Unit) {
                     withContext(Dispatchers.IO) {
                         val cutoffTime = System.currentTimeMillis() - (24 * 60 * 60 * 1000L)
@@ -128,19 +148,49 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     ) { innerPadding ->
+                        val startRoute = if (isOnboardingCompleted == true) {
+                            Route.Home.route
+                        } else {
+                            Route.Onboarding.route
+                        }
+
                         NavHost(
                             navController = navController,
-                            startDestination = Route.Home.route,
+                            startDestination = startRoute,
                             modifier = Modifier.padding(innerPadding)
                         ) {
+                            composable(Route.Onboarding.route) {
+                                val onboardingViewModel: OnboardingViewModel = viewModel()
+                                val context = LocalContext.current
+
+                                OnboardingScreen(
+                                    viewModel = onboardingViewModel,
+                                    onScheduleTestAlarm = { title, content ->
+                                        ReminderAlarmScheduler.schedule(
+                                            context = context,
+                                            reminderId = 9999L,
+                                            title = title,
+                                            content = content,
+                                            triggerTimeMillis = System.currentTimeMillis() + 1000L
+                                        )
+                                    },
+                                    onOnboardingComplete = {
+                                        preferencesViewModel.markOnboardingCompleted()
+                                        navController.navigate(Route.Home.route) {
+                                            popUpTo(Route.Onboarding.route) {
+                                                inclusive = true
+                                            }
+                                        }
+                                    }
+                                )
+                            }
 
                             composable(Route.Home.route) {
                                 val homeViewModel: HomeViewModel = viewModel(
-                                    factory = object: ViewModelProvider.Factory {
+                                    factory = object : ViewModelProvider.Factory {
+                                        @Suppress("UNCHECKED_CAST")
                                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                                            return HomeViewModel(
-                                                reminderRepo
-                                            ) as T
+                                            return HomeViewModel(reminderRepo) as T
                                         }
                                     }
                                 )
@@ -201,13 +251,13 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
+
                             composable(Route.Notification.route) {
                                 val notificationViewModel: NotificationViewModel = viewModel(
-                                    factory = object: ViewModelProvider.Factory {
+                                    factory = object : ViewModelProvider.Factory {
+                                        @Suppress("UNCHECKED_CAST")
                                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                                            return NotificationViewModel(
-                                                reminderRepo
-                                            ) as T
+                                            return NotificationViewModel(reminderRepo) as T
                                         }
                                     }
                                 )
@@ -218,9 +268,11 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
+
                             composable(Route.CreateReminder.route) {
                                 val createViewModel: CreateReminderViewModel = viewModel(
-                                    factory = object: ViewModelProvider.Factory {
+                                    factory = object : ViewModelProvider.Factory {
+                                        @Suppress("UNCHECKED_CAST")
                                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
                                             return CreateReminderViewModel(
                                                 reminderRepo,
@@ -241,17 +293,17 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
+
                             composable(
                                 route = Route.EditReminder.ROUTE,
                                 arguments = listOf(navArgument("reminderId") { type = NavType.LongType })
                             ) { backStackEntry ->
                                 val id = backStackEntry.arguments?.getLong("reminderId") ?: 0L
                                 val editViewModel: EditReminderViewModel = viewModel(
-                                    factory = object: ViewModelProvider.Factory {
+                                    factory = object : ViewModelProvider.Factory {
+                                        @Suppress("UNCHECKED_CAST")
                                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                                            return EditReminderViewModel(
-                                                reminderRepo
-                                            ) as T
+                                            return EditReminderViewModel(reminderRepo) as T
                                         }
                                     }
                                 )
@@ -263,13 +315,13 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
+
                             composable(Route.TemplateManagement.route) {
                                 val managementViewModel: TemplateManagementViewModel = viewModel(
-                                    factory = object: ViewModelProvider.Factory {
+                                    factory = object : ViewModelProvider.Factory {
+                                        @Suppress("UNCHECKED_CAST")
                                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                                            return TemplateManagementViewModel(
-                                                templateRepo
-                                            ) as T
+                                            return TemplateManagementViewModel(templateRepo) as T
                                         }
                                     }
                                 )
@@ -283,18 +335,17 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
+
                             composable(
                                 route = Route.TemplateDetail.ROUTE,
                                 arguments = listOf(navArgument("templateId") { type = NavType.LongType })
                             ) { backStackEntry ->
                                 val id = backStackEntry.arguments?.getLong("templateId") ?: 0L
                                 val detailViewModel: TemplateDetailViewModel = viewModel(
-                                    factory = object: ViewModelProvider.Factory {
+                                    factory = object : ViewModelProvider.Factory {
+                                        @Suppress("UNCHECKED_CAST")
                                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                                            return TemplateDetailViewModel(
-                                                id,
-                                                templateRepo
-                                            ) as T
+                                            return TemplateDetailViewModel(id, templateRepo) as T
                                         }
                                     }
                                 )
@@ -308,18 +359,17 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
+
                             composable(
                                 route = Route.TemplateEdit.ROUTE,
                                 arguments = listOf(navArgument("templateId") { type = NavType.LongType })
                             ) { backStackEntry ->
                                 val id = backStackEntry.arguments?.getLong("templateId") ?: 0L
                                 val editViewModel: TemplateEditViewModel = viewModel(
-                                    factory = object: ViewModelProvider.Factory {
+                                    factory = object : ViewModelProvider.Factory {
+                                        @Suppress("UNCHECKED_CAST")
                                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                                            return TemplateEditViewModel(
-                                                id,
-                                                templateRepo
-                                            ) as T
+                                            return TemplateEditViewModel(id, templateRepo) as T
                                         }
                                     }
                                 )
@@ -331,18 +381,17 @@ class MainActivity : ComponentActivity() {
                                     }
                                 )
                             }
+
                             composable(
                                 route = Route.ReminderDetail.ROUTE,
                                 arguments = listOf(navArgument("reminderId") { type = NavType.LongType })
                             ) { backStackEntry ->
                                 val id = backStackEntry.arguments?.getLong("reminderId") ?: 0L
                                 val detailViewModel: ReminderDetailViewModel = viewModel(
-                                    factory = object: ViewModelProvider.Factory {
+                                    factory = object : ViewModelProvider.Factory {
+                                        @Suppress("UNCHECKED_CAST")
                                         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                                            return ReminderDetailViewModel(
-                                                id,
-                                                reminderRepo
-                                            ) as T
+                                            return ReminderDetailViewModel(id, reminderRepo) as T
                                         }
                                     }
                                 )
