@@ -65,11 +65,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.dontforget.R
 import com.example.dontforget.ui.theme.Spacing
+import com.example.dontforget.ui.theme.extendedColors
 
-private val DarkGreen = Color(0xFF1B3B2B)
-private val LightGreenCircle = Color(0xFFE8F5E9)
-private val AccentGreen = Color(0xFF2E7D32)
-private val SoftBgColor = Color(0xFFFAF9F6)
 private val spacing = Spacing()
 
 @Composable
@@ -77,7 +74,7 @@ fun OnboardingScreen(
     viewModel: OnboardingViewModel,
     onScheduleTestAlarm: (title: String, content: String) -> Unit,
     onOnboardingComplete: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -105,11 +102,11 @@ fun OnboardingScreen(
 fun OnboardingContent(
     state: OnboardingUiState,
     onEvent: (OnboardingUiEvent) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Surface(
         modifier = modifier.fillMaxSize(),
-        color = SoftBgColor
+        color = MaterialTheme.extendedColors.onboardingSurfaceSubtle
     ) {
         AnimatedContent(
             targetState = state.currentStep,
@@ -170,7 +167,7 @@ fun OnboardingContent(
 fun OnboardingWelcomeStep(
     onGetStarted: () -> Unit,
     onSkip: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -185,13 +182,13 @@ fun OnboardingWelcomeStep(
             modifier = Modifier
                 .size(180.dp)
                 .clip(CircleShape)
-                .background(LightGreenCircle),
+                .background(MaterialTheme.extendedColors.onboardingBrandContainer),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.CheckCircle,
                 contentDescription = null,
-                tint = DarkGreen,
+                tint = MaterialTheme.extendedColors.onboardingBrandPrimary,
                 modifier = Modifier.size(80.dp)
             )
         }
@@ -225,7 +222,7 @@ fun OnboardingWelcomeStep(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = DarkGreen),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
                 shape = RoundedCornerShape(28.dp)
             ) {
                 Text(
@@ -255,7 +252,7 @@ fun OnboardingChooseContextStep(
     onContextChanged: (String) -> Unit,
     onNext: () -> Unit,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -301,14 +298,16 @@ fun OnboardingChooseContextStep(
                     Icon(
                         imageVector = Icons.Default.LocationOn,
                         contentDescription = null,
-                        tint = AccentGreen
+                        tint = MaterialTheme.extendedColors.onboardingBrandAccent
                     )
                 },
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                 )
             )
 
@@ -337,7 +336,7 @@ fun OnboardingChooseContextStep(
                 .fillMaxWidth()
                 .padding(bottom = spacing.medium)
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = DarkGreen),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text(
@@ -362,7 +361,7 @@ fun OnboardingAddItemsStep(
     onRemoveItem: (String) -> Unit,
     onNext: () -> Unit,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -403,7 +402,7 @@ fun OnboardingAddItemsStep(
                             modifier = Modifier
                                 .size(36.dp)
                                 .clip(CircleShape)
-                                .background(DarkGreen),
+                                .background(MaterialTheme.extendedColors.onboardingBrandPrimary),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
@@ -417,8 +416,10 @@ fun OnboardingAddItemsStep(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(24.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                 )
             )
 
@@ -430,7 +431,7 @@ fun OnboardingAddItemsStep(
                         .fillMaxWidth()
                         .padding(vertical = 4.dp),
                     shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                 ) {
                     Row(
                         modifier = Modifier
@@ -450,7 +451,8 @@ fun OnboardingAddItemsStep(
                             Text(
                                 text = item,
                                 style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.Medium
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
                         IconButton(onClick = { onRemoveItem(item) }) {
@@ -471,7 +473,7 @@ fun OnboardingAddItemsStep(
                 .fillMaxWidth()
                 .padding(bottom = spacing.medium)
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = DarkGreen),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text(
@@ -492,7 +494,7 @@ fun OnboardingConfigureTimingStep(
     onDepartureTimeChanged: (String) -> Unit,
     onNext: () -> Unit,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -539,7 +541,7 @@ fun OnboardingConfigureTimingStep(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFF2F0EB))
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Row(
                     modifier = Modifier
@@ -550,20 +552,21 @@ fun OnboardingConfigureTimingStep(
                 ) {
                     Box(
                         modifier = Modifier
-                            .background(Color.White, RoundedCornerShape(8.dp))
+                            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
                             .padding(horizontal = 20.dp, vertical = 12.dp)
                     ) {
                         Text(
                             text = departureTimeText,
                             style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
 
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(20.dp))
-                            .background(DarkGreen)
+                            .background(MaterialTheme.extendedColors.onboardingBrandPrimary)
                             .padding(horizontal = 16.dp, vertical = 8.dp)
                     ) {
                         Text(
@@ -588,7 +591,7 @@ fun OnboardingConfigureTimingStep(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
                 Row(
                     modifier = Modifier.padding(spacing.medium),
@@ -598,13 +601,13 @@ fun OnboardingConfigureTimingStep(
                         modifier = Modifier
                             .size(40.dp)
                             .clip(CircleShape)
-                            .background(LightGreenCircle),
+                            .background(MaterialTheme.extendedColors.onboardingBrandContainer),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.NotificationsActive,
                             contentDescription = null,
-                            tint = AccentGreen
+                            tint = MaterialTheme.extendedColors.onboardingBrandAccent
                         )
                     }
 
@@ -615,19 +618,20 @@ fun OnboardingConfigureTimingStep(
                             Text(
                                 text = stringResource(R.string.onboarding_timing_now_title),
                                 fontWeight = FontWeight.Bold,
-                                style = MaterialTheme.typography.titleMedium
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Spacer(modifier = Modifier.width(spacing.small))
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(12.dp))
-                                    .background(LightGreenCircle)
+                                    .background(MaterialTheme.extendedColors.onboardingBrandContainer)
                                     .padding(horizontal = 8.dp, vertical = 2.dp)
                             ) {
                                 Text(
                                     text = stringResource(R.string.onboarding_timing_now_badge),
                                     fontSize = 11.sp,
-                                    color = AccentGreen,
+                                    color = MaterialTheme.extendedColors.onboardingBrandAccent,
                                     fontWeight = FontWeight.Bold
                                 )
                             }
@@ -642,11 +646,11 @@ fun OnboardingConfigureTimingStep(
                     Icon(
                         imageVector = Icons.Default.Check,
                         contentDescription = null,
-                        tint = DarkGreen,
+                        tint = MaterialTheme.extendedColors.onboardingBrandPrimary,
                         modifier = Modifier
                             .size(24.dp)
                             .clip(CircleShape)
-                            .background(LightGreenCircle)
+                            .background(MaterialTheme.extendedColors.onboardingBrandContainer)
                     )
                 }
             }
@@ -656,7 +660,7 @@ fun OnboardingConfigureTimingStep(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFF2F0EB))
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Row(
                     modifier = Modifier.padding(spacing.medium),
@@ -684,7 +688,7 @@ fun OnboardingConfigureTimingStep(
                 .fillMaxWidth()
                 .padding(bottom = spacing.medium)
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = DarkGreen),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text(
@@ -705,7 +709,7 @@ fun OnboardingConfirmationSummaryStep(
     state: OnboardingUiState,
     onDone: () -> Unit,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -726,14 +730,14 @@ fun OnboardingConfirmationSummaryStep(
                 modifier = Modifier
                     .size(72.dp)
                     .clip(CircleShape)
-                    .background(LightGreenCircle)
+                    .background(MaterialTheme.extendedColors.onboardingBrandContainer)
                     .align(Alignment.CenterHorizontally),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = null,
-                    tint = DarkGreen,
+                    tint = MaterialTheme.extendedColors.onboardingBrandPrimary,
                     modifier = Modifier.size(36.dp)
                 )
             }
@@ -760,7 +764,7 @@ fun OnboardingConfirmationSummaryStep(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFF2F0EB))
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Column(modifier = Modifier.padding(spacing.medium)) {
                     Row(
@@ -772,26 +776,27 @@ fun OnboardingConfirmationSummaryStep(
                             Icon(
                                 imageVector = Icons.Default.FitnessCenter,
                                 contentDescription = null,
-                                tint = DarkGreen
+                                tint = MaterialTheme.extendedColors.onboardingBrandPrimary
                             )
                             Spacer(modifier = Modifier.width(spacing.small))
                             Text(
                                 text = state.contextText,
                                 style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
 
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(12.dp))
-                                .background(LightGreenCircle)
+                                .background(MaterialTheme.extendedColors.onboardingBrandContainer)
                                 .padding(horizontal = 10.dp, vertical = 4.dp)
                         ) {
                             Text(
                                 text = stringResource(R.string.onboarding_summary_status_active),
                                 fontSize = 12.sp,
-                                color = AccentGreen,
+                                color = MaterialTheme.extendedColors.onboardingBrandAccent,
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -812,7 +817,8 @@ fun OnboardingConfirmationSummaryStep(
                             Text(
                                 text = state.departureTimeText,
                                 style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
 
@@ -825,7 +831,8 @@ fun OnboardingConfirmationSummaryStep(
                             Text(
                                 text = state.reminderLeadText,
                                 style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }
@@ -848,10 +855,14 @@ fun OnboardingConfirmationSummaryStep(
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(16.dp))
-                                    .background(Color.White)
+                                    .background(MaterialTheme.colorScheme.surface)
                                     .padding(horizontal = 12.dp, vertical = 6.dp)
                             ) {
-                                Text(text = item, style = MaterialTheme.typography.bodySmall)
+                                Text(
+                                    text = item,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
                             }
                         }
                     }
@@ -865,7 +876,7 @@ fun OnboardingConfirmationSummaryStep(
                 .fillMaxWidth()
                 .padding(bottom = spacing.medium)
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = DarkGreen),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text(
@@ -887,7 +898,7 @@ fun OnboardingInteractivePackingStep(
     onPackAll: () -> Unit,
     onFinish: () -> Unit,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -901,14 +912,14 @@ fun OnboardingInteractivePackingStep(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
-                    .background(LightGreenCircle)
+                    .background(MaterialTheme.extendedColors.onboardingBrandContainer)
                     .padding(horizontal = 12.dp, vertical = 8.dp)
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Default.NotificationsActive,
                         contentDescription = null,
-                        tint = AccentGreen,
+                        tint = MaterialTheme.extendedColors.onboardingBrandAccent,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(spacing.small))
@@ -916,7 +927,7 @@ fun OnboardingInteractivePackingStep(
                         text = stringResource(R.string.onboarding_packing_banner),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Bold,
-                        color = AccentGreen
+                        color = MaterialTheme.extendedColors.onboardingBrandAccent
                     )
                 }
             }
@@ -979,7 +990,7 @@ fun OnboardingInteractivePackingStep(
                     Text(
                         text = stringResource(R.string.onboarding_packing_pack_all),
                         fontWeight = FontWeight.Bold,
-                        color = DarkGreen
+                        color = MaterialTheme.extendedColors.onboardingBrandPrimary
                     )
                 }
             }
@@ -994,7 +1005,7 @@ fun OnboardingInteractivePackingStep(
                         .padding(vertical = 4.dp)
                         .clickable { onTogglePacked(item) },
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                 ) {
                     Row(
                         modifier = Modifier
@@ -1005,13 +1016,14 @@ fun OnboardingInteractivePackingStep(
                         Checkbox(
                             checked = isPacked,
                             onCheckedChange = { onTogglePacked(item) },
-                            colors = CheckboxDefaults.colors(checkedColor = DarkGreen)
+                            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.extendedColors.onboardingBrandPrimary)
                         )
                         Spacer(modifier = Modifier.width(spacing.small))
                         Text(
                             text = item,
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Medium
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }
@@ -1024,7 +1036,7 @@ fun OnboardingInteractivePackingStep(
                 .fillMaxWidth()
                 .padding(bottom = spacing.medium)
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = DarkGreen),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text(
@@ -1043,7 +1055,7 @@ fun OnboardingInteractivePackingStep(
 @Composable
 fun OnboardingCompletionVictoryStep(
     onComplete: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -1081,14 +1093,14 @@ fun OnboardingCompletionVictoryStep(
                 modifier = Modifier
                     .size(90.dp)
                     .clip(CircleShape)
-                    .background(LightGreenCircle)
+                    .background(MaterialTheme.extendedColors.onboardingBrandContainer)
                     .align(Alignment.CenterHorizontally),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = null,
-                    tint = DarkGreen,
+                    tint = MaterialTheme.extendedColors.onboardingBrandPrimary,
                     modifier = Modifier.size(48.dp)
                 )
             }
@@ -1098,7 +1110,7 @@ fun OnboardingCompletionVictoryStep(
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
-                    .background(LightGreenCircle)
+                    .background(MaterialTheme.extendedColors.onboardingBrandContainer)
                     .padding(horizontal = 12.dp, vertical = 6.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
@@ -1106,7 +1118,7 @@ fun OnboardingCompletionVictoryStep(
                     text = stringResource(R.string.onboarding_victory_pill),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Bold,
-                    color = AccentGreen
+                    color = MaterialTheme.extendedColors.onboardingBrandAccent
                 )
             }
 
@@ -1133,7 +1145,7 @@ fun OnboardingCompletionVictoryStep(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFF2F0EB))
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
                 Column(modifier = Modifier.padding(spacing.medium)) {
                     Row(
@@ -1150,7 +1162,7 @@ fun OnboardingCompletionVictoryStep(
                             text = stringResource(R.string.onboarding_victory_inventory_sub),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
-                            color = AccentGreen
+                            color = MaterialTheme.extendedColors.onboardingBrandAccent
                         )
                     }
 
@@ -1165,10 +1177,15 @@ fun OnboardingCompletionVictoryStep(
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(16.dp))
-                                    .background(Color.White)
+                                    .background(MaterialTheme.colorScheme.surface)
                                     .padding(horizontal = 12.dp, vertical = 6.dp)
                             ) {
-                                Text(text = "✓ $item", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Medium)
+                                Text(
+                                    text = "✓ $item",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = FontWeight.Medium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
                             }
                         }
                     }
@@ -1182,7 +1199,7 @@ fun OnboardingCompletionVictoryStep(
                 .fillMaxWidth()
                 .padding(bottom = spacing.medium)
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = DarkGreen),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text(
@@ -1202,7 +1219,7 @@ private fun OnboardingHeader(
     stepText: String,
     progress: Float,
     onBack: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
@@ -1237,7 +1254,7 @@ private fun OnboardingHeader(
                     .weight(1f)
                     .height(6.dp)
                     .clip(RoundedCornerShape(3.dp)),
-                color = DarkGreen,
+                color = MaterialTheme.extendedColors.onboardingBrandPrimary,
                 trackColor = Color.LightGray.copy(alpha = 0.4f)
             )
             Spacer(modifier = Modifier.width(spacing.medium))

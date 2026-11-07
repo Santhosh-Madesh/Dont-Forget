@@ -6,6 +6,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
     primary = PrimaryDark,
@@ -45,15 +46,31 @@ private val LightColorScheme = lightColorScheme(
     onError = OnErrorLight
 )
 
+private val LightExtendedColors = ExtendedColors(
+    onboardingBrandPrimary = Color(0xFF1B3B2B),
+    onboardingBrandContainer = Color(0xFFE8F5E9),
+    onboardingBrandAccent = Color(0xFF2E7D32),
+    onboardingSurfaceSubtle = Color(0xFFFAF9F6)
+)
+
+private val DarkExtendedColors = ExtendedColors(
+    onboardingBrandPrimary = Color(0xFFA5C9AE),
+    onboardingBrandContainer = Color(0xFF243B2D),
+    onboardingBrandAccent = Color(0xFF81C784),
+    onboardingSurfaceSubtle = Color(0xFF121A15)
+)
+
 @Composable
 fun DontForgetTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
+    val extendedColorScheme = if (darkTheme) DarkExtendedColors else LightExtendedColors
 
     CompositionLocalProvider(
-        LocalSpacing provides Spacing()
+        LocalSpacing provides Spacing(),
+        LocalExtendedColors provides extendedColorScheme
     ) {
         MaterialTheme(
             colorScheme = colorScheme,
