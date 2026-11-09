@@ -19,9 +19,12 @@ data class OnboardingUiState(
     val contextText: String = "Gym",
     val checklistItems: List<String> = listOf("Water bottle", "Towel", "Headphones"),
     val departureTimeText: String = "06:00 PM",
-    val reminderLeadText: String = "5:30 PM (-30m)",
+    val reminderLeadText: String = "30m before departure",
     val packedItems: Set<String> = emptySet(),
-    val newItemInput: String = ""
+    val newItemInput: String = "",
+    val isError: Boolean = false,
+    val errorMsg: String? = null,
+    val isReminderPopupVisible: Boolean = false
 ) : UiState
 
 sealed interface OnboardingUiEvent : UiEvent {
@@ -35,6 +38,7 @@ sealed interface OnboardingUiEvent : UiEvent {
     data object OnNextClicked : OnboardingUiEvent
     data object OnBackClicked : OnboardingUiEvent
     data object OnConfirmReminderClicked : OnboardingUiEvent
+    data object OnDismissReminderPopup : OnboardingUiEvent
     data class OnToggleItemPacked(val item: String) : OnboardingUiEvent
     data object OnPackAllClicked : OnboardingUiEvent
     data object OnFinishOnboardingClicked : OnboardingUiEvent
