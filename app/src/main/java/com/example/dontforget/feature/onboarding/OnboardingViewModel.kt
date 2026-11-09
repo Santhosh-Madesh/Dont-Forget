@@ -1,15 +1,29 @@
 package com.example.dontforget.feature.onboarding
 
 import com.example.dontforget.core.mvi.BaseViewModel
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class OnboardingViewModel : BaseViewModel<OnboardingUiState, OnboardingUiEvent, OnboardingUiSideEffect>(
-    initialState = OnboardingUiState()
+    initialState = OnboardingUiState(
+        departureTimeText = calculateDepartureTime()
+    )
 ) {
+
+    companion object {
+        private fun calculateDepartureTime(): String {
+            val calendar = Calendar.getInstance()
+            calendar.add(Calendar.MINUTE, 30)
+            val sdf = SimpleDateFormat("hh:mm a", Locale.ENGLISH)
+            return sdf.format(calendar.time)
+        }
+    }
 
     override fun onEvent(event: OnboardingUiEvent) {
         when (event) {
             OnboardingUiEvent.OnGetStartedClicked -> {
-                updateState { copy(currentStep = OnboardingStep.CHOOSE_CONTEXT) }
+                updateState { copy(currentStep = OnboardingStep.CHOOSE_CONTEXT, isError = false, errorMsg = null) }
             }
             OnboardingUiEvent.OnSkipClicked -> {
                 sendEffect(OnboardingUiSideEffect.CompleteOnboardingAndNavigateHome)
@@ -23,7 +37,7 @@ class OnboardingViewModel : BaseViewModel<OnboardingUiState, OnboardingUiEvent, 
             OnboardingUiEvent.OnAddItemClicked -> {
                 if (currentState.newItemInput.isNotBlank()) {
                     val updatedItems = currentState.checklistItems + currentState.newItemInput.trim()
-                    updateState { copy(checklistItems = updatedItems, newItemInput = "") }
+                    updateState { copy(checklistItems = updatedItems, newItemInput = "", isError = false, errorMsg = null) }
                 }
             }
             is OnboardingUiEvent.OnRemoveItemClicked -> {
@@ -34,16 +48,46 @@ class OnboardingViewModel : BaseViewModel<OnboardingUiState, OnboardingUiEvent, 
                 updateState { copy(departureTimeText = event.time) }
             }
             OnboardingUiEvent.OnNextClicked -> {
-                val nextStep = when (currentState.currentStep) {
-                    OnboardingStep.WELCOME -> OnboardingStep.CHOOSE_CONTEXT
-                    OnboardingStep.CHOOSE_CONTEXT -> OnboardingStep.ADD_ITEMS
-                    OnboardingStep.ADD_ITEMS -> OnboardingStep.CONFIGURE_TIMING
-                    OnboardingStep.CONFIGURE_TIMING -> OnboardingStep.CONFIRMATION_SUMMARY
-                    OnboardingStep.CONFIRMATION_SUMMARY -> OnboardingStep.INTERACTIVE_PACKING
-                    OnboardingStep.INTERACTIVE_PACKING -> OnboardingStep.COMPLETION_VICTORY
-                    OnboardingStep.COMPLETION_VICTORY -> OnboardingStep.COMPLETION_VICTORY
+                when (currentState.currentStep) {
+                    OnboardingStep.WELCOME -> {
+                        updateState { copy(currentStep = OnboardingStep.CHOOSE_CONTEXT, isError = false, errorMsg = null) }
+                    }
+                    OnboardingStep.CHOOSE_CONTEXT -> {
+                        if(currentState.contextText.isEmpty()) {
+                            updateState {
+                                copy(isError = true, errorMsg = "Please set the context name")
+                            }
+                        } else {
+                            updateState { copy(currentStep = OnboardingStep.ADD_ITEMS, isError = false, errorMsg = null) }
+                        }
+
+                    }
+                    OnboardingStep.ADD_ITEMS -> {
+                        if (currentState.checklistItems.isEmpty()) {
+                            updateState { copy(isError = true, errorMsg = "Please add at least one item before continuing!") }
+                        } else {
+                            updateState { copy(currentStep = OnboardingStep.CONFIGURE_TIMING, isError = false, errorMsg = null) }
+                        }
+                    }
+                    OnboardingStep.CONFIGURE_TIMING -> {
+                        updateState { copy(currentStep = OnboardingStep.CONFIRMATION_SUMMARY, isError = false, errorMsg = null) }
+                    }
+                    OnboardingStep.CONFIRMATION_SUMMARY -> {
+                        updateState { copy(currentStep = OnboardingStep.INTERACTIVE_PACKING, isReminderPopupVisible = true, isError = false, errorMsg = null) }
+                    }
+                    OnboardingStep.INTERACTIVE_PACKING -> {
+                        val allItemsPacked = currentState.checklistItems.isNotEmpty() &&
+                                currentState.packedItems.containsAll(currentState.checklistItems)
+                        if (!allItemsPacked) {
+                            updateState { copy(isError = true, errorMsg = "Hold up! Check off and pack all your items before finishing up!") }
+                        } else {
+                            updateState { copy(currentStep = OnboardingStep.COMPLETION_VICTORY, isError = false, errorMsg = null) }
+                        }
+                    }
+                    OnboardingStep.COMPLETION_VICTORY -> {
+                        updateState { copy(currentStep = OnboardingStep.COMPLETION_VICTORY, isError = false, errorMsg = null) }
+                    }
                 }
-                updateState { copy(currentStep = nextStep) }
             }
             OnboardingUiEvent.OnBackClicked -> {
                 val prevStep = when (currentState.currentStep) {
@@ -55,21 +99,13 @@ class OnboardingViewModel : BaseViewModel<OnboardingUiState, OnboardingUiEvent, 
                     OnboardingStep.INTERACTIVE_PACKING -> OnboardingStep.CONFIRMATION_SUMMARY
                     OnboardingStep.COMPLETION_VICTORY -> OnboardingStep.INTERACTIVE_PACKING
                 }
-                updateState { copy(currentStep = prevStep) }
+                updateState { copy(currentStep = prevStep, isError = false, errorMsg = null) }
             }
             OnboardingUiEvent.OnConfirmReminderClicked -> {
-                val itemsList = if (currentState.checklistItems.isNotEmpty()) {
-                    currentState.checklistItems.joinToString(", ")
-                } else "Don't forget your essential items"
-
-                sendEffect(
-                    OnboardingUiSideEffect.TriggerInstantTestAlarm(
-                        reminderId = 9999L,
-                        title = "${currentState.contextText} Departure",
-                        content = "Don't forget: $itemsList"
-                    )
-                )
-                updateState { copy(currentStep = OnboardingStep.INTERACTIVE_PACKING) }
+                updateState { copy(currentStep = OnboardingStep.INTERACTIVE_PACKING, isReminderPopupVisible = true, isError = false, errorMsg = null) }
+            }
+            OnboardingUiEvent.OnDismissReminderPopup -> {
+                updateState { copy(isReminderPopupVisible = false) }
             }
             is OnboardingUiEvent.OnToggleItemPacked -> {
                 val currentPacked = currentState.packedItems
@@ -78,7 +114,7 @@ class OnboardingViewModel : BaseViewModel<OnboardingUiState, OnboardingUiEvent, 
                 } else {
                     currentPacked + event.item
                 }
-                updateState { copy(packedItems = updatedPacked) }
+                updateState { copy(packedItems = updatedPacked, isError = false, errorMsg = null) }
             }
             OnboardingUiEvent.OnPackAllClicked -> {
                 val allItems = currentState.checklistItems.toSet()
@@ -87,7 +123,7 @@ class OnboardingViewModel : BaseViewModel<OnboardingUiState, OnboardingUiEvent, 
                 } else {
                     allItems
                 }
-                updateState { copy(packedItems = updatedPacked) }
+                updateState { copy(packedItems = updatedPacked, isError = false, errorMsg = null) }
             }
             OnboardingUiEvent.OnFinishOnboardingClicked -> {
                 sendEffect(OnboardingUiSideEffect.CompleteOnboardingAndNavigateHome)
