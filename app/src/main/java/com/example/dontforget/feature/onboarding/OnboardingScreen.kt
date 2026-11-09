@@ -63,6 +63,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.dontforget.R
 import com.example.dontforget.ui.theme.Spacing
 import com.example.dontforget.ui.theme.extendedColors
@@ -132,7 +133,9 @@ fun OnboardingContent(
                     onAddItem = { onEvent(OnboardingUiEvent.OnAddItemClicked) },
                     onRemoveItem = { onEvent(OnboardingUiEvent.OnRemoveItemClicked(it)) },
                     onNext = { onEvent(OnboardingUiEvent.OnNextClicked) },
-                    onBack = { onEvent(OnboardingUiEvent.OnBackClicked) }
+                    onBack = { onEvent(OnboardingUiEvent.OnBackClicked) },
+                    isError = state.isError,
+                    errorMsg = state.errorMsg
                 )
                 OnboardingStep.CONFIGURE_TIMING -> OnboardingConfigureTimingStep(
                     departureTimeText = state.departureTimeText,
@@ -150,9 +153,11 @@ fun OnboardingContent(
                     onTogglePacked = { onEvent(OnboardingUiEvent.OnToggleItemPacked(it)) },
                     onPackAll = { onEvent(OnboardingUiEvent.OnPackAllClicked) },
                     onFinish = { onEvent(OnboardingUiEvent.OnNextClicked) },
-                    onBack = { onEvent(OnboardingUiEvent.OnBackClicked) }
+                    onBack = { onEvent(OnboardingUiEvent.OnBackClicked) },
+                    onDismissPopup = { onEvent(OnboardingUiEvent.OnDismissReminderPopup) }
                 )
                 OnboardingStep.COMPLETION_VICTORY -> OnboardingCompletionVictoryStep(
+                    checklistItems = state.checklistItems,
                     onComplete = { onEvent(OnboardingUiEvent.OnFinishOnboardingClicked) }
                 )
             }
@@ -361,6 +366,8 @@ fun OnboardingAddItemsStep(
     onRemoveItem: (String) -> Unit,
     onNext: () -> Unit,
     onBack: () -> Unit,
+    isError: Boolean = false,
+    errorMsg: String? = null,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -389,6 +396,33 @@ fun OnboardingAddItemsStep(
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+
+            if (isError && !errorMsg.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(spacing.small))
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = spacing.medium, vertical = spacing.small),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(spacing.small))
+                        Text(
+                            text = errorMsg,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(spacing.large))
 
@@ -898,8 +932,78 @@ fun OnboardingInteractivePackingStep(
     onPackAll: () -> Unit,
     onFinish: () -> Unit,
     onBack: () -> Unit,
+    onDismissPopup: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
+    if (state.isReminderPopupVisible) {
+        Dialog(onDismissRequest = onDismissPopup) {
+            Surface(
+                shape = RoundedCornerShape(24.dp),
+                color = MaterialTheme.colorScheme.surface,
+                tonalElevation = 8.dp,
+                modifier = Modifier
+                    .fillMaxWidth(0.95f)
+                    .padding(spacing.small)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(spacing.large)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Packing Reminder 🎒",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        IconButton(onClick = onDismissPopup) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Close",
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(spacing.medium))
+
+                    val itemsText = if (state.checklistItems.isNotEmpty()) {
+                        state.checklistItems.joinToString(", ")
+                    } else {
+                        "all your essentials"
+                    }
+
+                    Text(
+                        text = "Yo! Don't even think about stepping out without your essentials: $itemsText. Get 'em packed so you don't regret it later! 🔥",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+
+                    Spacer(modifier = Modifier.height(spacing.large))
+
+                    Button(
+                        onClick = onDismissPopup,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        shape = RoundedCornerShape(24.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary)
+                    ) {
+                        Text(
+                            text = "Got it!",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -908,6 +1012,14 @@ fun OnboardingInteractivePackingStep(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
+            OnboardingHeader(
+                stepText = stringResource(R.string.onboarding_step_5_of_5),
+                progress = 1.0f,
+                onBack = onBack
+            )
+
+            Spacer(modifier = Modifier.height(spacing.small))
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -934,11 +1046,33 @@ fun OnboardingInteractivePackingStep(
 
             Spacer(modifier = Modifier.height(spacing.small))
 
-            OnboardingHeader(
-                stepText = stringResource(R.string.onboarding_step_5_of_5),
-                progress = 1.0f,
-                onBack = onBack
-            )
+            if (state.isError && !state.errorMsg.isNullOrBlank()) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = spacing.small),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
+                ) {
+                    Row(
+                        modifier = Modifier.padding(horizontal = spacing.medium, vertical = spacing.small),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Spacer(modifier = Modifier.width(spacing.small))
+                        Text(
+                            text = state.errorMsg,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onErrorContainer
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(spacing.small))
 
@@ -1054,6 +1188,7 @@ fun OnboardingInteractivePackingStep(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun OnboardingCompletionVictoryStep(
+    checklistItems: List<String>,
     onComplete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -1159,7 +1294,7 @@ fun OnboardingCompletionVictoryStep(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Text(
-                            text = stringResource(R.string.onboarding_victory_inventory_sub),
+                            text = "ALL ${checklistItems.size} READY",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.extendedColors.onboardingBrandAccent
@@ -1172,8 +1307,7 @@ fun OnboardingCompletionVictoryStep(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        val verifiedItems = listOf("Keys & FOB", "Work Badge", "Noise Canceling", "Water Bottle")
-                        verifiedItems.forEach { item ->
+                        checklistItems.forEach { item ->
                             Box(
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(16.dp))
