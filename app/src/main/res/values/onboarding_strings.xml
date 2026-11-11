@@ -65,4 +65,13 @@
     <string name="onboarding_victory_inventory_header">VERIFIED INVENTORY</string>
     <string name="onboarding_victory_inventory_sub">ALL 4 READY</string>
     <string name="onboarding_action_roll">Got it, let\'s roll -></string>
+
+    <!-- Accessibility Content Descriptions -->
+    <string name="onboarding_cd_back">Navigate back</string>
+    <string name="onboarding_cd_add_item">Add item to checklist</string>
+    <string name="onboarding_cd_remove_item">Remove %1$s from checklist</string>
+    <string name="onboarding_cd_close_dialog">Close reminder popup</string>
+    <string name="onboarding_cd_close">Close onboarding</string>
+    <string name="onboarding_cd_item_packed">%1$s, packed</string>
+    <string name="onboarding_cd_item_unpacked">%1$s, not packed</string>
 </resources>
