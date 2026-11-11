@@ -65,4 +65,10 @@
     <string name="onboarding_victory_inventory_header">INVENTAIRE VÉRIFIÉ</string>
     <string name="onboarding_victory_inventory_sub">LES 4 SONT PRÊTS</string>
     <string name="onboarding_action_roll">C\'est compris, c\'est parti -></string>
+
+    <!-- Clean Button Accessibility Descriptions (Without Emojis/Symbols) -->
+    <string name="onboarding_action_next_cd">Suivant</string>
+    <string name="onboarding_action_done_cd">Terminé</string>
+    <string name="onboarding_packing_pack_all_cd">Tout emballer</string>
+    <string name="onboarding_action_roll_cd">C\'est compris, c\'est parti</string>
 </resources>

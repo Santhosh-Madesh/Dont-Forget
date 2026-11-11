@@ -74,4 +74,10 @@
     <string name="onboarding_cd_close">Close onboarding</string>
     <string name="onboarding_cd_item_packed">%1$s, packed</string>
     <string name="onboarding_cd_item_unpacked">%1$s, not packed</string>
+
+    <!-- Clean Button Accessibility Descriptions (Without Emojis/Symbols) -->
+    <string name="onboarding_action_next_cd">Next</string>
+    <string name="onboarding_action_done_cd">Done</string>
+    <string name="onboarding_packing_pack_all_cd">Pack all</string>
+    <string name="onboarding_action_roll_cd">Got it, let\'s roll</string>
 </resources>

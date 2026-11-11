@@ -65,4 +65,10 @@
     <string name="onboarding_victory_inventory_header">सत्यापित इन्वेंट्री</string>
     <string name="onboarding_victory_inventory_sub">सभी 4 तैयार</string>
     <string name="onboarding_action_roll">समझ गया, चलिए शुरू करते हैं -></string>
+
+    <!-- Clean Button Accessibility Descriptions (Without Emojis/Symbols) -->
+    <string name="onboarding_action_next_cd">आगे</string>
+    <string name="onboarding_action_done_cd">हो गया</string>
+    <string name="onboarding_packing_pack_all_cd">सब पैक करें</string>
+    <string name="onboarding_action_roll_cd">समझ गया, चलिए शुरू करते हैं</string>
 </resources>

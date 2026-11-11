@@ -65,4 +65,10 @@
     <string name="onboarding_victory_inventory_header">சரிபார்க்கப்பட்ட பொருட்கள்</string>
     <string name="onboarding_victory_inventory_sub">அனைத்தும் 4 தயார்</string>
     <string name="onboarding_action_roll">புரிந்தது, தொடங்குவோம் -></string>
+
+    <!-- Clean Button Accessibility Descriptions (Without Emojis/Symbols) -->
+    <string name="onboarding_action_next_cd">அடுத்து</string>
+    <string name="onboarding_action_done_cd">முடிந்தது</string>
+    <string name="onboarding_packing_pack_all_cd">அனைத்தையும் பேக் செய்</string>
+    <string name="onboarding_action_roll_cd">புரிந்தது, தொடங்குவோம்</string>
 </resources>
