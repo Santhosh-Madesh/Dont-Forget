@@ -71,4 +71,10 @@
     <string name="onboarding_action_done_cd">हो गया</string>
     <string name="onboarding_packing_pack_all_cd">सब पैक करें</string>
     <string name="onboarding_action_roll_cd">समझ गया, चलिए शुरू करते हैं</string>
+
+    <!-- Merged Group Content Descriptions -->
+    <string name="onboarding_timing_departure_cd">आपके स्थानीय समय में प्रस्थान का समय %1$s है</string>
+    <string name="onboarding_timing_notification_cd">नोटिफिकेशन का समय टेस्ट अलर्ट के लिए अभी पर सेट किया गया है ताकि सेटअप पूरा करते ही लाइव प्रस्थान रिमाइंडर का अनुभव किया जा सके।</string>
+    <string name="onboarding_packing_reminder_dialog_cd">पैकिंग रिमाइंडर। अपनी ज़रूरी चीज़ों के बिना बाहर निकलने के बारे में सोचें भी मत: %1$s। इन्हें पैक करें ताकि बाद में पछताना न पड़े!</string>
+    <string name="onboarding_packing_cargo_cd">आपका सामान, %2$d में से %1$d आइटम पैक किए गए</string>
 </resources>

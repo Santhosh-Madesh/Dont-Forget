@@ -71,4 +71,10 @@
     <string name="onboarding_action_done_cd">Terminé</string>
     <string name="onboarding_packing_pack_all_cd">Tout emballer</string>
     <string name="onboarding_action_roll_cd">C\'est compris, c\'est parti</string>
+
+    <!-- Merged Group Content Descriptions -->
+    <string name="onboarding_timing_departure_cd">L\'heure de départ dans votre heure locale est %1$s</string>
+    <string name="onboarding_timing_notification_cd">Moment de la notification réglé sur Maintenant pour l\'alerte de test afin de découvrir le fonctionnement des rappels de départ en direct dès la fin de la configuration.</string>
+    <string name="onboarding_packing_reminder_dialog_cd">Rappel d\'emballage. Ne pensez même pas à sortir sans vos indispensables : %1$s. Emballez-les pour ne pas le regretter plus tard !</string>
+    <string name="onboarding_packing_cargo_cd">Vos objets, %1$d sur %2$d objets emballés</string>
 </resources>

@@ -80,4 +80,10 @@
     <string name="onboarding_action_done_cd">Done</string>
     <string name="onboarding_packing_pack_all_cd">Pack all</string>
     <string name="onboarding_action_roll_cd">Got it, let\'s roll</string>
+
+    <!-- Merged Group Content Descriptions -->
+    <string name="onboarding_timing_departure_cd">Departure time in your local time is %1$s</string>
+    <string name="onboarding_timing_notification_cd">Notification timing set to Now for Test Alert in order to experience how live departure reminders work immediately upon finishing setup.</string>
+    <string name="onboarding_packing_reminder_dialog_cd">Packing Reminder. Yo! Don\'t even think about stepping out without your essentials: %1$s. Get \'em packed so you don\'t regret it later!</string>
+    <string name="onboarding_packing_cargo_cd">Your cargo, %1$d of %2$d items packed</string>
 </resources>

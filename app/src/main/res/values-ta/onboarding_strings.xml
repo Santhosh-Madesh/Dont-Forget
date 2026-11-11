@@ -71,4 +71,10 @@
     <string name="onboarding_action_done_cd">முடிந்தது</string>
     <string name="onboarding_packing_pack_all_cd">அனைத்தையும் பேக் செய்</string>
     <string name="onboarding_action_roll_cd">புரிந்தது, தொடங்குவோம்</string>
+
+    <!-- Merged Group Content Descriptions -->
+    <string name="onboarding_timing_departure_cd">உங்கள் உள்ளூர் நேரத்தில் புறப்படும் நேரம் %1$s</string>
+    <string name="onboarding_timing_notification_cd">அமைப்பை முடித்தவுடன் நேரலை புறப்பாடு நினைவூட்டல்கள் எவ்வாறு செயல்படுகின்றன என்பதை உணர அறிவிப்பு நேரம் இப்போது என அமைக்கப்பட்டுள்ளது.</string>
+    <string name="onboarding_packing_reminder_dialog_cd">பேக்கிங் நினைவூட்டல். உங்கள் அத்தியாவசியப் பொருட்கள் இல்லாமல் வெளியில் செல்வதைப் பற்றி யோசிக்கக்கூட வேண்டாம்: %1$s. பின்னர் வருந்தாமல் இருக்க அவற்றை பேக் செய்யுங்கள்!</string>
+    <string name="onboarding_packing_cargo_cd">உங்கள் பொருட்கள், %2$d-இல் %1$d பொருட்கள் பேக் செய்யப்பட்டன</string>
 </resources>
