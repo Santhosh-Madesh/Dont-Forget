@@ -60,6 +60,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.toggleableState
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -210,7 +220,8 @@ fun OnboardingWelcomeStep(
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.semantics { heading() }
             )
             Spacer(modifier = Modifier.height(spacing.medium))
             Text(
@@ -225,24 +236,36 @@ fun OnboardingWelcomeStep(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxWidth()
         ) {
+            val getStartedText = stringResource(R.string.onboarding_welcome_get_started)
             Button(
                 onClick = onGetStarted,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
+                    .height(56.dp)
+                    .semantics {
+                        role = Role.Button
+                        contentDescription = getStartedText
+                    },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
                 shape = RoundedCornerShape(28.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.onboarding_welcome_get_started),
+                    text = getStartedText,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
             Spacer(modifier = Modifier.height(spacing.small))
-            TextButton(onClick = onSkip) {
+            val skipText = stringResource(R.string.onboarding_welcome_skip)
+            TextButton(
+                onClick = onSkip,
+                modifier = Modifier.semantics {
+                    role = Role.Button
+                    contentDescription = skipText
+                }
+            ) {
                 Text(
-                    text = stringResource(R.string.onboarding_welcome_skip),
+                    text = skipText,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     fontSize = 15.sp
                 )
@@ -280,7 +303,8 @@ fun OnboardingChooseContextStep(
             Text(
                 text = stringResource(R.string.onboarding_context_title),
                 style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.semantics { heading() }
             )
             Spacer(modifier = Modifier.height(spacing.extraSmall))
             Text(
@@ -340,18 +364,23 @@ fun OnboardingChooseContextStep(
             }
         }
 
+        val nextText = stringResource(R.string.onboarding_action_next)
         Button(
             onClick = onNext,
             enabled = contextText.isNotBlank(),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = spacing.medium)
-                .height(56.dp),
+                .height(56.dp)
+                .semantics {
+                    role = Role.Button
+                    contentDescription = nextText
+                },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text(
-                text = stringResource(R.string.onboarding_action_next),
+                text = nextText,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -394,7 +423,8 @@ fun OnboardingAddItemsStep(
             Text(
                 text = stringResource(R.string.onboarding_items_title),
                 style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.semantics { heading() }
             )
             Spacer(modifier = Modifier.height(spacing.extraSmall))
             Text(
@@ -406,7 +436,9 @@ fun OnboardingAddItemsStep(
             if (isError && !errorMsg.isNullOrBlank()) {
                 Spacer(modifier = Modifier.height(spacing.small))
                 Card(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .semantics { liveRegion = LiveRegionMode.Assertive },
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
                 ) {
@@ -432,6 +464,7 @@ fun OnboardingAddItemsStep(
 
             Spacer(modifier = Modifier.height(spacing.large))
 
+            val addItemCd = stringResource(R.string.onboarding_cd_add_item)
             OutlinedTextField(
                 value = newItemInput,
                 onValueChange = onNewItemInputChanged,
@@ -440,7 +473,13 @@ fun OnboardingAddItemsStep(
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { if (newItemInput.isNotBlank()) onAddItem() }),
                 trailingIcon = {
-                    IconButton(onClick = onAddItem) {
+                    IconButton(
+                        onClick = onAddItem,
+                        modifier = Modifier.semantics {
+                            role = Role.Button
+                            contentDescription = addItemCd
+                        }
+                    ) {
                         Box(
                             modifier = Modifier
                                 .size(36.dp)
@@ -450,7 +489,7 @@ fun OnboardingAddItemsStep(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Add,
-                                contentDescription = "Add item",
+                                contentDescription = null,
                                 tint = Color.White
                             )
                         }
@@ -498,10 +537,17 @@ fun OnboardingAddItemsStep(
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         }
-                        IconButton(onClick = { onRemoveItem(item) }) {
+                        val removeItemCd = stringResource(R.string.onboarding_cd_remove_item, item)
+                        IconButton(
+                            onClick = { onRemoveItem(item) },
+                            modifier = Modifier.semantics {
+                                role = Role.Button
+                                contentDescription = removeItemCd
+                            }
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Close,
-                                contentDescription = "Remove",
+                                contentDescription = null,
                                 tint = Color.Gray
                             )
                         }
@@ -510,17 +556,22 @@ fun OnboardingAddItemsStep(
             }
         }
 
+        val nextText = stringResource(R.string.onboarding_action_next)
         Button(
             onClick = onNext,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = spacing.medium)
-                .height(56.dp),
+                .height(56.dp)
+                .semantics {
+                    role = Role.Button
+                    contentDescription = nextText
+                },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text(
-                text = stringResource(R.string.onboarding_action_next),
+                text = nextText,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -557,7 +608,8 @@ fun OnboardingConfigureTimingStep(
             Text(
                 text = stringResource(R.string.onboarding_timing_title),
                 style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.semantics { heading() }
             )
 
             Spacer(modifier = Modifier.height(spacing.large))
@@ -582,7 +634,9 @@ fun OnboardingConfigureTimingStep(
             Spacer(modifier = Modifier.height(spacing.small))
 
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics(mergeDescendants = true) {},
                 shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
@@ -632,7 +686,9 @@ fun OnboardingConfigureTimingStep(
             Spacer(modifier = Modifier.height(spacing.small))
 
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics(mergeDescendants = true) {},
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
@@ -701,7 +757,9 @@ fun OnboardingConfigureTimingStep(
             Spacer(modifier = Modifier.height(spacing.medium))
 
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics(mergeDescendants = true) {},
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
@@ -725,17 +783,22 @@ fun OnboardingConfigureTimingStep(
             }
         }
 
+        val nextText = stringResource(R.string.onboarding_action_next)
         Button(
             onClick = onNext,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = spacing.medium)
-                .height(56.dp),
+                .height(56.dp)
+                .semantics {
+                    role = Role.Button
+                    contentDescription = nextText
+                },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text(
-                text = stringResource(R.string.onboarding_action_next),
+                text = nextText,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -792,7 +855,9 @@ fun OnboardingConfirmationSummaryStep(
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { heading() }
             )
             Text(
                 text = stringResource(R.string.onboarding_summary_subtitle),
@@ -805,7 +870,9 @@ fun OnboardingConfirmationSummaryStep(
             Spacer(modifier = Modifier.height(spacing.large))
 
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics(mergeDescendants = true) {},
                 shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
@@ -913,17 +980,22 @@ fun OnboardingConfirmationSummaryStep(
             }
         }
 
+        val doneText = stringResource(R.string.onboarding_action_done)
         Button(
             onClick = onDone,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = spacing.medium)
-                .height(56.dp),
+                .height(56.dp)
+                .semantics {
+                    role = Role.Button
+                    contentDescription = doneText
+                },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text(
-                text = stringResource(R.string.onboarding_action_done),
+                text = doneText,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -968,12 +1040,20 @@ fun OnboardingInteractivePackingStep(
                             text = "Packing Reminder ",
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.semantics { heading() }
                         )
-                        IconButton(onClick = onDismissPopup) {
+                        val closeDialogCd = stringResource(R.string.onboarding_cd_close_dialog)
+                        IconButton(
+                            onClick = onDismissPopup,
+                            modifier = Modifier.semantics {
+                                role = Role.Button
+                                contentDescription = closeDialogCd
+                            }
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.Close,
-                                contentDescription = "Close",
+                                contentDescription = null,
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -999,7 +1079,11 @@ fun OnboardingInteractivePackingStep(
                         onClick = onDismissPopup,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(48.dp),
+                            .height(48.dp)
+                            .semantics {
+                                role = Role.Button
+                                contentDescription = "Got it!"
+                            },
                         shape = RoundedCornerShape(24.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary)
                     ) {
@@ -1035,6 +1119,7 @@ fun OnboardingInteractivePackingStep(
                     .clip(RoundedCornerShape(12.dp))
                     .background(MaterialTheme.extendedColors.onboardingBrandContainer)
                     .padding(horizontal = 12.dp, vertical = 8.dp)
+                    .semantics(mergeDescendants = true) {}
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -1059,7 +1144,8 @@ fun OnboardingInteractivePackingStep(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = spacing.small),
+                        .padding(bottom = spacing.small)
+                        .semantics { liveRegion = LiveRegionMode.Assertive },
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
                 ) {
@@ -1088,7 +1174,8 @@ fun OnboardingInteractivePackingStep(
             Text(
                 text = stringResource(R.string.onboarding_packing_title),
                 style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.semantics { heading() }
             )
             Spacer(modifier = Modifier.height(spacing.extraSmall))
             Text(
@@ -1129,9 +1216,16 @@ fun OnboardingInteractivePackingStep(
                     }
                 }
 
-                TextButton(onClick = onPackAll) {
+                val packAllText = stringResource(R.string.onboarding_packing_pack_all)
+                TextButton(
+                    onClick = onPackAll,
+                    modifier = Modifier.semantics {
+                        role = Role.Button
+                        contentDescription = packAllText
+                    }
+                ) {
                     Text(
-                        text = stringResource(R.string.onboarding_packing_pack_all),
+                        text = packAllText,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.extendedColors.onboardingBrandPrimary
                     )
@@ -1142,10 +1236,17 @@ fun OnboardingInteractivePackingStep(
 
             state.checklistItems.forEach { item ->
                 val isPacked = state.packedItems.contains(item)
+                val itemPackedCd = stringResource(R.string.onboarding_cd_item_packed, item)
+                val itemUnpackedCd = stringResource(R.string.onboarding_cd_item_unpacked, item)
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
+                        .semantics(mergeDescendants = true) {
+                            role = Role.Checkbox
+                            toggleableState = if (isPacked) ToggleableState.On else ToggleableState.Off
+                            stateDescription = if (isPacked) itemPackedCd else itemUnpackedCd
+                        }
                         .clickable { onTogglePacked(item) },
                     shape = RoundedCornerShape(16.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -1158,7 +1259,7 @@ fun OnboardingInteractivePackingStep(
                     ) {
                         Checkbox(
                             checked = isPacked,
-                            onCheckedChange = { onTogglePacked(item) },
+                            onCheckedChange = null,
                             colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.extendedColors.onboardingBrandPrimary)
                         )
                         Spacer(modifier = Modifier.width(spacing.small))
@@ -1173,17 +1274,22 @@ fun OnboardingInteractivePackingStep(
             }
         }
 
+        val finishText = stringResource(R.string.onboarding_packing_finish)
         Button(
             onClick = onFinish,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = spacing.medium)
-                .height(56.dp),
+                .height(56.dp)
+                .semantics {
+                    role = Role.Button
+                    contentDescription = finishText
+                },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text(
-                text = stringResource(R.string.onboarding_packing_finish),
+                text = finishText,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -1214,8 +1320,15 @@ fun OnboardingCompletionVictoryStep(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = onComplete) {
-                    Icon(imageVector = Icons.Default.Close, contentDescription = "Close")
+                val closeCd = stringResource(R.string.onboarding_cd_close)
+                IconButton(
+                    onClick = onComplete,
+                    modifier = Modifier.semantics {
+                        role = Role.Button
+                        contentDescription = closeCd
+                    }
+                ) {
+                    Icon(imageVector = Icons.Default.Close, contentDescription = null)
                 }
                 Box(
                     modifier = Modifier
@@ -1273,7 +1386,9 @@ fun OnboardingCompletionVictoryStep(
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { heading() }
             )
             Spacer(modifier = Modifier.height(spacing.small))
             Text(
@@ -1287,7 +1402,9 @@ fun OnboardingCompletionVictoryStep(
             Spacer(modifier = Modifier.height(spacing.large))
 
             Card(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics(mergeDescendants = true) {},
                 shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
@@ -1336,17 +1453,22 @@ fun OnboardingCompletionVictoryStep(
             }
         }
 
+        val rollText = stringResource(R.string.onboarding_action_roll)
         Button(
             onClick = onComplete,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = spacing.medium)
-                .height(56.dp),
+                .height(56.dp)
+                .semantics {
+                    role = Role.Button
+                    contentDescription = rollText
+                },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text(
-                text = stringResource(R.string.onboarding_action_roll),
+                text = rollText,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -1370,16 +1492,24 @@ private fun OnboardingHeader(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            IconButton(onClick = onBack) {
+            val backCd = stringResource(R.string.onboarding_cd_back)
+            IconButton(
+                onClick = onBack,
+                modifier = Modifier.semantics {
+                    role = Role.Button
+                    contentDescription = backCd
+                }
+            ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back"
+                    contentDescription = null
                 )
             }
             Text(
                 text = stringResource(R.string.onboarding_header_title),
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.semantics { heading() }
             )
             Spacer(modifier = Modifier.size(48.dp))
         }
@@ -1387,7 +1517,11 @@ private fun OnboardingHeader(
         Spacer(modifier = Modifier.height(spacing.extraSmall))
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics(mergeDescendants = true) {
+                    stateDescription = stepText
+                },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
