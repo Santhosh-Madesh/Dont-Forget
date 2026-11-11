@@ -65,6 +65,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.isTraversalGroup
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
@@ -403,14 +405,18 @@ fun OnboardingAddItemsStep(
         modifier = modifier
             .fillMaxSize()
             .padding(spacing.medium)
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(rememberScrollState())
+            .semantics { isTraversalGroup = true },
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column {
+        Column(
+            modifier = Modifier.semantics { isTraversalGroup = true; traversalIndex = 1f }
+        ) {
             OnboardingHeader(
                 stepText = stringResource(R.string.onboarding_step_2_of_5),
                 progress = 0.4f,
-                onBack = onBack
+                onBack = onBack,
+                modifier = Modifier.semantics { traversalIndex = 1f }
             )
             Spacer(modifier = Modifier.height(spacing.medium))
 
@@ -418,13 +424,14 @@ fun OnboardingAddItemsStep(
                 text = stringResource(R.string.onboarding_items_title),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.semantics { heading() }
+                modifier = Modifier.semantics { heading(); traversalIndex = 2f }
             )
             Spacer(modifier = Modifier.height(spacing.extraSmall))
             Text(
                 text = stringResource(R.string.onboarding_items_subtitle, contextText),
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.semantics { traversalIndex = 3f }
             )
 
             if (isError && !errorMsg.isNullOrBlank()) {
@@ -432,7 +439,7 @@ fun OnboardingAddItemsStep(
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .semantics { liveRegion = LiveRegionMode.Assertive },
+                        .semantics { liveRegion = LiveRegionMode.Assertive; traversalIndex = 3.5f },
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
                 ) {
@@ -489,7 +496,9 @@ fun OnboardingAddItemsStep(
                         }
                     }
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { traversalIndex = 4f },
                 shape = RoundedCornerShape(24.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
@@ -501,11 +510,12 @@ fun OnboardingAddItemsStep(
 
             Spacer(modifier = Modifier.height(spacing.medium))
 
-            checklistItems.forEach { item ->
+            checklistItems.forEachIndexed { index, item ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 4.dp),
+                        .padding(vertical = 4.dp)
+                        .semantics { traversalIndex = 5f + index * 0.1f },
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                 ) {
@@ -561,6 +571,7 @@ fun OnboardingAddItemsStep(
                 .clearAndSetSemantics {
                     role = Role.Button
                     contentDescription = nextCd
+                    traversalIndex = 100f
                 },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
             shape = RoundedCornerShape(28.dp)
@@ -589,14 +600,18 @@ fun OnboardingConfigureTimingStep(
         modifier = modifier
             .fillMaxSize()
             .padding(spacing.medium)
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(rememberScrollState())
+            .semantics { isTraversalGroup = true },
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column {
+        Column(
+            modifier = Modifier.semantics { isTraversalGroup = true; traversalIndex = 1f }
+        ) {
             OnboardingHeader(
                 stepText = stringResource(R.string.onboarding_step_3_of_5),
                 progress = 0.6f,
-                onBack = onBack
+                onBack = onBack,
+                modifier = Modifier.semantics { traversalIndex = 1f }
             )
             Spacer(modifier = Modifier.height(spacing.medium))
 
@@ -604,13 +619,15 @@ fun OnboardingConfigureTimingStep(
                 text = stringResource(R.string.onboarding_timing_title),
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.semantics { heading() }
+                modifier = Modifier.semantics { heading(); traversalIndex = 2f }
             )
 
             Spacer(modifier = Modifier.height(spacing.large))
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics { traversalIndex = 3f },
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -631,7 +648,7 @@ fun OnboardingConfigureTimingStep(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .semantics(mergeDescendants = true) {},
+                    .semantics(mergeDescendants = true) { traversalIndex = 4f },
                 shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
@@ -675,7 +692,8 @@ fun OnboardingConfigureTimingStep(
             Text(
                 text = stringResource(R.string.onboarding_timing_notification_label),
                 style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.semantics { traversalIndex = 5f }
             )
 
             Spacer(modifier = Modifier.height(spacing.small))
@@ -683,7 +701,7 @@ fun OnboardingConfigureTimingStep(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .semantics(mergeDescendants = true) {},
+                    .semantics(mergeDescendants = true) { traversalIndex = 6f },
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
@@ -754,7 +772,7 @@ fun OnboardingConfigureTimingStep(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .semantics(mergeDescendants = true) {},
+                    .semantics(mergeDescendants = true) { traversalIndex = 7f },
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {
@@ -789,6 +807,7 @@ fun OnboardingConfigureTimingStep(
                 .clearAndSetSemantics {
                     role = Role.Button
                     contentDescription = nextCd
+                    traversalIndex = 100f
                 },
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.extendedColors.onboardingBrandPrimary),
             shape = RoundedCornerShape(28.dp)
