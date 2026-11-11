@@ -624,146 +624,159 @@ fun OnboardingConfigureTimingStep(
 
             Spacer(modifier = Modifier.height(spacing.large))
 
-            Row(
+            val departureCd = stringResource(R.string.onboarding_timing_departure_cd, departureTimeText)
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .semantics { traversalIndex = 3f },
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.onboarding_timing_departure_label),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Text(
-                    text = stringResource(R.string.onboarding_timing_local_time),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-
-            Spacer(modifier = Modifier.height(spacing.small))
-
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .semantics(mergeDescendants = true) { traversalIndex = 4f },
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                    .semantics(mergeDescendants = true) {
+                        contentDescription = departureCd
+                        traversalIndex = 3f
+                    }
             ) {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(spacing.medium),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
-                            .padding(horizontal = 20.dp, vertical = 12.dp)
-                    ) {
-                        Text(
-                            text = departureTimeText,
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
+                    Text(
+                        text = stringResource(R.string.onboarding_timing_departure_label),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = stringResource(R.string.onboarding_timing_local_time),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
 
-                    Box(
+                Spacer(modifier = Modifier.height(spacing.small))
+
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                ) {
+                    Row(
                         modifier = Modifier
-                            .clip(RoundedCornerShape(20.dp))
-                            .background(MaterialTheme.extendedColors.onboardingBrandPrimary)
-                            .padding(horizontal = 16.dp, vertical = 8.dp)
+                            .fillMaxWidth()
+                            .padding(spacing.medium),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = "PM",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
+                        Box(
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
+                                .padding(horizontal = 20.dp, vertical = 12.dp)
+                        ) {
+                            Text(
+                                text = departureTimeText,
+                                style = MaterialTheme.typography.headlineMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(MaterialTheme.extendedColors.onboardingBrandPrimary)
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Text(
+                                text = "PM",
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
                 }
             }
 
             Spacer(modifier = Modifier.height(spacing.large))
 
-            Text(
-                text = stringResource(R.string.onboarding_timing_notification_label),
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.semantics { traversalIndex = 5f }
-            )
-
-            Spacer(modifier = Modifier.height(spacing.small))
-
-            Card(
+            val notificationCd = stringResource(R.string.onboarding_timing_notification_cd)
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .semantics(mergeDescendants = true) { traversalIndex = 6f },
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                    .semantics(mergeDescendants = true) {
+                        contentDescription = notificationCd
+                        traversalIndex = 4f
+                    }
             ) {
-                Row(
-                    modifier = Modifier.padding(spacing.medium),
-                    verticalAlignment = Alignment.CenterVertically
+                Text(
+                    text = stringResource(R.string.onboarding_timing_notification_label),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Spacer(modifier = Modifier.height(spacing.small))
+
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.extendedColors.onboardingBrandContainer),
-                        contentAlignment = Alignment.Center
+                    Row(
+                        modifier = Modifier.padding(spacing.medium),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.NotificationsActive,
-                            contentDescription = null,
-                            tint = MaterialTheme.extendedColors.onboardingBrandAccent
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(spacing.medium))
-
-                    Column(modifier = Modifier.weight(1f)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                text = stringResource(R.string.onboarding_timing_now_title),
-                                fontWeight = FontWeight.Bold,
-                                style = MaterialTheme.typography.titleMedium,
-                                color = MaterialTheme.colorScheme.onSurface
+                        Box(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.extendedColors.onboardingBrandContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.NotificationsActive,
+                                contentDescription = null,
+                                tint = MaterialTheme.extendedColors.onboardingBrandAccent
                             )
-                            Spacer(modifier = Modifier.width(spacing.small))
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .background(MaterialTheme.extendedColors.onboardingBrandContainer)
-                                    .padding(horizontal = 8.dp, vertical = 2.dp)
-                            ) {
-                                Text(
-                                    text = stringResource(R.string.onboarding_timing_now_badge),
-                                    fontSize = 11.sp,
-                                    color = MaterialTheme.extendedColors.onboardingBrandAccent,
-                                    fontWeight = FontWeight.Bold
-                                )
-                            }
                         }
-                        Text(
-                            text = stringResource(R.string.onboarding_timing_now_subtitle),
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+
+                        Spacer(modifier = Modifier.width(spacing.medium))
+
+                        Column(modifier = Modifier.weight(1f)) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = stringResource(R.string.onboarding_timing_now_title),
+                                    fontWeight = FontWeight.Bold,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                                Spacer(modifier = Modifier.width(spacing.small))
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .background(MaterialTheme.extendedColors.onboardingBrandContainer)
+                                        .padding(horizontal = 8.dp, vertical = 2.dp)
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.onboarding_timing_now_badge),
+                                        fontSize = 11.sp,
+                                        color = MaterialTheme.extendedColors.onboardingBrandAccent,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+                            Text(
+                                text = stringResource(R.string.onboarding_timing_now_subtitle),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = null,
+                            tint = MaterialTheme.extendedColors.onboardingBrandPrimary,
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.extendedColors.onboardingBrandContainer)
                         )
                     }
-
-                    Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = null,
-                        tint = MaterialTheme.extendedColors.onboardingBrandPrimary,
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.extendedColors.onboardingBrandContainer)
-                    )
                 }
             }
 
@@ -1042,6 +1055,13 @@ fun OnboardingInteractivePackingStep(
                     .fillMaxWidth(0.95f)
                     .padding(spacing.small)
             ) {
+                val itemsText = if (state.checklistItems.isNotEmpty()) {
+                    state.checklistItems.joinToString(", ")
+                } else {
+                    "all your essentials"
+                }
+                val reminderDialogCd = stringResource(R.string.onboarding_packing_reminder_dialog_cd, itemsText)
+
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -1050,15 +1070,30 @@ fun OnboardingInteractivePackingStep(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.Top
                     ) {
-                        Text(
-                            text = "Packing Reminder ",
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.semantics { heading() }
-                        )
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .semantics(mergeDescendants = true) {
+                                    contentDescription = reminderDialogCd
+                                }
+                        ) {
+                            Text(
+                                text = "Packing Reminder ",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.semantics { heading() }
+                            )
+                            Spacer(modifier = Modifier.height(spacing.medium))
+                            Text(
+                                text = "Yo! Don't even think about stepping out without your essentials: $itemsText. Get 'em packed so you don't regret it later! ",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
                         val closeDialogCd = stringResource(R.string.onboarding_cd_close_dialog)
                         IconButton(
                             onClick = onDismissPopup,
@@ -1074,20 +1109,6 @@ fun OnboardingInteractivePackingStep(
                             )
                         }
                     }
-
-                    Spacer(modifier = Modifier.height(spacing.medium))
-
-                    val itemsText = if (state.checklistItems.isNotEmpty()) {
-                        state.checklistItems.joinToString(", ")
-                    } else {
-                        "all your essentials"
-                    }
-
-                    Text(
-                        text = "Yo! Don't even think about stepping out without your essentials: $itemsText. Get 'em packed so you don't regret it later! ",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
 
                     Spacer(modifier = Modifier.height(spacing.large))
 
@@ -1198,12 +1219,22 @@ fun OnboardingInteractivePackingStep(
 
             Spacer(modifier = Modifier.height(spacing.medium))
 
+            val cargoCd = stringResource(
+                R.string.onboarding_packing_cargo_cd,
+                state.packedItems.size,
+                state.checklistItems.size
+            )
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.semantics(mergeDescendants = true) {
+                        contentDescription = cargoCd
+                    },
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
                         text = stringResource(R.string.onboarding_packing_cargo_header),
                         fontWeight = FontWeight.Bold,
