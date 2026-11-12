@@ -628,7 +628,7 @@ fun OnboardingConfigureTimingStep(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .semantics(mergeDescendants = true) {
+                    .clearAndSetSemantics {
                         contentDescription = departureCd
                         traversalIndex = 3f
                     }
@@ -699,7 +699,7 @@ fun OnboardingConfigureTimingStep(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .semantics(mergeDescendants = true) {
+                    .clearAndSetSemantics {
                         contentDescription = notificationCd
                         traversalIndex = 4f
                     }
@@ -1075,7 +1075,7 @@ fun OnboardingInteractivePackingStep(
                         Column(
                             modifier = Modifier
                                 .weight(1f)
-                                .semantics(mergeDescendants = true) {
+                                .clearAndSetSemantics {
                                     contentDescription = reminderDialogCd
                                 }
                         ) {
@@ -1230,7 +1230,7 @@ fun OnboardingInteractivePackingStep(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
-                    modifier = Modifier.semantics(mergeDescendants = true) {
+                    modifier = Modifier.clearAndSetSemantics {
                         contentDescription = cargoCd
                     },
                     verticalAlignment = Alignment.CenterVertically
@@ -1560,8 +1560,8 @@ private fun OnboardingHeader(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .semantics(mergeDescendants = true) {
-                    stateDescription = stepText
+                .clearAndSetSemantics {
+                    contentDescription = stepText
                 },
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
