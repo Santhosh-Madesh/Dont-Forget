@@ -10,6 +10,19 @@
     <string name="common_nav_templates">Modèles</string>
     <string name="common_warning_icon_desc">Avertissement</string>
 
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_back">Retour</string>
+    <string name="cd_notifications">Notifications</string>
+    <string name="cd_add_item">Ajouter un objet</string>
+    <string name="cd_move_up">Déplacer vers le haut</string>
+    <string name="cd_move_down">Déplacer vers le bas</string>
+    <string name="cd_delete_item">Supprimer l\'objet</string>
+    <string name="cd_edit">Modifier</string>
+    <string name="cd_delete">Supprimer</string>
+    <string name="cd_more_options">Plus d\'options</string>
+    <string name="cd_packed">Emballé</string>
+    <string name="cd_unpacked">Non emballé</string>
+
     <!-- Context Icon Labels -->
     <string name="context_icon_college">Université / École</string>
     <string name="context_icon_work">Travail</string>

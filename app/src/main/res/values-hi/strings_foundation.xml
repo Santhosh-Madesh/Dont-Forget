@@ -10,6 +10,19 @@
     <string name="common_nav_templates">टैम्प्लेट</string>
     <string name="common_warning_icon_desc">चेतावनी</string>
 
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_back">वापस</string>
+    <string name="cd_notifications">सूचनाएं</string>
+    <string name="cd_add_item">आइटम जोड़ें</string>
+    <string name="cd_move_up">ऊपर ले जाएं</string>
+    <string name="cd_move_down">नीचे ले जाएं</string>
+    <string name="cd_delete_item">आइटम हटाएं</string>
+    <string name="cd_edit">संपादित करें</string>
+    <string name="cd_delete">हटाएं</string>
+    <string name="cd_more_options">अधिक विकल्प</string>
+    <string name="cd_packed">पैक्ड</string>
+    <string name="cd_unpacked">पैक्ड नहीं</string>
+
     <!-- Context Icon Labels -->
     <string name="context_icon_college">कॉलेज / स्कूल</string>
     <string name="context_icon_work">काम</string>

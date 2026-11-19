@@ -10,6 +10,19 @@
     <string name="common_nav_templates">Templates</string>
     <string name="common_warning_icon_desc">Warning</string>
 
+    <!-- Accessibility Content Descriptions -->
+    <string name="cd_back">Back</string>
+    <string name="cd_notifications">Notifications</string>
+    <string name="cd_add_item">Add item</string>
+    <string name="cd_move_up">Move item up</string>
+    <string name="cd_move_down">Move item down</string>
+    <string name="cd_delete_item">Delete item</string>
+    <string name="cd_edit">Edit</string>
+    <string name="cd_delete">Delete</string>
+    <string name="cd_more_options">More options</string>
+    <string name="cd_packed">Packed</string>
+    <string name="cd_unpacked">Not packed</string>
+
     <!-- Context Icon Labels -->
     <string name="context_icon_college">College / School</string>
     <string name="context_icon_work">Work</string>
