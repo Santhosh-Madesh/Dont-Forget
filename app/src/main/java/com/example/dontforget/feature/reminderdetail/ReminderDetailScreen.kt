@@ -1,6 +1,7 @@
 package com.example.dontforget.feature.reminderdetail
 
 import android.text.format.DateFormat
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,6 +50,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.semantics.toggleableState
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -99,16 +107,27 @@ fun ReminderDetailScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.reminder_detail_app_bar_title)) },
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.reminder_detail_app_bar_title),
+                        modifier = Modifier.semantics { heading() }
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { viewModel.onEvent(ReminderDetailUiEvent.OnBackClick) }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.cd_back)
+                        )
                     }
                 },
                 actions = {
                     Box {
                         IconButton(onClick = { showMenu = true }) {
-                            Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "Menu")
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = stringResource(id = R.string.cd_more_options)
+                            )
                         }
                         DropdownMenu(
                             expanded = showMenu,
@@ -164,7 +183,8 @@ fun ReminderDetailScreen(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                    .padding(vertical = 8.dp)
+                    .semantics(mergeDescendants = true) {},
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 )
@@ -238,7 +258,8 @@ fun ReminderDetailScreen(
                 Text(
                     text = "Checklist Items",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.semantics { heading() }
                 )
                 TextButton(
                     onClick = {
@@ -336,8 +357,18 @@ fun ChecklistItemRow(
     onTogglePacked: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val packedDesc = stringResource(id = R.string.cd_packed)
+    val unpackedDesc = stringResource(id = R.string.cd_unpacked)
+
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) {
+                role = Role.Checkbox
+                toggleableState = if (item.isPacked) ToggleableState.On else ToggleableState.Off
+                stateDescription = if (item.isPacked) packedDesc else unpackedDesc
+            }
+            .clickable { onTogglePacked(!item.isPacked) },
         colors = CardDefaults.cardColors(
             containerColor = if (item.isPacked)
                 MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
@@ -350,7 +381,7 @@ fun ChecklistItemRow(
         ) {
             Checkbox(
                 checked = item.isPacked,
-                onCheckedChange = onTogglePacked
+                onCheckedChange = null
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
