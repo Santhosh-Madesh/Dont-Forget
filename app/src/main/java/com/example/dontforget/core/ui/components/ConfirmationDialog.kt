@@ -4,7 +4,10 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import com.example.dontforget.R
 
 @Composable
@@ -18,7 +21,12 @@ fun ConfirmationDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(text = title) },
+        title = {
+            Text(
+                text = title,
+                modifier = Modifier.semantics { heading() }
+            )
+        },
         text = { Text(text = message) },
         confirmButton = {
             TextButton(onClick = onConfirm) {

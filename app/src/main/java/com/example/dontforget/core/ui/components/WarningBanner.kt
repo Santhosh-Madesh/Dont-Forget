@@ -21,7 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.dontforget.R
@@ -49,11 +49,12 @@ fun WarningBanner(
             modifier = Modifier.padding(16.dp)
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.semantics(mergeDescendants = true) {}
             ) {
                 Icon(
                     imageVector = Icons.Filled.Warning,
-                    contentDescription = stringResource(id = R.string.common_warning_icon_desc),
+                    contentDescription = null,
                     tint = WarningYellowIcon
                 )
                 Spacer(modifier = Modifier.width(12.dp))

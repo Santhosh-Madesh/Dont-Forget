@@ -31,7 +31,7 @@ fun AppBottomBar(
                 icon = {
                     Icon(
                         imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
-                        contentDescription = itemTitle
+                        contentDescription = null
                     )
                 },
                 label = {

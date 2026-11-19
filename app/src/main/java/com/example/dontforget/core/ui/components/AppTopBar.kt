@@ -11,6 +11,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
+import com.example.dontforget.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -21,14 +25,19 @@ fun AppTopBar(
     actions: @Composable (RowScope.() -> Unit) = {}
 ) {
     TopAppBar(
-        title = { Text(text = title) },
+        title = {
+            Text(
+                text = title,
+                modifier = Modifier.semantics { heading() }
+            )
+        },
         modifier = modifier,
         navigationIcon = {
             if (onBackClick != null) {
                 IconButton(onClick = onBackClick) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back"
+                        contentDescription = stringResource(id = R.string.cd_back)
                     )
                 }
             }
