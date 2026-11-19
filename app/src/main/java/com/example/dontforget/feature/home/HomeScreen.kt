@@ -48,6 +48,11 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -99,14 +104,15 @@ fun HomeScreen(
                     Text(
                         text = stringResource(id = R.string.home_app_bar_title),
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.semantics { heading() }
                     )
                 },
                 actions = {
                     IconButton(onClick = { viewModel.onEvent(HomeUiEvent.OnNotificationIconClick) }) {
                         Icon(
                             imageVector = Icons.Filled.Notifications,
-                            contentDescription = "Notifications"
+                            contentDescription = stringResource(id = R.string.cd_notifications)
                         )
                     }
                 },
@@ -148,7 +154,8 @@ fun HomeScreen(
                         Text(
                             text = stringResource(id = R.string.home_header_title),
                             style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.semantics { heading() }
                         )
                     }
                 }
@@ -337,7 +344,10 @@ fun FilterSegmentButton(
 ) {
     Surface(
         onClick = onClick,
-        modifier = modifier,
+        modifier = modifier.semantics {
+            role = Role.Tab
+            selected = isSelected
+        },
         shape = RoundedCornerShape(50.dp),
         color = if (isSelected)
             MaterialTheme.colorScheme.primary
@@ -375,7 +385,9 @@ fun CategoryHeader(
         style = MaterialTheme.typography.titleSmall,
         fontWeight = FontWeight.Bold,
         color = titleColor,
-        modifier = modifier.padding(top = 12.dp, bottom = 4.dp)
+        modifier = modifier
+            .padding(top = 12.dp, bottom = 4.dp)
+            .semantics { heading() }
     )
 }
 
@@ -513,6 +525,9 @@ fun ReminderCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
+            .semantics(mergeDescendants = true) {
+                role = Role.Button
+            }
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
             containerColor = if (isOverdue) Color(0xFF4A211D) else MaterialTheme.colorScheme.surfaceVariant
@@ -534,7 +549,7 @@ fun ReminderCard(
                     Box(contentAlignment = Alignment.Center) {
                         Icon(
                             imageVector = iconVector,
-                            contentDescription = reminder.contextTitle,
+                            contentDescription = null,
                             tint = if(isOverdue) Color(0xFFFFB4AB) else MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier.size(24.dp)
                         )
@@ -702,7 +717,8 @@ fun EmptyHomeContent(
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.semantics { heading() }
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
