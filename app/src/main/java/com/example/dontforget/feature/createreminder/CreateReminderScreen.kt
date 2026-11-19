@@ -61,6 +61,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.toggleableState
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -105,10 +112,18 @@ fun CreateReminderScreen(
         modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text(text = title) },
+                title = {
+                    Text(
+                        text = title,
+                        modifier = Modifier.semantics { heading() }
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { viewModel.onEvent(CreateReminderUiEvent.PreviousStep) }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.cd_back)
+                        )
                     }
                 },
                 actions = {
@@ -134,7 +149,9 @@ fun CreateReminderScreen(
                     text = "Step ${state.currentStep.ordinal + 1} of 5",
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                    modifier = Modifier
+                        .padding(bottom = 8.dp)
+                        .semantics { heading() }
                 )
 
                 // Error Banner
@@ -305,14 +322,17 @@ private fun StepContext(
             onValueChange = { onEvent(CreateReminderUiEvent.UpdateContextTitle(it)) },
             label = { Text(stringResource(id = R.string.create_reminder_context_label)) },
             modifier = Modifier.fillMaxWidth(),
-            singleLine = true
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Select Icon:",
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+                .semantics { heading() }
         )
 
         FlowRow(
@@ -337,6 +357,10 @@ private fun StepContext(
                             color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
                             shape = CircleShape
                         )
+                        .semantics {
+                            role = Role.Button
+                            selected = isSelected
+                        }
                         .clickable { onEvent(CreateReminderUiEvent.SelectContextIcon(item.name)) },
                     contentAlignment = Alignment.Center
                 ) {
@@ -394,7 +418,10 @@ private fun StepChecklist(
                     }
                 }
             ) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add Item")
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = stringResource(id = R.string.cd_add_item)
+                )
             }
         }
 
@@ -420,7 +447,9 @@ private fun StepChecklist(
             ) {
                 itemsIndexed(state.checklistItems) { index, itemText ->
                     Card(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .semantics(mergeDescendants = true) {},
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.surfaceVariant
                         )
@@ -447,7 +476,10 @@ private fun StepChecklist(
                                 },
                                 enabled = index > 0
                             ) {
-                                Icon(imageVector = Icons.Filled.ArrowUpward, contentDescription = "Move Up")
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowUpward,
+                                    contentDescription = stringResource(id = R.string.cd_move_up)
+                                )
                             }
                             IconButton(
                                 onClick = {
@@ -455,12 +487,18 @@ private fun StepChecklist(
                                 },
                                 enabled = index < state.checklistItems.lastIndex
                             ) {
-                                Icon(imageVector = Icons.Filled.ArrowDownward, contentDescription = "Move Down")
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowDownward,
+                                    contentDescription = stringResource(id = R.string.cd_move_down)
+                                )
                             }
                             IconButton(
                                 onClick = { onEvent(CreateReminderUiEvent.RemoveChecklistItem(index)) }
                             ) {
-                                Icon(imageVector = Icons.Filled.Delete, contentDescription = "Remove")
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = stringResource(id = R.string.cd_delete_item)
+                                )
                             }
                         }
                     }
@@ -494,11 +532,15 @@ private fun StepDateTimeNotification(
         Text(
             text = "Departure Date & Time:",
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+                .semantics { heading() }
         )
 
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics(mergeDescendants = true) {},
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
         ) {
             Row(
@@ -552,7 +594,9 @@ private fun StepDateTimeNotification(
         Text(
             text = "Notification Lead Time:",
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+                .semantics { heading() }
         )
 
         FlowRow(
@@ -582,7 +626,7 @@ private fun StepDateTimeNotification(
                 value = state.customLeadMinutesInput,
                 onValueChange = { onEvent(CreateReminderUiEvent.UpdateCustomLeadMinutes(it)) },
                 label = { Text(stringResource(id = R.string.create_reminder_lead_time_label)) },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                 modifier = Modifier.fillMaxWidth()
             )
         }
@@ -607,7 +651,9 @@ private fun StepPreview(
 
     Column(modifier = Modifier.fillMaxSize()) {
         Card(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics(mergeDescendants = true) {},
             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
@@ -667,7 +713,9 @@ private fun StepPreview(
         Text(
             text = "Checklist Items (${state.checklistItems.size}):",
             style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier
+                .padding(bottom = 8.dp)
+                .semantics { heading() }
         )
 
         LazyColumn(
@@ -675,7 +723,10 @@ private fun StepPreview(
             verticalArrangement = Arrangement.spacedBy(6.dp)
         ) {
             items(state.checklistItems) { item ->
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.semantics(mergeDescendants = true) {}
+                ) {
                     Text(
                         text = "• ",
                         style = MaterialTheme.typography.bodyLarge,
@@ -693,11 +744,17 @@ private fun StepPreview(
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics(mergeDescendants = true) {
+                    role = Role.Checkbox
+                    toggleableState = if (state.saveAsTemplate) ToggleableState.On else ToggleableState.Off
+                }
+                .clickable { onEvent(CreateReminderUiEvent.ToggleSaveAsTemplate(!state.saveAsTemplate)) }
         ) {
             Checkbox(
                 checked = state.saveAsTemplate,
-                onCheckedChange = { onEvent(CreateReminderUiEvent.ToggleSaveAsTemplate(it)) }
+                onCheckedChange = null
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
@@ -712,6 +769,7 @@ private fun StepPreview(
                 value = state.templateTitleInput,
                 onValueChange = { onEvent(CreateReminderUiEvent.UpdateTemplateTitle(it)) },
                 label = { Text(stringResource(id = R.string.create_reminder_template_title_label)) },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 modifier = Modifier.fillMaxWidth()
             )
         }

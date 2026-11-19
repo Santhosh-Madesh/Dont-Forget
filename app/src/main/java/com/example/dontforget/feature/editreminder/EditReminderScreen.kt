@@ -56,6 +56,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -96,10 +101,18 @@ fun EditReminderScreen(
         modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.edit_reminder_title)) },
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.edit_reminder_title),
+                        modifier = Modifier.semantics { heading() }
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { viewModel.onEvent(EditReminderUiEvent.RequestDiscard) }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(id = R.string.cd_back)
+                        )
                     }
                 }
             )
@@ -153,12 +166,17 @@ fun EditReminderScreen(
                             onValueChange = { viewModel.onEvent(EditReminderUiEvent.UpdateContextTitle(it)) },
                             label = { Text("Context Title") },
                             modifier = Modifier.fillMaxWidth(),
-                            singleLine = true
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                         )
                     }
 
                     item {
-                        Text(text = stringResource(id = R.string.edit_reminder_select_icon), style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            text = stringResource(id = R.string.edit_reminder_select_icon),
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.semantics { heading() }
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                         FlowRow(
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -180,6 +198,10 @@ fun EditReminderScreen(
                                             color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
                                             shape = CircleShape
                                         )
+                                        .semantics {
+                                            role = Role.Button
+                                            selected = isSelected
+                                        }
                                         .clickable { viewModel.onEvent(EditReminderUiEvent.SelectContextIcon(item.name)) },
                                     contentAlignment = Alignment.Center
                                 ) {
@@ -195,7 +217,11 @@ fun EditReminderScreen(
                     }
 
                     item {
-                        Text(text = stringResource(id = R.string.edit_reminder_departure_title), style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            text = stringResource(id = R.string.edit_reminder_departure_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.semantics { heading() }
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                         Card(
                             modifier = Modifier.fillMaxWidth(),
@@ -249,7 +275,11 @@ fun EditReminderScreen(
                     }
 
                     item {
-                        Text(text = stringResource(id = R.string.edit_reminder_lead_time_title), style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            text = stringResource(id = R.string.edit_reminder_lead_time_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.semantics { heading() }
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                         FlowRow(
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -278,14 +308,18 @@ fun EditReminderScreen(
                                 value = state.customLeadMinutesInput,
                                 onValueChange = { viewModel.onEvent(EditReminderUiEvent.UpdateCustomLeadMinutes(it)) },
                                 label = { Text(stringResource(id = R.string.create_reminder_lead_time_label)) },
-                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
                     }
 
                     item {
-                        Text(text = stringResource(id = R.string.edit_reminder_checklist_title), style = MaterialTheme.typography.titleMedium)
+                        Text(
+                            text = stringResource(id = R.string.edit_reminder_checklist_title),
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.semantics { heading() }
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
@@ -314,14 +348,19 @@ fun EditReminderScreen(
                                     }
                                 }
                             ) {
-                                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = stringResource(id = R.string.cd_add_item)
+                                )
                             }
                         }
                     }
 
                     itemsIndexed(state.checklistItems) { index, pair ->
                         Card(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .semantics(mergeDescendants = true) {},
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
                         ) {
                             Row(
@@ -335,22 +374,32 @@ fun EditReminderScreen(
                                     value = pair.second,
                                     onValueChange = { viewModel.onEvent(EditReminderUiEvent.EditChecklistItem(index, it)) },
                                     modifier = Modifier.weight(1f),
-                                    singleLine = true
+                                    singleLine = true,
+                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
                                 )
                                 IconButton(
                                     onClick = { if (index > 0) viewModel.onEvent(EditReminderUiEvent.ReorderChecklistItem(index, index - 1)) },
                                     enabled = index > 0
                                 ) {
-                                    Icon(imageVector = Icons.Filled.ArrowUpward, contentDescription = "Up")
+                                    Icon(
+                                        imageVector = Icons.Filled.ArrowUpward,
+                                        contentDescription = stringResource(id = R.string.cd_move_up)
+                                    )
                                 }
                                 IconButton(
                                     onClick = { if (index < state.checklistItems.lastIndex) viewModel.onEvent(EditReminderUiEvent.ReorderChecklistItem(index, index + 1)) },
                                     enabled = index < state.checklistItems.lastIndex
                                 ) {
-                                    Icon(imageVector = Icons.Filled.ArrowDownward, contentDescription = "Down")
+                                    Icon(
+                                        imageVector = Icons.Filled.ArrowDownward,
+                                        contentDescription = stringResource(id = R.string.cd_move_down)
+                                    )
                                 }
                                 IconButton(onClick = { viewModel.onEvent(EditReminderUiEvent.RemoveChecklistItem(index)) }) {
-                                    Icon(imageVector = Icons.Filled.Delete, contentDescription = "Delete")
+                                    Icon(
+                                        imageVector = Icons.Filled.Delete,
+                                        contentDescription = stringResource(id = R.string.cd_delete_item)
+                                    )
                                 }
                             }
                         }
