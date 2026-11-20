@@ -410,7 +410,7 @@ fun OnboardingAddItemsStep(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Column(
-            modifier = Modifier.semantics { isTraversalGroup = true; traversalIndex = 1f }
+            modifier = Modifier
         ) {
             OnboardingHeader(
                 stepText = stringResource(R.string.onboarding_step_2_of_5),
