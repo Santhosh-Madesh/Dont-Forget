@@ -36,6 +36,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.dontforget.R
@@ -91,13 +93,13 @@ fun TemplateDetailScreen(
                         IconButton(onClick = { viewModel.onEvent(TemplateDetailUiEvent.OnEditClick) }) {
                             Icon(
                                 imageVector = Icons.Filled.Edit,
-                                contentDescription = "Edit Template"
+                                contentDescription = stringResource(id = R.string.cd_edit)
                             )
                         }
                         IconButton(onClick = { viewModel.onEvent(TemplateDetailUiEvent.OnShowDeleteDialogClick) }) {
                             Icon(
                                 imageVector = Icons.Filled.Delete,
-                                contentDescription = "Delete Template"
+                                contentDescription = stringResource(id = R.string.cd_delete)
                             )
                         }
                     }
@@ -130,7 +132,9 @@ fun TemplateDetailScreen(
                             .padding(16.dp)
                     ) {
                         Card(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .semantics(mergeDescendants = true) {},
                             shape = RoundedCornerShape(12.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = MaterialTheme.colorScheme.primaryContainer
@@ -140,7 +144,7 @@ fun TemplateDetailScreen(
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Icon(
                                         imageVector = ContextIcons.getIconByName(templateData.context.iconName),
-                                        contentDescription = templateData.context.title,
+                                        contentDescription = null,
                                         tint = MaterialTheme.colorScheme.onPrimaryContainer,
                                         modifier = Modifier.size(24.dp)
                                     )
@@ -168,7 +172,8 @@ fun TemplateDetailScreen(
                             text = stringResource(id = R.string.template_detail_items_header, itemsSorted.size),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurface
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.semantics { heading() }
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -184,7 +189,9 @@ fun TemplateDetailScreen(
                                 key = { item -> item.id }
                             ) { item ->
                                 Card(
-                                    modifier = Modifier.fillMaxWidth(),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .semantics(mergeDescendants = true) {},
                                     shape = RoundedCornerShape(8.dp),
                                     colors = CardDefaults.cardColors(
                                         containerColor = MaterialTheme.colorScheme.surfaceVariant

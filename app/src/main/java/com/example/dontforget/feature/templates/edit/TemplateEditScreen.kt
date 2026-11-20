@@ -18,6 +18,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowDownward
@@ -45,7 +47,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.dontforget.R
 import com.example.dontforget.core.ui.components.AppTopBar
@@ -131,7 +139,8 @@ fun TemplateEditScreen(
                         Text(
                             text = stringResource(id = R.string.template_edit_section_title),
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.semantics { heading() }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedTextField(
@@ -139,7 +148,8 @@ fun TemplateEditScreen(
                             onValueChange = { viewModel.onEvent(TemplateEditUiEvent.OnTemplateTitleChange(it)) },
                             placeholder = { Text(stringResource(id = R.string.template_edit_placeholder_title)) },
                             modifier = Modifier.fillMaxWidth(),
-                            singleLine = true
+                            singleLine = true,
+                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
@@ -148,7 +158,8 @@ fun TemplateEditScreen(
                         Text(
                             text = stringResource(id = R.string.template_edit_section_context),
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.semantics { heading() }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
 
@@ -209,7 +220,8 @@ fun TemplateEditScreen(
                                 label = { Text(stringResource(id = R.string.template_edit_label_new_context)) },
                                 placeholder = { Text(stringResource(id = R.string.template_edit_placeholder_new_context)) },
                                 modifier = Modifier.fillMaxWidth(),
-                                singleLine = true
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Text(
@@ -238,6 +250,10 @@ fun TemplateEditScreen(
                                                 color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
                                                 shape = RoundedCornerShape(8.dp)
                                             )
+                                            .semantics {
+                                                role = Role.Button
+                                                selected = isSelected
+                                            }
                                             .clickable {
                                                 viewModel.onEvent(TemplateEditUiEvent.OnContextIconSelect(iconItem.name))
                                             },
@@ -260,7 +276,8 @@ fun TemplateEditScreen(
                         Text(
                             text = stringResource(id = R.string.template_edit_section_checklist),
                             style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.semantics { heading() }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
 
@@ -273,7 +290,11 @@ fun TemplateEditScreen(
                                 onValueChange = { viewModel.onEvent(TemplateEditUiEvent.OnNewItemInputChange(it)) },
                                 placeholder = { Text(stringResource(id = R.string.template_edit_placeholder_add_item)) },
                                 modifier = Modifier.weight(1f),
-                                singleLine = true
+                                singleLine = true,
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                keyboardActions = KeyboardActions(onDone = {
+                                    viewModel.onEvent(TemplateEditUiEvent.OnAddChecklistItem)
+                                })
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             IconButton(
@@ -281,7 +302,7 @@ fun TemplateEditScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Add,
-                                    contentDescription = "Add Item"
+                                    contentDescription = stringResource(id = R.string.cd_add_item)
                                 )
                             }
                         }
@@ -292,7 +313,8 @@ fun TemplateEditScreen(
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 4.dp),
+                                    .padding(vertical = 4.dp)
+                                    .semantics(mergeDescendants = true) {},
                                 shape = RoundedCornerShape(8.dp),
                                 colors = CardDefaults.cardColors(
                                     containerColor = MaterialTheme.colorScheme.surfaceVariant
@@ -316,7 +338,7 @@ fun TemplateEditScreen(
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Filled.ArrowUpward,
-                                                contentDescription = "Move Up",
+                                                contentDescription = stringResource(id = R.string.cd_move_up),
                                                 modifier = Modifier.size(16.dp)
                                             )
                                         }
@@ -331,7 +353,7 @@ fun TemplateEditScreen(
                                         ) {
                                             Icon(
                                                 imageVector = Icons.Filled.ArrowDownward,
-                                                contentDescription = "Move Down",
+                                                contentDescription = stringResource(id = R.string.cd_move_down),
                                                 modifier = Modifier.size(16.dp)
                                             )
                                         }
@@ -343,14 +365,15 @@ fun TemplateEditScreen(
                                             viewModel.onEvent(TemplateEditUiEvent.OnEditChecklistItem(index, newText))
                                         },
                                         modifier = Modifier.weight(1f),
-                                        singleLine = true
+                                        singleLine = true,
+                                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
                                     )
                                     IconButton(
                                         onClick = { viewModel.onEvent(TemplateEditUiEvent.OnRemoveChecklistItem(index)) }
                                     ) {
                                         Icon(
                                             imageVector = Icons.Filled.Delete,
-                                            contentDescription = "Remove Item",
+                                            contentDescription = stringResource(id = R.string.cd_delete_item),
                                             tint = MaterialTheme.colorScheme.error
                                         )
                                     }
