@@ -32,6 +32,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -66,7 +68,8 @@ fun NotificationScreen(
                     Text(
                         text = stringResource(id = R.string.notif_display_top_bar_title),
                         style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.semantics { heading() }
                     )
                 },
                 navigationIcon = {
@@ -178,14 +181,16 @@ private fun CategoryHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 12.dp, bottom = 8.dp),
+            .padding(top = 12.dp, bottom = 8.dp)
+            .semantics(mergeDescendants = true) {},
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = title,
             style = MaterialTheme.typography.labelLarge,
             fontWeight = FontWeight.Bold,
-            color = titleColor
+            color = titleColor,
+            modifier = Modifier.semantics { heading() }
         )
         Spacer(modifier = Modifier.width(8.dp))
         Text(
@@ -205,6 +210,7 @@ private fun NotificationItemRow(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
+            .semantics(mergeDescendants = true) {}
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -254,7 +260,8 @@ private fun EmptyNotificationContent(
         Text(
             text = stringResource(id = R.string.notif_display_empty_title),
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.semantics { heading() }
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
